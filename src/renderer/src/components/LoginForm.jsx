@@ -13,11 +13,12 @@ function LoginForm() {
     username: "fuck you",
     password: "fuckyou"
   }
+
   const formHelper = '';
   const [show, setShow] = useState(false);
   const [input, setInput] = useState({ username: "", password: "" });
   const [isError, setIsError] = useState(false);
-  const [test, setTest] = useState({hello:"", bye:""})
+
   function reducer(formHelper, action) {
     if (action == "no user found") {
       return "No User Found";
@@ -47,12 +48,12 @@ function LoginForm() {
     <>
 
       <VStack width={"20%"}>
-      <FormControl isInvalid={isError}>
+      <FormControl isInvalid={isError} >
         <InputGroup>
           <InputLeftElement pointerEvents='none'>
             <Icon as={FaUserFriends} />
           </InputLeftElement>
-          <Input type='tel' placeholder='Username' name="username" onChange={handleInputChange} />
+          <Input type="text" placeholder='Username' name="username" onChange={handleInputChange}/>
         </InputGroup>
       </FormControl >
         <FormControl isInvalid={isError} >
