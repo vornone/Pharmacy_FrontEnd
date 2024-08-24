@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129.67 23.45">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: Montserrat-Regular, Montserrat;
+        font-size: 21.09px;
+      }
+
+      .cls-3 {
+        letter-spacing: .2em;
+      }
+
+      .cls-4 {
+        letter-spacing: .19em;
+      }
+
+      .cls-5 {
+        letter-spacing: .2em;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <text class="cls-2" transform="translate(33.84 17.93)"><tspan class="cls-5" x="0" y="0">AL</tspan><tspan class="cls-4" x="35.98" y="0">P</tspan><tspan class="cls-3" x="55.13" y="0">HA</tspan></text>
+      <g>
+        <path class="cls-1" d="m21.75,13.96l4.65-10.8H8.69c2.36,1.96,7.77,6.45,13.05,10.8Z"/>
+        <polygon class="cls-1" points="7.99 3.16 6.35 3.16 0 17.93 15.67 17.93 7.99 3.16"/>
+      </g>
+    </g>
+  </g>
+</svg>

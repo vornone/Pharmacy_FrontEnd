@@ -4,13 +4,15 @@ import { HashRouter } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import LoginForm from './components/LoginForm';
 import { ToastContainer } from 'react-toastify';
+import MainPage from './pages/MainPage';
 const App = () => {
    return ( 
    <>
-  <Flex width={"100dvw"} height={"100dvh"} justifyContent={"center"} alignItems={"center"} flexDirection={"column"} >
+  <Flex width={"100dvw"} height={"100dvh"} justifyContent={"center"} alignItems={"center"} >
         <HashRouter>
             <Routes>
-                <Route path="/" element={<LoginForm></LoginForm>}></Route>
+                <Route path="/login" element={<LoginForm></LoginForm>}></Route>
+                <Route path="/" element={<MainPage></MainPage>}></Route>
             </Routes>
         </HashRouter>
         <ToastContainer />
