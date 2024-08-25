@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import LoginForm from './pages/UserManagement/Login/LoginForm.jsx'
 import { ToastContainer } from 'react-toastify'
+import MainPage from './pages/MainPage.jsx'
 const App = () => {
   return (
     <>
@@ -16,7 +17,8 @@ const App = () => {
       >
         <HashRouter>
           <Routes>
-            <Route path="/" element={<LoginForm></LoginForm>}></Route>
+            <Route path="/login" element={<LoginForm></LoginForm>}></Route>
+            <Route path="/" element={<MainPage></MainPage>}></Route>
           </Routes>
         </HashRouter>
         <ToastContainer />

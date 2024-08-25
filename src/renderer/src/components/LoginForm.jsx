@@ -57,7 +57,6 @@ function LoginForm() {
       dispatch('wrong password')
     } else setIsError(false)
   }
-
   return (
     <>
       <VStack width={'20%'}>
