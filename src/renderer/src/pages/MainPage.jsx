@@ -23,8 +23,10 @@ export default function MainPage() {
       }}
     >
       <GridItem area="header">
-        <NavBar></NavBar>
-        <MenuBar></MenuBar>
+        <Flex flexDirection={'column'} gap={'1%'} width={'100%'} paddingX={'1%'}>
+          <NavBar></NavBar>
+          <MenuBar></MenuBar>
+        </Flex>
       </GridItem>
       <GridItem area="main" padding={'1%'} width={'100%'} height={'100%'}>
         <HStack height={'100%'} width={'100%'}>

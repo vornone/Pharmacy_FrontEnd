@@ -44,13 +44,8 @@ const dataRight = [
 function MenuBar() {
   return (
     <div>
-      <HStack justifyContent={'space-between'} alignItems={'center'} height={'60px'}>
-        <HStack
-          justifyContent={'space-between'}
-          padding={'1%'}
-          alignItems={'center'}
-          height={'60px'}
-        >
+      <HStack justifyContent={'space-between'} alignItems={'center'}>
+        <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataLeft.map((item) => (
             <ButtonGroup size="sm" isAttached variant="outline">
               <Button leftIcon={item.icon}>{item.name}</Button>
@@ -63,12 +58,7 @@ function MenuBar() {
             </ButtonGroup>
           ))}
         </HStack>
-        <HStack
-          justifyContent={'space-between'}
-          padding={'1%'}
-          alignItems={'center'}
-          height={'60px'}
-        >
+        <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataRight.map((item) => (
             <ButtonGroup size="sm" isAttached variant={'solid'} colorScheme="green">
               <Button leftIcon={item.icon}>{item.name}</Button>
@@ -86,7 +76,6 @@ function MenuBar() {
               Log Out
             </Button>
           </ButtonGroup>
-          <ButtonGroup size="sm" isAttached></ButtonGroup>
         </HStack>
       </HStack>
     </div>

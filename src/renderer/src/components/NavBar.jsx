@@ -8,7 +8,7 @@ import PlatformSelector from './PlatformSelector'
 const NavBar = () => {
   const { toggleColorMode, colorMode } = useColorMode()
   return (
-    <HStack justifyContent={'space-between'} padding={'1%'} alignItems={'center'} height={'60px'}>
+    <HStack justifyContent={'space-between'} alignItems={'center'}>
       <PlatformSelector></PlatformSelector>
       <Image
         src={logo}
