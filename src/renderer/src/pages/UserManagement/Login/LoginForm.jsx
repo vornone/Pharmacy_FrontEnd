@@ -26,7 +26,6 @@ function LoginForm() {
   const handleLogin = async () => {
     setIsError(await dispatch(login(input, redirectUrl)))
   }
-
   return (
     <>
       <VStack width={'20%'}>
