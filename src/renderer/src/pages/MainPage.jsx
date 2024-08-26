@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import { redirect } from 'react-router-dom'
 import MenuBar from '../components/MenuBar'
+import ProductGrid from '../components/ProductGrid'
 export default function MainPage() {
   return (
     <Grid
@@ -30,8 +31,11 @@ export default function MainPage() {
       </GridItem>
       <GridItem area="main" padding={'1%'} width={'100%'} height={'100%'}>
         <HStack height={'100%'} width={'100%'}>
-          <Flex bg={'gray.700'} height={'100%'} width={'100%'}></Flex>
-          <Flex bg={'gray.700'} height={'100%'} width={'100%'}></Flex>
+          <VStack bg={'gray.600'}  width={'100%'} height={'100%'} padding={"1%"}>
+          </VStack>
+          <VStack bg={'gray.600'}  width={'100%'} height={'100%'} padding={"1%"}>
+            <ProductGrid></ProductGrid>
+          </VStack>
         </HStack>
       </GridItem>
     </Grid>

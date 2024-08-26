@@ -47,7 +47,7 @@ function MenuBar() {
       <HStack justifyContent={'space-between'} alignItems={'center'}>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataLeft.map((item) => (
-            <ButtonGroup size="sm" isAttached variant="outline">
+            <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
               <Button leftIcon={item.icon}>{item.name}</Button>
               <IconButton
                 aria-label="Add to friends"
@@ -60,8 +60,8 @@ function MenuBar() {
         </HStack>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataRight.map((item) => (
-            <ButtonGroup size="sm" isAttached variant={'solid'} colorScheme="green">
-              <Button leftIcon={item.icon}>{item.name}</Button>
+            <ButtonGroup size="sm" isAttached variant={'solid'} colorScheme="green" key={item.name} >
+              <Button  leftIcon={item.icon}>{item.name}</Button>
             </ButtonGroup>
           ))}
           <ButtonGroup size="sm" isAttached variant={'outline'} colorScheme="gray">
