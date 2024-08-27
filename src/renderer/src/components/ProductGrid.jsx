@@ -3,20 +3,11 @@ import React from 'react'
 import ProductCard from './ProductCard'
 import ProductContainer from './ProductContainer'
 
-function ProductGrid() {
-  const skeleton = []
-  const data = []
-  for (let i = 0; i < 20; i++) {
-    skeleton.push(i)
-    data.push({
-      id: `${Math.random().toFixed(0)}`,
-      price: `${(Math.random() * 11).toFixed(2)}`,
-      name: `Product ${i + 1}`,
-      image: 'src',
-      stock: `${(Math.random() * 100).toFixed(0)}`
-    })
-  }
 
+function ProductGrid({ data}) {
+  const hello = (e) => {
+    alert(e.name)
+  }
   return (
     <SimpleGrid
       columns={{ sm: 1, md: 2, lg: 4 }}
@@ -26,10 +17,11 @@ function ProductGrid() {
       overflowY={'auto'}
       position={'relative'}
       paddingRight={'1%'}
+      rowGap={2}
     >
-      {skeleton.map((item) => (
-        <ProductContainer key={item}>
-          <ProductCard {...data[item]} />
+      {data.map((item) => (
+        <ProductContainer key={item.name}>
+          <ProductCard props={item} evenhandler={()=>hello(item)}/>
         </ProductContainer>
       ))}
     </SimpleGrid>

@@ -8,9 +8,11 @@ const Props = {
   image: '',
   stock: 0
 }
-function ProductCard({ ...props }) {
+function ProductCard({ props, evenhandler}) {
+
   return (
     <Card
+    onClick={evenhandler}
       height={'100%'}
       borderRadius={0}
       overflow={'hidden'}
