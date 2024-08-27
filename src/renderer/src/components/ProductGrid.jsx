@@ -22,10 +22,10 @@ function ProductGrid() {
       columns={{ sm: 1, md: 2, lg: 4 }}
       spacing={4}
       width={'100%'}
-      maxHeight={'570px'}
+      height={'100%'}
       overflowY={'auto'}
       position={'relative'}
-      padding={'1%'}
+      paddingRight={'1%'}
     >
       {skeleton.map((item) => (
         <ProductContainer key={item}>

@@ -1,4 +1,4 @@
-import { Card, CardBody, HStack, Image, Text, Heading } from '@chakra-ui/react'
+import { Card, CardBody, HStack, Image, Text, Heading, VStack } from '@chakra-ui/react'
 import React from 'react'
 
 const Props = {
@@ -16,22 +16,25 @@ function ProductCard({ ...props }) {
       overflow={'hidden'}
       justifyContent={'space-between'}
       p={2}
+      gap={'5%'}
     >
       <Image
         bg="gray.100"
         width={'100%'}
-        height={'100%'}
+        height={125}
         src={props.image}
         borderRadius={5}
       ></Image>
-      <CardBody p={0}>
-        <Heading fontSize={'1xl'} style={{ textWrap: 'wrap' }} as={'p'}>
-          {props.name}
-        </Heading>
-        <HStack justifyContent={'space-between'}>
-          <Text>{props.stock}</Text>
-          <Text color={'green.500'}>${props.price}</Text>
-        </HStack>
+      <CardBody height={'100%'} p={0} >
+        <VStack justifyContent={'space-between'} width={'100%'} height={'100%'}>
+          <Heading fontSize={'1xl'} style={{ textWrap: 'wrap' }} as={'p'} fontWeight={'normal'} width={'100%'}>
+            {props.name}
+          </Heading>
+          <HStack justifyContent={'space-between'} width={'100%'} >
+            <Text>{props.stock}</Text>
+            <Text  >${props.price}</Text>
+          </HStack>
+        </VStack>
       </CardBody>
     </Card>
   )
