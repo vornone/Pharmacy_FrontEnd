@@ -19,7 +19,7 @@ function OrderList({data}) {
     >
         {
             data.map((item)=>(
-                <OrderCard key={item.id} {...item}/>
+                <OrderCard key={item.name} {...item}/>
             ))
         }
     </SimpleGrid>

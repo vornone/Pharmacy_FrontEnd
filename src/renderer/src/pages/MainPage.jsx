@@ -1,5 +1,5 @@
 import { Grid, GridItem, HStack, Show, VStack, Flex, useColorModeValue, OrderedList } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import { redirect } from 'react-router-dom'
 import MenuBar from '../components/MenuBar'
@@ -10,10 +10,9 @@ import ProductSort from '../components/ProductSort'
 import OrderList from '../components/OrderList'
 
 const hello = []
-const order=[]
 for (let i = 0; i < 20; i++) {
   hello.push({
-    id: `${Math.random().toFixed(0)}`,
+    id: i,
     price: `${(Math.random() * 11).toFixed(2)}`,
     name: `Product ${i + 1}`,
     image: 'src',
@@ -21,17 +20,15 @@ for (let i = 0; i < 20; i++) {
   })
 }
 
-const handleAddingOrder= () => {
-    order.push((e)=>{
-      e.id,
-      e.name,
-      e.price,
-      e.stock
-    })
-}
 
 
 export default function MainPage() {
+  const[orders, setOrders] = useState([])
+  const addingOrder = (e) => {
+    const newOrders = [...orders]
+    newOrders.push(e)
+    setOrders(newOrders)
+  } 
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
   return (
     <Grid
@@ -54,6 +51,7 @@ export default function MainPage() {
       }}
       gap={'2%'}
     >
+
       <GridItem area="header"  >
         <Flex flexDirection={'column'} gap={'1%'} width={'100%'}>
           <NavBar></NavBar>
@@ -70,7 +68,7 @@ export default function MainPage() {
             borderRadius={'10px'}
             p={'1%'}
           >
-            <OrderList data={order}></OrderList>
+            <OrderList data={orders}></OrderList>
           </VStack>
           <VStack
             padding={'1%'}
@@ -86,7 +84,7 @@ export default function MainPage() {
               <ProductSort></ProductSort>
               <ProductFilter></ProductFilter>
             </HStack>
-            <ProductGrid data={hello}></ProductGrid>
+            <ProductGrid data={hello}  addingOrder={addingOrder}></ProductGrid>
           </VStack>
         </HStack>
       </GridItem>

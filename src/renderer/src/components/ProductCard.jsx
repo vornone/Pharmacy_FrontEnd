@@ -12,7 +12,7 @@ function ProductCard({ props, evenhandler}) {
 
   return (
     <Card
-    onClick={evenhandler}
+      onClick={evenhandler}
       height={'100%'}
       borderRadius={0}
       overflow={'hidden'}
@@ -34,7 +34,7 @@ function ProductCard({ props, evenhandler}) {
           </Heading>
           <HStack justifyContent={'space-between'} width={'100%'} >
             <Text>{props.stock}</Text>
-            <Text  >${props.price}</Text>
+            <Text>${props.price}</Text>
           </HStack>
         </VStack>
       </CardBody>
