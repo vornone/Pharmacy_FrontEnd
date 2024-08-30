@@ -1,13 +1,14 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid, Grid, Stack, HStack,Text, VStack,Heading, Button,ButtonGroup } from "@chakra-ui/react";
 import React from "react";
 import OrderCard from "./OrderCard";
+import { TbPlus, TbMinus } from "react-icons/tb";
 
 
 function OrderList({data}) {
  
 
   return (
-    <SimpleGrid
+    <VStack
       columns={1}
       spacing={4}
       width={'100%'}
@@ -19,10 +20,10 @@ function OrderList({data}) {
     >
         {
             data.map((item)=>(
-                <OrderCard key={item.name} {...item}/>
+                <OrderCard key={item.name} {...item} />
             ))
         }
-    </SimpleGrid>
+    </VStack>
   );
 }
 

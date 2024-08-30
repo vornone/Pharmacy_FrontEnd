@@ -26,15 +26,17 @@ function ProductCard({ props, evenhandler}) {
         height={125}
         src={props.image}
         borderRadius={5}
+        objectFit={'cover'}
+        objectPosition={'center'}
       ></Image>
       <CardBody height={'100%'} p={0} >
         <VStack justifyContent={'space-between'} width={'100%'} height={'100%'}>
-          <Heading fontSize={'1xl'} style={{ textWrap: 'wrap' }} as={'p'} fontWeight={'normal'} width={'100%'}>
+          <Heading fontSize={'md'} style={{ textWrap: 'wrap' }}   width={'100%'} fontFamily={'Inter'}>
             {props.name}
           </Heading>
           <HStack justifyContent={'space-between'} width={'100%'} >
-            <Text>{props.stock}</Text>
-            <Text>${props.price}</Text>
+            <Text color={'gray.400'}>{props.stock}</Text>
+            <Text >${props.price}</Text>
           </HStack>
         </VStack>
       </CardBody>

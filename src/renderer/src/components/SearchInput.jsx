@@ -7,7 +7,7 @@ const SearchInput = () => {
     <form>
       <InputGroup>
         <InputLeftElement children={<BsSearch />}></InputLeftElement>
-        <Input placeholder="search games.." width={'400px'} shadow={'sm'}></Input>
+        <Input placeholder="search products.." width={'400px'} shadow={'sm'}></Input>
       </InputGroup>
     </form>
   )

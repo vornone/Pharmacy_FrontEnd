@@ -60,7 +60,7 @@ function MenuBar() {
         </HStack>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataRight.map((item) => (
-            <ButtonGroup size="sm" isAttached variant={'solid'} colorScheme="green" key={item.name} >
+            <ButtonGroup size="sm" isAttached variant={'outline'} colorScheme="green" key={item.name} >
               <Button  leftIcon={item.icon}>{item.name}</Button>
             </ButtonGroup>
           ))}

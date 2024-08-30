@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, Show, VStack, Flex, useColorModeValue, OrderedList } from '@chakra-ui/react'
+import { Grid, GridItem, HStack, Show, VStack, Flex, useColorModeValue, OrderedList, Heading } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import { redirect } from 'react-router-dom'
@@ -8,27 +8,20 @@ import SearchInput from '../components/SearchInput'
 import ProductFilter from '../components/ProductFilter'
 import ProductSort from '../components/ProductSort'
 import OrderList from '../components/OrderList'
-
-const hello = []
-for (let i = 0; i < 20; i++) {
-  hello.push({
-    id: i,
-    price: `${(Math.random() * 11).toFixed(2)}`,
-    name: `Product ${i + 1}`,
-    image: 'src',
-    stock: `${(Math.random() * 100).toFixed(0)}`,
-  })
-}
-
-
+import OrderHeader from '../components/OrderHeader'
+import OrderCharge from '../components/OrderCharge'
+import { hello, orderData } from '../data/data'
 
 export default function MainPage() {
-  const[orders, setOrders] = useState([])
+  const[orders, setOrders] = useState(orderData)
   const addingOrder = (e) => {
     const newOrders = [...orders]
     newOrders.push(e)
     setOrders(newOrders)
-  } 
+  }
+
+  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price * cur.orderQuantity), 0).toFixed(2);
+
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
   return (
     <Grid
@@ -49,27 +42,17 @@ export default function MainPage() {
         base: 'auto 1fr',
         lg: 'auto 1fr'
       }}
-      gap={'2%'}
     >
 
-      <GridItem area="header"  >
-        <Flex flexDirection={'column'} gap={'1%'} width={'100%'}>
+      <GridItem area="header" p={'1%'} borderRadius={'10px'}  >
+        <Flex flexDirection={'column'} gap={'1%'} width={'100%'} justifyContent={'space-between'}>
           <NavBar></NavBar>
           <MenuBar></MenuBar>
         </Flex>
       </GridItem >
       <GridItem area="main" width={'100%'} height={'100%'} maxHeight={'85dvh'} borderRadius={'10px'} >
         <HStack  width={'100%'} height={'100%'} justifyContent={'space-between'}>
-          <VStack 
-            bg={colorGenre}
-            width={'50%'}
-            height={'100%'}
-            justify={'space-between'}
-            borderRadius={'10px'}
-            p={'1%'}
-          >
-            <OrderList data={orders}></OrderList>
-          </VStack>
+          
           <VStack
             padding={'1%'}
             bg={colorGenre}
@@ -77,14 +60,25 @@ export default function MainPage() {
             height={'100%'}
             borderRadius={'10px'}
             justifyContent={'flex-start'}
-            
-          >
+            >
             <HStack justifyContent={'space-between'} width={'100%'}>
               <SearchInput></SearchInput>
               <ProductSort></ProductSort>
               <ProductFilter></ProductFilter>
             </HStack>
             <ProductGrid data={hello}  addingOrder={addingOrder}></ProductGrid>
+          </VStack>
+          <VStack 
+            bg={colorGenre}
+            width={'40%'}
+            height={'100%'}
+            justify={'space-between'}
+            borderRadius={'10px'}
+            p={'1%'}
+          >
+            <OrderHeader></OrderHeader>
+            <OrderList data={orders}></OrderList>
+            <OrderCharge subTotal={totalPrice}></OrderCharge>
           </VStack>
         </HStack>
       </GridItem>

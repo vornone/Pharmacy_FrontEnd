@@ -19,6 +19,8 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@fontsource/open-sans": "^5.0.29",
+    "@fontsource/raleway": "^5.0.20",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.5",
     "bcrypt": "^5.1.1",

@@ -5,10 +5,6 @@ import { BsChevronDown } from 'react-icons/bs'
 import { FaCommentsDollar, FaCashRegister } from 'react-icons/fa'
 
 function ProductFilter() {
-  const [platform, setPlatform] = useState('Point of Sale')
-  const platformSelectorEvent = (e) => {
-    setPlatform(e.menuName)
-  }
   const data = [
     {
       menuId: 1,
@@ -19,6 +15,11 @@ function ProductFilter() {
       menuName: 'Cloth'
     }
   ]
+  const [platform, setPlatform] = useState(data[0].menuName)
+  const platformSelectorEvent = (e) => {
+    setPlatform(e.menuName)
+  }
+
   return (
     <>
       <Menu autoSelect={false}>

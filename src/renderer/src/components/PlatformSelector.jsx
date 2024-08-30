@@ -8,12 +8,6 @@ import { TbBox } from 'react-icons/tb'
 import { FaCashRegister } from 'react-icons/fa6'
 
 function PlatformSelector() {
-  const [platform, setPlatform] = useState('Point of Sale')
-  const [icon, setIcon] = useState(<MdOutlinePointOfSale />)
-  const platformSelectorEvent = (e) => {
-    setPlatform(e.menuName)
-    setIcon(e.menuIcon)
-  }
   const data = [
     {
       menuId: 1,
@@ -26,6 +20,13 @@ function PlatformSelector() {
       menuIcon: <FaCommentsDollar />
     }
   ]
+  const [platform, setPlatform] = useState(data[0].menuName)
+  const [icon, setIcon] = useState(<MdOutlinePointOfSale />)
+  const platformSelectorEvent = (e) => {
+    setPlatform(e.menuName)
+    setIcon(e.menuIcon)
+  }
+
   return (
     <>
       <Menu autoSelect={false}>
