@@ -14,9 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Provider store={store}>
         <ChakraProvider theme={theme}>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-
           <App></App>
-
           <ToastContainer />
         </ChakraProvider>
       </Provider>
