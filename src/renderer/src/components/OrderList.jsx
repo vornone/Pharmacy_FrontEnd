@@ -20,7 +20,7 @@ function OrderList({data}) {
     >
         {
             data.map((item)=>(
-                <OrderCard key={item.name} {...item} />
+                <OrderCard key={item.name} data={item} orderData={data}/>
             ))
         }
     </VStack>

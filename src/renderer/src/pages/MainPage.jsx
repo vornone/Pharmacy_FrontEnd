@@ -18,10 +18,15 @@ export default function MainPage() {
     const newOrders = [...orders]
     newOrders.push(e)
     setOrders(newOrders)
+    console.log(orders)
   }
 
-  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price * cur.orderQuantity), 0).toFixed(2);
-
+  function deleteOrder(id) {
+    const newOrders = [...orders]
+    newOrders.splice(id, 1)
+    setOrders(newOrders)
+  }
+  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price ), 0).toFixed(2);
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
   return (
     <Grid
