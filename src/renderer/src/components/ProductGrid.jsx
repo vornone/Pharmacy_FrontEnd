@@ -6,7 +6,7 @@ import ProductContainer from './ProductContainer'
 function ProductGrid({ data, addingOrder }) {
   return (
     <SimpleGrid
-      columns={{ sm: 1, md: 2, lg: 5 }}
+      columns={{ sm: 1, md: 2, lg: 4 }}
       spacing={4}
       width={'100%'}
       maxHeight={'100%'}

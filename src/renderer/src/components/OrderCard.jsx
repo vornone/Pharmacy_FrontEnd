@@ -6,16 +6,8 @@ import {
   Text,
   Heading,
   VStack,
-  CardFooter,
   Button,
-  Stack,
-  Box,
   Flex,
-  ButtonGroup,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  Input,
   Show,
   useColorMode
 } from '@chakra-ui/react'
@@ -23,11 +15,14 @@ import React, { useState } from 'react'
 import { TbPlus, TbMinus, TbTrashFilled } from 'react-icons/tb'
 function OrderCard({ data, orderData, setOrderData }) {
   const [count, setCount] = useState(data.orderQuantity)
-
   const color = useColorMode()
+
+  //functions
   function handleIncrement() {
     const a = [...orderData]
-    data.orderQuantity >= data.stock ? alert('out of stock') : (data.orderQuantity = count + 1)
+    data.orderQuantity >= data.stock
+      ? alert('out of stock')
+      : (data.orderQuantity = data.orderQuantity + 1)
     setCount(data.orderQuantity)
     setOrderData(a)
   }
