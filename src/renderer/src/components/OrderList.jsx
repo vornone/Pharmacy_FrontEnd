@@ -4,7 +4,7 @@ import OrderCard from "./OrderCard";
 import { TbPlus, TbMinus } from "react-icons/tb";
 
 
-function OrderList({data}) {
+function OrderList({orderData, setOrderData}) {
  
 
   return (
@@ -19,8 +19,8 @@ function OrderList({data}) {
       rowGap={2}
     >
         {
-            data.map((item)=>(
-                <OrderCard key={item.name} data={item} orderData={data}/>
+            orderData.map((item)=>(
+                <OrderCard key={item.name} data={item} orderData={orderData} setOrderData={setOrderData}/>
             ))
         }
     </VStack>

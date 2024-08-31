@@ -28,6 +28,10 @@ export default function MainPage() {
   }
   const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price ), 0).toFixed(2);
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
+
+  useEffect(() => {
+    console.log(orders)
+  }, [orders])
   return (
     <Grid
       boxSizing="border-box"
@@ -82,7 +86,7 @@ export default function MainPage() {
             p={'1%'}
           >
             <OrderHeader></OrderHeader>
-            <OrderList data={orders}></OrderList>
+            <OrderList orderData={orders} setOrderData={setOrders}></OrderList>
             <OrderCharge subTotal={totalPrice}></OrderCharge>
           </VStack>
         </HStack>

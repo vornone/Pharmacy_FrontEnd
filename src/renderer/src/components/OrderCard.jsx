@@ -1,25 +1,20 @@
 import { Card, CardBody, HStack, Image, Text, Heading, VStack, CardFooter, Button, Stack, Box, Flex, ButtonGroup, NumberDecrementStepper, NumberIncrementStepper, NumberInput, Input, Show, useColorMode} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { TbPlus , TbMinus, TbTrashFilled } from "react-icons/tb";
-function OrderCard({data, orderData}) {
-    const [count, setCount] = useState(1);
-    const [newData, setNewData] = useState([...orderData])
+function OrderCard({data, orderData, setOrderData}) {
+    const [count, setCount] = useState(data.orderQuantity);
     const color = useColorMode()
-    const handleIncrement = () => {
-        const a = [...newData];
-        count==data.stock? alert('out of stock'):setCount(count + 1);
-        data.orderQuantity=count+1;
-        setNewData(a);
-        console.log(data)
-        console.log(orderData)
+    function handleIncrement  ()  {
+        const a = [...orderData];
+        data.orderQuantity>= data.stock? alert('out of stock'):data.orderQuantity=count+1;
+        setCount(data.orderQuantity);
+        setOrderData(a);
       };
       const handleDecrement = () => {
-        const a = [...newData];
-        count==1? alert('you sure?'):setCount(count - 1);
-        data.orderQuantity=count;
-        setNewData(a);
-        console.log(data)
-        console.log(orderData)
+        const a = [...orderData];
+        data.orderQuantity==1? alert('you sure?'):data.orderQuantity=count-1;
+        setCount(data.orderQuantity);
+        setOrderData(a);
       };
   return (<>
     {count!==0? <Show>
@@ -51,9 +46,9 @@ function OrderCard({data, orderData}) {
         <VStack width={'50%'}   height={'100%'}  alignItems={"flex-end"} justifyContent={"space-between"}  >
             <Button  size={'xs'} variant={'solid'} colorScheme="red" ><TbTrashFilled/></Button>
             <Flex width={'100px'}  alignItems={'center'} justifyContent={'space-between'} >
-                  <Button  size={'xs'} onClick={handleDecrement}  variant={'solid'}><TbMinus/></Button>
+                  <Button  size={'xs'} onClick={()=>handleDecrement()}  variant={'solid'}><TbMinus/></Button>
                   <Text width={'50px'} textAlign={'center'}>{count}</Text>
-                  <Button  size={'xs'} onClick={handleIncrement}  variant={'solid'}><TbPlus/></Button>
+                  <Button  size={'xs'} onClick={()=>handleIncrement()}  variant={'solid'}><TbPlus/></Button>
             </Flex>
         </VStack>
        </HStack>
