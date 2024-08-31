@@ -26,10 +26,11 @@ export default function MainPage() {
     newOrders.splice(id, 1)
     setOrders(newOrders)
   }
-  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price ), 0).toFixed(2);
+  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price * cur.orderQuantity), 0).toFixed(2);
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
 
   useEffect(() => {
+    ()=>totalPrice;
     console.log(orders)
   }, [orders])
   return (
@@ -59,7 +60,7 @@ export default function MainPage() {
           <MenuBar></MenuBar>
         </Flex>
       </GridItem >
-      <GridItem area="main" width={'100%'} height={'100%'} maxHeight={'85dvh'} borderRadius={'10px'} >
+      <GridItem area="main" width={'100%'} height={'100%'} maxHeight={'80dvh'} borderRadius={'10px'} >
         <HStack  width={'100%'} height={'100%'} justifyContent={'space-between'}>
           
           <VStack
