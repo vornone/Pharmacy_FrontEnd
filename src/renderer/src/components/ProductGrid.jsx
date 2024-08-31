@@ -3,9 +3,7 @@ import React, { useState } from 'react'
 import ProductCard from './ProductCard'
 import ProductContainer from './ProductContainer'
 
-function ProductGrid({ data, addingOrder
-}) {
-
+function ProductGrid({ data, addingOrder }) {
   return (
     <SimpleGrid
       columns={{ sm: 1, md: 2, lg: 5 }}
@@ -20,7 +18,7 @@ function ProductGrid({ data, addingOrder
     >
       {data.map((item) => (
         <ProductContainer key={item.id}>
-          <ProductCard props={item} evenhandler={()=>addingOrder(item)}/>
+          <ProductCard props={item} evenhandler={() => addingOrder(item)} />
         </ProductContainer>
       ))}
     </SimpleGrid>

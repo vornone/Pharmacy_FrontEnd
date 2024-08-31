@@ -1,4 +1,14 @@
-import { Grid, GridItem, HStack, Show, VStack, Flex, useColorModeValue, OrderedList, Heading } from '@chakra-ui/react'
+import {
+  Grid,
+  GridItem,
+  HStack,
+  Show,
+  VStack,
+  Flex,
+  useColorModeValue,
+  OrderedList,
+  Heading
+} from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import { redirect } from 'react-router-dom'
@@ -13,12 +23,24 @@ import OrderCharge from '../components/OrderCharge'
 import { hello, orderData } from '../data/data'
 
 export default function MainPage() {
-  const[orders, setOrders] = useState(orderData)
+  const [orders, setOrders] = useState(orderData)
+  const colorGenre = useColorModeValue('gray.50', 'gray.600')
+  const colorMainBg = useColorModeValue('blue.50')
+  //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
-    newOrders.push(e)
+    const existedData = newOrders.some((item) => item.name === e.name)
+    if (existedData) {
+      newOrders.forEach((item) => {
+        if (item.name === e.name && item.orderQuantity < item.stock) {
+          item.orderQuantity += 1
+          setOrders(newOrders)
+        }
+      })
+    } else {
+      newOrders.push(e)
+    }
     setOrders(newOrders)
-    console.log(orders)
   }
 
   function deleteOrder(id) {
@@ -26,15 +48,13 @@ export default function MainPage() {
     newOrders.splice(id, 1)
     setOrders(newOrders)
   }
-  const totalPrice=orders.reduce((acc, cur) => acc + parseFloat(cur.price * cur.orderQuantity), 0).toFixed(2);
-  const colorGenre = useColorModeValue('gray.50', 'gray.600')
 
   useEffect(() => {
-    ()=>totalPrice;
     console.log(orders)
   }, [orders])
   return (
     <Grid
+      bg={colorMainBg}
       boxSizing="border-box"
       width={'100%'}
       height={'100%'}
@@ -53,16 +73,14 @@ export default function MainPage() {
         lg: 'auto 1fr'
       }}
     >
-
-      <GridItem area="header" p={'1%'} borderRadius={'10px'}  >
+      <GridItem area="header" p={'1%'} borderRadius={'10px'}>
         <Flex flexDirection={'column'} gap={'1%'} width={'100%'} justifyContent={'space-between'}>
           <NavBar></NavBar>
           <MenuBar></MenuBar>
         </Flex>
-      </GridItem >
-      <GridItem area="main" width={'100%'} height={'100%'} maxHeight={'80dvh'} borderRadius={'10px'} >
-        <HStack  width={'100%'} height={'100%'} justifyContent={'space-between'}>
-          
+      </GridItem>
+      <GridItem area="main" width={'100%'} height={'82dvh'} borderRadius={'10px'}>
+        <HStack width={'100%'} height={'100%'} justifyContent={'space-between'}>
           <VStack
             padding={'1%'}
             bg={colorGenre}
@@ -70,17 +88,17 @@ export default function MainPage() {
             height={'100%'}
             borderRadius={'10px'}
             justifyContent={'flex-start'}
-            >
+          >
             <HStack justifyContent={'space-between'} width={'100%'}>
               <SearchInput></SearchInput>
               <ProductSort></ProductSort>
               <ProductFilter></ProductFilter>
             </HStack>
-            <ProductGrid data={hello}  addingOrder={addingOrder}></ProductGrid>
+            <ProductGrid data={hello} addingOrder={addingOrder}></ProductGrid>
           </VStack>
-          <VStack 
+          <VStack
             bg={colorGenre}
-            width={'40%'}
+            width={'50%'}
             height={'100%'}
             justify={'space-between'}
             borderRadius={'10px'}
@@ -88,7 +106,7 @@ export default function MainPage() {
           >
             <OrderHeader></OrderHeader>
             <OrderList orderData={orders} setOrderData={setOrders}></OrderList>
-            <OrderCharge subTotal={totalPrice}></OrderCharge>
+            <OrderCharge data={orders}></OrderCharge>
           </VStack>
         </HStack>
       </GridItem>
