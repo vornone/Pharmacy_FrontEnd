@@ -48,7 +48,7 @@ function OrderCharge({ data }) {
         <VStack alignItems={'flex-start'} width={'100%'}>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Text color={'gray.400'}>Subtotal:</Text>
-            <Text color={'gray.400'}>{subTotal}</Text>
+            <Text color={'gray.400'}>${subTotal}</Text>
           </HStack>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Text color={'gray.400'}>Discount:</Text>
@@ -56,12 +56,12 @@ function OrderCharge({ data }) {
           </HStack>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Text color={'gray.400'}>Tax:</Text>
-            <Text color={'gray.400'}>{tax}</Text>
+            <Text color={'gray.400'}>${tax}</Text>
           </HStack>
 
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Text fontSize={'lg'}>Total:</Text>
-            <Text fontSize={'lg'}>{total}</Text>
+            <Text fontSize={'lg'}>${total}</Text>
           </HStack>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <InputGroup colorScheme="white">

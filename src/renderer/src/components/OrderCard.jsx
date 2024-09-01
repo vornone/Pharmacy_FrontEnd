@@ -14,33 +14,32 @@ import {
 import React, { useState } from 'react'
 import { TbPlus, TbMinus, TbTrashFilled } from 'react-icons/tb'
 function OrderCard({ data, orderData, setOrderData }) {
-  const [count, setCount] = useState(data.orderQuantity)
-  const color = useColorMode()
-
   //functions
+  function deleteOrder() {
+    data.orderQuantity = 0
+    let newOrders = [...orderData].filter((item) => item.orderQuantity !== 0)
+    setOrderData(newOrders)
+  }
   function handleIncrement() {
     const a = [...orderData]
     data.orderQuantity >= data.stock
       ? alert('out of stock')
       : (data.orderQuantity = data.orderQuantity + 1)
-    setCount(data.orderQuantity)
     setOrderData(a)
   }
-  const handleDecrement = () => {
+  function handleDecrement() {
     const a = [...orderData]
-    data.orderQuantity == 1 ? alert('you sure?') : (data.orderQuantity = count - 1)
-    setCount(data.orderQuantity)
-    setOrderData(a)
-  }
-  function deleteOrder(id) {
-    const newOrders = [...orderData]
-    newOrders.splice(id, 1)
-    setOrderData(newOrders)
+    if (data.orderQuantity == 1) {
+      deleteOrder()
+    } else {
+      data.orderQuantity = data.orderQuantity - 1
+      setOrderData(a)
+    }
   }
 
   return (
     <>
-      {count !== 0 ? (
+      {data.orderQuantity >= 1 ? (
         <Show>
           <Card
             width={'100%'}
@@ -83,7 +82,7 @@ function OrderCard({ data, orderData, setOrderData }) {
                       size={'xs'}
                       variant={'solid'}
                       colorScheme="red"
-                      onClick={() => deleteOrder(data.orderId)}
+                      onClick={() => deleteOrder()}
                     >
                       <TbTrashFilled />
                     </Button>

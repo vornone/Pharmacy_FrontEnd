@@ -26,6 +26,7 @@ export default function MainPage() {
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
   const colorMainBg = useColorModeValue('blue.50')
+
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
@@ -39,19 +40,10 @@ export default function MainPage() {
       })
     } else {
       newOrders.push(e)
+      e.orderQuantity = 1
     }
     setOrders(newOrders)
   }
-
-  function deleteOrder(id) {
-    const newOrders = [...orders]
-    newOrders.splice(id, 1)
-    setOrders(newOrders)
-  }
-
-  useEffect(() => {
-    console.log(orders)
-  }, [orders])
   return (
     <Grid
       bg={colorMainBg}
