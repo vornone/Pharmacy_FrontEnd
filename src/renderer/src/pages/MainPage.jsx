@@ -20,7 +20,7 @@ import ProductSort from '../components/ProductSort'
 import OrderList from '../components/OrderList'
 import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
-import { hello, orderData } from '../data/data'
+import { mainData, orderData } from '../data/data'
 
 export default function MainPage() {
   const [orders, setOrders] = useState(orderData)
@@ -86,7 +86,7 @@ export default function MainPage() {
               <ProductSort></ProductSort>
               <ProductFilter></ProductFilter>
             </HStack>
-            <ProductGrid data={hello} addingOrder={addingOrder}></ProductGrid>
+            <ProductGrid data={mainData} addingOrder={addingOrder}></ProductGrid>
           </VStack>
           <VStack
             bg={colorGenre}
