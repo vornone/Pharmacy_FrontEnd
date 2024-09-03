@@ -12,7 +12,17 @@ import {
   TbLogout,
   TbSettingsFilled
 } from 'react-icons/tb'
-
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
+} from '@chakra-ui/react'
+import ModalTable from './ModalTable'
 const dataLeft = [
   {
     name: 'Product',
@@ -42,8 +52,27 @@ const dataRight = [
   }
 ]
 function MenuBar() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <div>
+      <Button onClick={onOpen}>Open Modal</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'6xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <ModalTable></ModalTable>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <HStack justifyContent={'space-between'} alignItems={'center'}>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataLeft.map((item) => (
@@ -60,8 +89,14 @@ function MenuBar() {
         </HStack>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataRight.map((item) => (
-            <ButtonGroup size="sm" isAttached variant={'outline'} colorScheme="green" key={item.name} >
-              <Button  leftIcon={item.icon}>{item.name}</Button>
+            <ButtonGroup
+              size="sm"
+              isAttached
+              variant={'outline'}
+              colorScheme="green"
+              key={item.name}
+            >
+              <Button leftIcon={item.icon}>{item.name}</Button>
             </ButtonGroup>
           ))}
           <ButtonGroup size="sm" isAttached variant={'outline'} colorScheme="gray">
