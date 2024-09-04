@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EditableCell from './EditableCell'
 import { TableContainer } from '@chakra-ui/react'
 import { userData } from '../../data/data'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import { useDispatch } from 'react-redux'
+import { retrieveUser } from '../../actions/userActions.js'
 const columns =[
     {
         accessorKey: 'user_id',
@@ -24,7 +26,14 @@ const columns =[
 
 
 function UserTable() {
-    const [data, setData] = useState(userData)
+
+    const dispatch = useDispatch();
+
+    useEffect(async ()=>{
+        console.log(await retrieveUser());    
+    }, [retrieveUser])
+
+    const [data, setData] = useState(userData);
     const table = useReactTable({
         data,
         columns,
