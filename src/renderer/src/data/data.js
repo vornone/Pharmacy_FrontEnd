@@ -11,3 +11,18 @@ for (let i = 0; i < 20; i++) {
   })
 }
 export const orderData = []
+
+export const userData = [
+  {
+    user_id: 1,
+    user_name: 'admin',
+    user_password: 'admin',
+    user_role: 'admin'
+  },
+  {
+    user_id: 2,
+    user_name: 'user',
+    user_password: 'user',
+    user_role: 'user'
+  }
+]
