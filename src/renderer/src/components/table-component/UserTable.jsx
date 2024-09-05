@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import EditableCell from './EditableCell'
 import { TableContainer } from '@chakra-ui/react'
-import { userData } from '../../data/data'
+// import { userData } from '../../data/data'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
-import { useDispatch } from 'react-redux'
-import { retrieveUser } from '../../actions/userActions.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { retrieveUser } from '../../actions/UserActions.js'
 const columns =[
     {
         accessorKey: 'user_id',
@@ -13,12 +13,12 @@ const columns =[
         cell: EditableCell
     },
     {
-        accessorKey: 'user_name',
+        accessorKey: 'username',
         header: 'Name',
         cell: EditableCell
     },
     {
-        accessorKey: 'user_role',
+        accessorKey: 'role_id',
         header: 'Role',
         cell: EditableCell
     }
@@ -28,9 +28,10 @@ const columns =[
 function UserTable() {
 
     const dispatch = useDispatch();
-
-    useEffect(async ()=>{
-        console.log(await retrieveUser());    
+    const userData = useSelector((state) => state.userReducer.userList.data.list)
+    useEffect( ()=>{
+        dispatch(retrieveUser())
+        
     }, [retrieveUser])
 
     const [data, setData] = useState(userData);
@@ -39,6 +40,7 @@ function UserTable() {
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
+    if(userData)console.log(userData)
   return (
     <TableContainer>
         <Table>

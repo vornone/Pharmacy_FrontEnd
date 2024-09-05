@@ -1,16 +1,14 @@
 import { toast } from 'react-toastify'
-import * as action from '../constants/UserConstants.js'
-import { get } from '../common/apiCaller.js'
+import * as actions from '../constants/UserConstants.js'
+import { post } from '../common/apiCaller.js'
 
 const userUrl = 'http://localhost:8080/user/getAll'
 export const retrieveUser = () => async (dispatch) => {
   try {
-    const { data } = await get(userUrl, '', false)
-    dispatch({ type: action.USER_RETRIEVE_REQUEST, payload: { data } })
-
-    return data
+    const { data } = await post(userUrl, null, '', false)
+    await dispatch({ type: actions.USER_RETRIEVE_SUCCESS, payload: { data } })
   } catch (error) {
-    dispatch({ type: action.USER_RETRIEVE_FAIL, payload: error.message })
+    await dispatch({ type: actions.USER_RETRIEVE_FAIL, payload: error.message })
     toast.error(error.message)
   }
 }
