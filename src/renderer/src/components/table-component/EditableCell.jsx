@@ -18,9 +18,11 @@ const EditableCell = ({ getValue, row, column, table }) => {
   return (
     <Input
       value={value}
+      size="sm"
       onChange={(e) => setValue(e.target.value)}
       onBlur={onBlur}
       width={"100px"}
+      variant={"unstyled"}
     />
   );
 };
