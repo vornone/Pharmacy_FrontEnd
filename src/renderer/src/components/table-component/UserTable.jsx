@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import EditableCell from './EditableCell'
 import { TableContainer, Button, Icon } from '@chakra-ui/react'
-// import { userData } from '../../data/data'
+import { userData } from '../../data/data'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { useReactTable, getCoreRowModel, flexRender, getSortedRowModel, getPaginationRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { useDispatch } from 'react-redux'
@@ -17,12 +17,13 @@ const columns =[
         cell: EditableCell
     },
     {
-        accessorKey: 'username',
+        accessorKey: 'user_name',
         header: 'Name',
         cell: EditableCell,
+        enableSorting: true
     },
     {
-        accessorKey: 'role_id',
+        accessorKey: 'user_role',
         header: 'Role',
         cell: EditableCell
     },
@@ -39,11 +40,12 @@ const columns =[
 function UserTable() {
 
     const dispatch = useDispatch();
+    // const userData = useSelector((state) => state);
     useEffect( ()=>{
         dispatch(retrieveUser())
         
     }, [retrieveUser])
-    const userData = useSelector((state) => state.userReducer.userList.data.list)
+
 
     const [data, setData] = useState(userData);
     const table = useReactTable({
@@ -75,25 +77,27 @@ function UserTable() {
                 {table.getHeaderGroups().map((headerGroup) => (
                     <Tr key={headerGroup.id}  >
                         {headerGroup.headers.map((header) => (
-                            <Th key={header.id} onClick={header.column.getToggleSortingHandler()}  >
+                            <Th key={header.id}   >
                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                 {header.column.getCanSort() && (
                                 
                             <IconButton
                             cursor={'pointer'}
                                     colorScheme='gray'
-                                as= {{   
-                                    false: TbArrowsSort,
-                                    asc: TbChevronDown,
-                                    desc: TbChevronUp,
-                                }[header.column.getIsSorted()]
-                                }
+                                    as={header.column.getIsSorted()==='asc'? TbChevronDown:header.column.getIsSorted()==='desc'? TbChevronUp:TbArrowsSort}
+                                // as= {{ 
+                                //     false:TbArrowsSort,
+                                //     asc: TbChevronDown,
+                                //     desc: TbChevronUp,
+                                // }[header.column.getIsSorted()]
+                                // }
+                                onClick={header.column.getToggleSortingHandler()}
                                 disabled
                                 
                                 mx={3}
                                 boxSize={4}
                                 
-                                variant={'unstyled'}
+                                variant={'ghost'}
                                 
                                 
                             >{console.log(header.column.getIsSorted())}</IconButton>
