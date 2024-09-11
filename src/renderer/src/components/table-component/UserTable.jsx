@@ -56,10 +56,9 @@ function UserTable() {
     useEffect( ()=>{
         if (userData) setData(userData.list)
         else dispatch(retrieveUser())
+   }, [ userData])
 
-   }, [retrieveUser, userData])
-
-   console.log(userData)
+   console.log(data)
 
     const table = useReactTable({
         data,
@@ -113,7 +112,7 @@ function UserTable() {
                                 variant={'ghost'}
                                 
                                 
-                            >{console.log(header.column.getIsSorted())}</IconButton>
+                            ></IconButton>
                             )}
                            
                             </Th>
