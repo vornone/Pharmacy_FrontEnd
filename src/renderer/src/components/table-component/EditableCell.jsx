@@ -17,7 +17,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
 
   return (
     <Input
-      value={value}
+      value={value.toLowerCase()}
       size="sm"
       onChange={(e) => setValue(e.target.value)}
       onBlur={onBlur}
