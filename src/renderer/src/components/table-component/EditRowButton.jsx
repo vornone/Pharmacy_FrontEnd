@@ -7,7 +7,7 @@ const EditRowButton = ({handleOpenModal}) => {
     variant={'ghost'} 
     colorScheme='blue' 
     icon={<TbEdit />} 
-    size={'sm'} 
+    size={'md'} 
     width={'100%'} 
     onClick={handleOpenModal}  />);
 };

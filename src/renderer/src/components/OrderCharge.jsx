@@ -1,26 +1,14 @@
 import React, { useState } from 'react'
 import {
   HStack,
-  Heading,
   VStack,
   Text,
   Button,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
+
   Card,
   Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Icon,
-  Show,
+
   InputGroup,
-  InputRightElement,
   InputLeftElement
 } from '@chakra-ui/react'
 import { TbPlus, TbEdit } from 'react-icons/tb'
@@ -71,7 +59,7 @@ function OrderCharge({ data }) {
                 width={'100%'}
                 shadow={'sm'}
                 type="number"
-                onChange={(e) => setDiscount(e.target.value)}
+                onChange={(e) => e.target.value > 100  ? e.target.value = 100 :e.target.value < 0  ? e.target.value = 0: setDiscount(e.target.value)}
               ></Input>
             </InputGroup>
             <Button colorScheme="green" width={'100%'}>

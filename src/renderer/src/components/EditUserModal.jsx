@@ -17,13 +17,10 @@ function EditUserModal({isOpen, onClose ,data}) {
     <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Check Role</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text fontWeight='bold' mb='1rem'>
-              You can scroll the content behind the modal
-            </Text>
-            hellos, {data.username}
+            hello {data.username}, you have {data.role_name} role.
           </ModalBody>
 
           <ModalFooter>

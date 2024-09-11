@@ -15,7 +15,7 @@ const DeleteRowButton = ({handleDeleteRow}) => {
       onClose={onClose}
     >
       <PopoverTrigger>
-        <IconButton icon={<TbTrashXFilled/>} colorScheme="red" size={"sm"} variant={"ghost"} onClick={onOpen}/>
+        <IconButton icon={<TbTrashXFilled/>} colorScheme="red" size={"md"} variant={"ghost"} onClick={onOpen}/>
       </PopoverTrigger>
       <PopoverContent color='white' bg='blue.800' borderColor='blue.800'>
         <PopoverHeader pt={4} fontWeight='bold' border='0'>

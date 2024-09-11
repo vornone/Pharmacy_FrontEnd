@@ -19,7 +19,7 @@ const App = () => {
         <HashRouter>
           <Routes>
             <Route path="/login" element={<LoginForm></LoginForm>}></Route>
-            <Route path="/" element={<UserTable></UserTable>}></Route>
+            <Route path="/" element={<MainPage></MainPage>}></Route>
           </Routes>
         </HashRouter>
         <ToastContainer />

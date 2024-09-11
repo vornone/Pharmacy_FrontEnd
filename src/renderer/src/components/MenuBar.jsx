@@ -23,53 +23,58 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import ModalTable from './ModalTable'
-const dataLeft = [
-  {
-    name: 'Product',
-    icon: <TbArchiveFilled />
-  },
-  {
-    name: 'Category',
-    icon: <TbAppsFilled />
-  },
-  {
-    name: 'User',
-    icon: <TbUserFilled />
-  }
-]
-const dataRight = [
-  {
-    name: 'Orders',
-    icon: <TbShoppingCartFilled />
-  },
-  {
-    name: 'Report',
-    icon: <TbChartPieFilled />
-  },
-  {
-    name: 'Admin',
-    icon: <TbUserShield />
-  }
-]
+import UserTable from './table-component/UserTable'
+
+
 function MenuBar() {
+
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const handleOpenAddUser= () => {
+    onOpen()
+  }
+  const dataLeft = [
+    {
+      name: 'Product',
+      icon: <TbArchiveFilled />,
+    },
+    {
+      name: 'Category',
+      icon: <TbAppsFilled />,
+
+    },
+    {
+      name: 'User',
+      icon: <TbUserFilled />,
+    }
+  ]
+  const dataRight = [
+    {
+      name: 'Orders',
+      icon: <TbShoppingCartFilled />
+    },
+    {
+      name: 'Report',
+      icon: <TbChartPieFilled />
+    },
+    {
+      name: 'Admin',
+      icon: <TbUserShield />
+    }
+  ]
   return (
     <div>
-      <Button onClick={onOpen}>Open Modal</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'6xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>User Table</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <ModalTable></ModalTable>
-          </ModalBody>
+          <ModalBody maxHeight={'50vh'}>
+            <UserTable />
+          </ModalBody >
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
+            <Button variant="outline" colorScheme='red'>close</Button>
+            
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -83,6 +88,7 @@ function MenuBar() {
                 icon={<TbPlus />}
                 colorScheme="green"
                 variant={'solid'}
+                onClick={() => handleOpenAddUser()}
               />
             </ButtonGroup>
           ))}

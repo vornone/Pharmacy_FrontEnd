@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import EditableCell from './EditableCell'
-import { TableContainer, Button, Icon, Text, HStack } from '@chakra-ui/react'
+import { TableContainer, Button, Icon, Text, HStack, Flex,ButtonGroup, useColorMode} from '@chakra-ui/react'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { useReactTable, getCoreRowModel, flexRender, getSortedRowModel, getPaginationRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { useDispatch } from 'react-redux'
@@ -26,7 +26,7 @@ function UserTable() {
     const columns =[
         {
             header: 'N',
-            cell: ({row})    => <Text>{row.index + 1}</Text>
+            cell: ({row})    => <Text width={50}>{row.index + 1}</Text>
         },
         {
             accessorKey: 'username',
@@ -41,10 +41,10 @@ function UserTable() {
         },
         {
             header: 'Action',
-            cell: ({row}) => <HStack><EditRowButton  handleOpenModal={() => handleOpenModal(row)}/> <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)}/></HStack>
+            cell: ({row}) => row.length !== 0?<Flex ><EditRowButton  handleOpenModal={() => handleOpenModal(row)}/> <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)}/></Flex> :"",
         }
     ]
-
+ 
     const handleOpenModal = (row) => {
         onOpen();
         setRowSelection(row.original);
@@ -58,9 +58,7 @@ function UserTable() {
         else dispatch(retrieveUser())
 
    }, [retrieveUser, userData])
-
-   console.log(userData)
-
+   const tableData = [...data];
     const table = useReactTable({
         data,
         columns,
@@ -70,6 +68,11 @@ function UserTable() {
         getCoreRowModel: getCoreRowModel(),
         state: {
             rowSelection,
+          },
+          initialState: {
+            pagination: { //custom initial page index
+              pageSize: 5, //custom default page size
+            },
           },
           enableRowSelection:" true",
         meta: {
@@ -90,20 +93,21 @@ function UserTable() {
   return (
     <>
     <EditUserModal isOpen={isOpen} onClose={onClose} data={rowSelection}></EditUserModal>
-    <TableContainer borderRadius={10} border={'1px'} borderColor={'gray.600'} >
+    <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} >
         <Table  variant={"simple"}>
-            <Thead  >
+            <Thead  bgColor={useColorMode().colorMode === 'dark' ? 'gray.800' : 'gray.400'}  >
                 {table.getHeaderGroups().map((headerGroup) => (
                     <Tr key={headerGroup.id}  >
                         {headerGroup.headers.map((header) => (
-                            <Th key={header.id}   >
+                            <Th key={header.id}  borderColor={'gray.600'} textColor={useColorMode().colorMode === 'dark' ? 'gray.200' : 'black'} >
                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                 {header.column.getCanSort() && (
                                 
                             <IconButton
+
                             cursor={'pointer'}
-                                    colorScheme='gray'
-                                    as={header.column.getIsSorted()==='asc'? TbChevronDown:header.column.getIsSorted()==='desc'? TbChevronUp:TbArrowsSort}
+                                    colorScheme='white'
+                                    as={header.column.getIsSorted()==='asc'? TbChevronDown:header.column.getIsSorted()==='desc'?TbChevronUp:TbArrowsSort}
                                 onClick={header.column.getToggleSortingHandler()}
                                 disabled
                                 
@@ -113,7 +117,7 @@ function UserTable() {
                                 variant={'ghost'}
                                 
                                 
-                            >{console.log(header.column.getIsSorted())}</IconButton>
+                            ></IconButton>
                             )}
                            
                             </Th>
@@ -123,9 +127,9 @@ function UserTable() {
             </Thead>
             <Tbody>
                 {table.getRowModel().rows.map((row) => (
-                    <Tr key={row.id} >
+                    <Tr key={row.id}    borderTop={'1px'} borderColor={'gray.600'}>
                         {row.getVisibleCells().map((cell) => (
-                            <Td key={cell.id} >
+                            <Td key={cell.id}   border={'0px'} borderColor={'gray.600'} >
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </Td>
                         ))}
@@ -133,7 +137,23 @@ function UserTable() {
                 ))}
             </Tbody>
         </Table>
+
     </TableContainer>
+    <br/>
+      <ButtonGroup size="sm" isAttached variant="outline">
+        <Button
+          onClick={() => table.previousPage()}
+          isDisabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </Button>
+        <Button
+          onClick={() => table.nextPage()}
+          isDisabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </Button>
+      </ButtonGroup>
     </>
   )
 }

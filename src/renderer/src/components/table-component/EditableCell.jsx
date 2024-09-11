@@ -17,11 +17,10 @@ const EditableCell = ({ getValue, row, column, table }) => {
 
   return (
     <Input
-      value={value.toLowerCase()}
-      size="sm"
+      value={value?.toLowerCase()}
+      size="md"
       onChange={(e) => setValue(e.target.value)}
       onBlur={onBlur}
-      width={"100px"}
       variant={"unstyled"}
     />
   );
