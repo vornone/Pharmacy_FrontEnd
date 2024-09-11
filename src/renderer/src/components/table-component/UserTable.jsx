@@ -95,7 +95,7 @@ function UserTable() {
     <EditUserModal isOpen={isOpen} onClose={onClose} data={rowSelection}></EditUserModal>
     <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} >
         <Table  variant={"simple"}>
-            <Thead  bgColor={useColorMode().colorMode === 'dark' ? 'gray.800' : 'gray.400'}  >
+            <Thead  bgColor={useColorMode().colorMode === 'dark' ? 'gray.800' : 'gray.300'}  >
                 {table.getHeaderGroups().map((headerGroup) => (
                     <Tr key={headerGroup.id}  >
                         {headerGroup.headers.map((header) => (
@@ -107,9 +107,9 @@ function UserTable() {
 
                             cursor={'pointer'}
                                     colorScheme='white'
-                                    as={header.column.getIsSorted()==='asc'? TbChevronDown:header.column.getIsSorted()==='desc'?TbChevronUp:TbArrowsSort}
+                                    icon={header.column.getIsSorted() === 'asc' ? <TbChevronUp />: header.column.getIsSorted() === 'desc' ?<TbChevronDown />: <TbArrowsSort /> }
                                 onClick={header.column.getToggleSortingHandler()}
-                                disabled
+    
                                 
                                 mx={3}
                                 boxSize={4}
