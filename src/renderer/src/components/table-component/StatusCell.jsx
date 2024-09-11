@@ -36,7 +36,7 @@ const StatusCell = () => {
     const eventClick = (event) => {
       setName(event.name);
       color && setValue(event.id);
-      colorBg && setColor(colorBg);
+      colorBg && setValue(event.id);
     }
   // const { name, color } = getValue() || {};
   // const { updateData } = table.options.meta;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import EditableCell from './EditableCell'
 import { TableContainer, Button, Icon } from '@chakra-ui/react'
-import { userData } from '../../data/data'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { useReactTable, getCoreRowModel, flexRender, getSortedRowModel, getPaginationRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { useDispatch } from 'react-redux'
@@ -17,13 +16,13 @@ const columns =[
         cell: EditableCell
     },
     {
-        accessorKey: 'user_name',
+        accessorKey: 'username',
         header: 'Name',
         cell: EditableCell,
         enableSorting: true
     },
     {
-        accessorKey: 'user_role',
+        accessorKey: 'role_name',
         header: 'Role',
         cell: EditableCell
     },
@@ -38,16 +37,18 @@ const columns =[
 
 
 function UserTable() {
-
+    const [data, setData] = useState([]);
     const dispatch = useDispatch();
-    // const userData = useSelector((state) => state);
+    const userData = useSelector((state) => state.userReducer.userList.data);
+
     useEffect( ()=>{
-        dispatch(retrieveUser())
-        
-    }, [retrieveUser])
+        if (userData) setData(userData.list)
+        else dispatch(retrieveUser())
 
+   }, [retrieveUser, userData])
 
-    const [data, setData] = useState(userData);
+   console.log(userData)
+
     const table = useReactTable({
         data,
         columns,
@@ -69,7 +70,7 @@ function UserTable() {
               ),
           },
     })
-    if(userData)console.log(userData)
+    
   return (
     <TableContainer borderRadius={10} border={'1px'} borderColor={'gray.600'} >
         <Table  variant={"simple"}>
@@ -85,12 +86,6 @@ function UserTable() {
                             cursor={'pointer'}
                                     colorScheme='gray'
                                     as={header.column.getIsSorted()==='asc'? TbChevronDown:header.column.getIsSorted()==='desc'? TbChevronUp:TbArrowsSort}
-                                // as= {{ 
-                                //     false:TbArrowsSort,
-                                //     asc: TbChevronDown,
-                                //     desc: TbChevronUp,
-                                // }[header.column.getIsSorted()]
-                                // }
                                 onClick={header.column.getToggleSortingHandler()}
                                 disabled
                                 
