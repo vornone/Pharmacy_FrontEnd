@@ -69,7 +69,7 @@ function MenuBar() {
         <ModalContent>
           <ModalHeader>User Table</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'50vh'}>
+          <ModalBody maxHeight={'50vh'} >
             <UserTable />
           </ModalBody >
           <ModalFooter>
