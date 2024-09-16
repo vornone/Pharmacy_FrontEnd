@@ -1,5 +1,5 @@
 export const mainData = []
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 200; i++) {
   mainData.push({
     id: i,
     price: `${(Math.random() * 11).toFixed(2)}`,

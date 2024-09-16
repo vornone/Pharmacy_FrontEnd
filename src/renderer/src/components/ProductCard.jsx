@@ -23,7 +23,7 @@ function ProductCard({ props, evenhandler}) {
       <Image
         bg="gray.100"
         width={'100%'}
-        height={125}
+        height={'60%'}
         src={props.image}
         borderRadius={5}
         objectFit={'cover'}
