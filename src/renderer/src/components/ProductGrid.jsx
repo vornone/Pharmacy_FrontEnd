@@ -1,5 +1,5 @@
 import { SimpleGrid , Flex, VStack} from '@chakra-ui/react'
-// import '../css/pagination.css'
+import '../css/pagination.css'
 import React, { useState, useEffect } from 'react'
 import ProductCard from './ProductCard'
 import ProductContainer from './ProductContainer'

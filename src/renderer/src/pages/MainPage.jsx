@@ -25,7 +25,7 @@ import { mainData, orderData } from '../data/data'
 export default function MainPage() {
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
-  const colorMainBg = useColorModeValue('gray.50')
+  const colorMainBg = useColorModeValue('white', 'gray.800')
 
   //function
   const addingOrder = (e) => {
