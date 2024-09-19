@@ -1,12 +1,12 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+// src/app/store.js
+import { configureStore } from '@reduxjs/toolkit'
 import { thunk } from 'redux-thunk'
-import authReducer from './reducers/AuthReducers.js'
-import userReducer from './reducers/UserReducers.js'
-
-const middleware = [thunk]
-
-const reducers = combineReducers({ authReducer: authReducer, userReducer: userReducer })
-
-const store = createStore(reducers, applyMiddleware(...middleware))
+import apiReducer from './reducers/apiReducer'
+const store = configureStore({
+  reducer: {
+    apiReducer: apiReducer
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk)
+})
 
 export default store
