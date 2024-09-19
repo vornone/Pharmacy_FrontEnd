@@ -21,12 +21,13 @@ import OrderList from '../components/OrderList'
 import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
 import { mainData, orderData } from '../data/data'
-
+import useApiCaller from '../hooks/useApiCaller'
+import useUser from '../hooks/useUser'
 export default function MainPage() {
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.600')
   const colorMainBg = useColorModeValue('white', 'gray.800')
-
+  const { data, loading, error } = useUser()
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
@@ -44,7 +45,11 @@ export default function MainPage() {
     }
     setOrders(newOrders)
   }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  console.log(data)
   return (
+    <>
     <Grid
       bg={colorMainBg}
       boxSizing="border-box"
@@ -103,5 +108,6 @@ export default function MainPage() {
         </HStack>
       </GridItem>
     </Grid>
+    </>
   )
 }
