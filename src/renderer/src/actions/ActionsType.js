@@ -22,7 +22,7 @@ export const apiFailure = (error) => ({
 })
 
 // Thunk action for making an API call
-export const fetchData = (endpoint, method, payload = null, params = {}) => {
+export const queryData = (endpoint, method, payload = null, params = {}) => {
   return async (dispatch) => {
     dispatch(apiRequest())
     try {

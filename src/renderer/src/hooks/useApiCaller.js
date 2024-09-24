@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchData } from '../actions/ActionsType'
+import { queryData } from '../actions/ActionsType'
 
 const useApiCaller = (method, endpoint, payload = null) => {
   const dispatch = useDispatch()
@@ -8,10 +8,13 @@ const useApiCaller = (method, endpoint, payload = null) => {
 
   useEffect(() => {
     if (endpoint) {
-      dispatch(fetchData(endpoint, method, (payload = null)))
+      dispatch(queryData(endpoint, method, (payload = null)))
     }
   }, [dispatch, method, endpoint, payload])
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   return { data, loading, error }
 }
 
