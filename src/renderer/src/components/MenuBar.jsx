@@ -69,7 +69,7 @@ function MenuBar() {
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>User Table</ModalHeader>
+          <ModalHeader>Insert New User</ModalHeader>
           <ModalCloseButton />
           <ModalBody maxHeight={'50vh'}>
             <AddUserModal />
