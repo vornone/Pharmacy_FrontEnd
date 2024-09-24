@@ -1,5 +1,8 @@
 
 *{
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'jetbrains mono', sans-serif;
+}
+h1{
+    font-family: 'jetbrains mono', sans-serif;
 }

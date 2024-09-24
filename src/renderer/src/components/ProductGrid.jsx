@@ -12,16 +12,12 @@ function ProductGrid({ data, addingOrder }) {
   const itemsPerPage = 15 ;
   
   const endOffset = itemOffset + itemsPerPage;
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = data.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data.length / itemsPerPage);
 
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
   return (
@@ -32,7 +28,6 @@ function ProductGrid({ data, addingOrder }) {
       spacing={4}
       width={'100%'}
       position={'relative'}
-      paddingRight={'1%'}
       rowGap={2}
       py={2}>
       {currentItems.map((item) => (

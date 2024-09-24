@@ -31,9 +31,9 @@ function ProductCard({ props, evenhandler}) {
       ></Image>
       <CardBody height={'100%'} p={0} >
         <VStack justifyContent={'space-between'} width={'100%'} height={'100%'}>
-          <Heading fontSize={'md'} style={{ textWrap: 'wrap' }}   width={'100%'}>
+          <Text fontSize={'md'} style={{ textWrap: 'wrap' }}   width={'100%'} as={'b'}>
             {props.name}
-          </Heading>
+          </Text>
           <HStack justifyContent={'space-between'} width={'100%'} >
             <Text color={'gray.400'}>{props.stock}</Text>
             <Text >${props.price}</Text>
