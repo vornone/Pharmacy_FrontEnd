@@ -12,7 +12,7 @@ const useApiCaller = (method, endpoint, payload = null) => {
     }
   }, [dispatch, method, endpoint, payload])
 
-  return { data: data?.data.list, loading, error }
+  return { data, loading, error }
 }
 
 export default useApiCaller

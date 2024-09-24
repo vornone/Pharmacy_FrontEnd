@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, ButtonGroup, HStack, IconButton } from '@chakra-ui/react'
 import { IoLogOut } from 'react-icons/io5'
 import {
@@ -24,43 +24,46 @@ import {
 } from '@chakra-ui/react'
 import ModalTable from './ModalTable'
 import UserTable from './table-component/UserTable'
+import useGetAllUser  from '../hooks/useGetAllUser'
+import AddCategoryModal from './AddCategoryModal'
 
+const dataLeft = [
+  {
+    name: 'Product',
+    icon: <TbArchiveFilled />,
+  },
+  {
+    name: 'Category',
+    icon: <TbAppsFilled />,
+  },
+  {
+    name: 'User',
+    icon: <TbUserFilled />,
+  }
+]
+const dataRight = [
+  {
+    name: 'Orders',
+    icon: <TbShoppingCartFilled />
+  },
+  {
+    name: 'Report',
+    icon: <TbChartPieFilled />
+  },
+  {
+    name: 'Admin',
+    icon: <TbUserShield />
+  }
+]
 
 function MenuBar() {
-
+  const { adata, loading, error } = useGetAllUser();
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {modalType, setModalType} = useState('')
   const handleOpenAddUser= () => {
     onOpen()
   }
-  const dataLeft = [
-    {
-      name: 'Product',
-      icon: <TbArchiveFilled />,
-    },
-    {
-      name: 'Category',
-      icon: <TbAppsFilled />,
 
-    },
-    {
-      name: 'User',
-      icon: <TbUserFilled />,
-    }
-  ]
-  const dataRight = [
-    {
-      name: 'Orders',
-      icon: <TbShoppingCartFilled />
-    },
-    {
-      name: 'Report',
-      icon: <TbChartPieFilled />
-    },
-    {
-      name: 'Admin',
-      icon: <TbUserShield />
-    }
-  ]
   return (
     <div>
 
@@ -70,12 +73,10 @@ function MenuBar() {
           <ModalHeader>User Table</ModalHeader>
           <ModalCloseButton />
           <ModalBody maxHeight={'50vh'} >
-            <UserTable />
+            <AddCategoryModal></AddCategoryModal>
           </ModalBody >
           <ModalFooter>
-            <Button variant="outline" colorScheme='red'>close</Button>
-            
-          </ModalFooter>
+            </ModalFooter>
         </ModalContent>
       </Modal>
       <HStack justifyContent={'space-between'} alignItems={'center'}>

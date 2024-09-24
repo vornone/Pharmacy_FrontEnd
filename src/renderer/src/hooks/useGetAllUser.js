@@ -1,7 +1,7 @@
 import useApiCaller from './useApiCaller'
 
-const useUser = () => {
+const useGetAllUser = () => {
   const { data, loading, error } = useApiCaller('GET', 'user/getAll')
-  return { data, loading, error }
+  return { data: data?.data.list, loading, error }
 }
-export default useUser
+export default useGetAllUser

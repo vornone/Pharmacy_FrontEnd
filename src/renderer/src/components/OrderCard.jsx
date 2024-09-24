@@ -69,7 +69,7 @@ function OrderCard({ data, orderData, setOrderData }) {
                     justifyContent={'space-between'}
                     height={'100%'}
                   >
-                    <Heading size="sm">{data.name}</Heading>
+                    <Text size="sm" as={'b'}>{data.name}</Text>
                     <Text color={'gray.400'}>${data.price}</Text>
                   </VStack>
                   <VStack
