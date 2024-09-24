@@ -5,7 +5,7 @@ const UpdateCategory = () => {
     category_id: 0,
     category_name: ''
   })
-  const { data, loading, error, updateCategory } = useUpdateCategory(category)
+  const { data, loading, error, updateCategory } = useUpdateCategory()
   const handleChange = (e) => {
     const { name, value } = e.target
     setCategory((prevState) => ({

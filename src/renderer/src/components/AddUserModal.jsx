@@ -1,32 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, ButtonGroup, InputGroup, VStack } from '@chakra-ui/react'
-import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
-import useInsertCategory from '../hooks/useInsertCategory'
-
-const AddCategoryModal = () => {
-  const [category, setCategory] = useState({
-    category_name: '',
-    created_by: '',
-    last_modified_by: ''
-  })
-  const { data, loading, error, insertCategory } = useInsertCategory()
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target
-    setCategory((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-
-  const handleInsert = () => {
-    insertCategory({
-      category_name: category.category_name,
-      created_by: category.created_by,
-      last_modified_by: category.last_modified_by
-    })
-    console.log(data)
-  }
+const AddUserModal = () => {
   return (
     <VStack>
       <Input
@@ -62,4 +36,4 @@ const AddCategoryModal = () => {
   )
 }
 
-export default AddCategoryModal
+export default AddUserModal

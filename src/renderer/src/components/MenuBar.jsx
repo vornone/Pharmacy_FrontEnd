@@ -24,21 +24,21 @@ import {
 } from '@chakra-ui/react'
 import ModalTable from './ModalTable'
 import UserTable from './table-component/UserTable'
-import useGetAllUser  from '../hooks/useGetAllUser'
+import useGetAllUser from '../hooks/useGetAllUser'
 import AddCategoryModal from './AddCategoryModal'
-
+import AddUserModal from './AddUserModal'
 const dataLeft = [
   {
     name: 'Product',
-    icon: <TbArchiveFilled />,
+    icon: <TbArchiveFilled />
   },
   {
     name: 'Category',
-    icon: <TbAppsFilled />,
+    icon: <TbAppsFilled />
   },
   {
     name: 'User',
-    icon: <TbUserFilled />,
+    icon: <TbUserFilled />
   }
 ]
 const dataRight = [
@@ -57,26 +57,24 @@ const dataRight = [
 ]
 
 function MenuBar() {
-  const { adata, loading, error } = useGetAllUser();
+  const { adata, loading, error } = useGetAllUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {modalType, setModalType} = useState('')
-  const handleOpenAddUser= () => {
+  const { modalType, setModalType } = useState('')
+  const handleOpenAddUser = () => {
     onOpen()
   }
 
   return (
     <div>
-
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>User Table</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'50vh'} >
-            <AddCategoryModal></AddCategoryModal>
-          </ModalBody >
-          <ModalFooter>
-            </ModalFooter>
+          <ModalBody maxHeight={'50vh'}>
+            <AddUserModal />
+          </ModalBody>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
       <HStack justifyContent={'space-between'} alignItems={'center'}>

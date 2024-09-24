@@ -11,10 +11,6 @@ const useApiCaller = (method, endpoint, payload = null) => {
       dispatch(queryData(endpoint, method, (payload = null)))
     }
   }, [dispatch, method, endpoint, payload])
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   return { data, loading, error }
 }
 
