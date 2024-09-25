@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, ButtonGroup, HStack, IconButton } from '@chakra-ui/react'
 import { IoLogOut } from 'react-icons/io5'
 import {
@@ -58,33 +58,33 @@ const dataRight = [
 ]
 
 function MenuBar() {
-  const { data, loading, error } = useGetAllUser()
+  const { data, loading, error, fetchData } = useGetAllUser('user/getAll')
   const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [modalType, setModalType ] = useState('')
-  const handleOpenModal= (type, boolean) => {
+  const [modalType, setModalType] = useState('')
+  const handleOpenModal = (type, boolean) => {
     setModalType(type)
     setIsTable(boolean)
     onOpen()
   }
-  let modal;
-  let title;
-  let table;
+  let modal
+  let title
+  let table
   switch (modalType) {
     case 'User':
-      title="Insert User"
-      modal= <AddUserModal closeModal={onClose}/>
-      table= <UserTable data={data} />
-      break;
+      title = 'Insert User'
+      modal = <AddUserModal closeModal={onClose} />
+      table = loading ? '' : <UserTable data={data} />
+      break
     case 'Category':
-      title="Insert Category"
-      modal= <AddCategoryModal closeModal={onClose} />
-      table= <UserTable data={data} />
-      break;
+      title = 'Insert Category'
+      modal = <AddCategoryModal closeModal={onClose} />
+      table = loading ? '' : <UserTable data={data} />
+      break
     case 'Product':
-      title="Insert Product"
-      modal= <AddProductModal />
-      table= <UserTable data={data} />
+      title = 'Insert Product'
+      modal = <AddProductModal />
+      table = loading ? '' : <UserTable data={data} />
   }
   return (
     <div>
@@ -93,9 +93,7 @@ function MenuBar() {
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'60vh'}>
-            {isTable ? table:modal}
-          </ModalBody>
+          <ModalBody maxHeight={'60vh'}>{isTable ? table : modal}</ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
@@ -103,13 +101,20 @@ function MenuBar() {
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataLeft.map((item) => (
             <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
-              <Button leftIcon={item.icon} onClick={() => handleOpenModal(item.name,true)}>{item.name}</Button>
+              <Button
+                leftIcon={item.icon}
+                onClick={() => {
+                  fetchData(), handleOpenModal(item.name, true)
+                }}
+              >
+                {item.name}
+              </Button>
               <IconButton
                 aria-label="Add to friends"
                 icon={<TbPlus />}
                 colorScheme="green"
                 variant={'solid'}
-                onClick={() => handleOpenModal(item.name,false)}
+                onClick={() => handleOpenModal(item.name, false)}
               />
             </ButtonGroup>
           ))}

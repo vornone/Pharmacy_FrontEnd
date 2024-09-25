@@ -1,12 +1,16 @@
 import { queryData } from '../actions/ActionsType'
-import useApiCaller from './useApiCaller'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 const useInsertCategory = () => {
   const dispatch = useDispatch()
-  const { data, loading, error } = useApiCaller('POST', 'category/insert')
+  const { data, loading, error } = useSelector((state) => state.categoryReducer)
   const insertCategory = (body) => {
-    return dispatch(queryData('category/insert', 'POST', body))
+    dispatch(queryData('category/insert', 'POST', body))
   }
+  useEffect(() => {
+    data
+  }, [insertCategory, data])
   return { data: data?.data, loading, error, insertCategory }
 }
 
