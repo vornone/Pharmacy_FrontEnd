@@ -1,7 +1,9 @@
 import React from "react";
 
 const AddProductModal = () => {
-  return <div>AddProductModal</div>;
+  return (
+    <></>
+  );
 };
 
 export default AddProductModal;

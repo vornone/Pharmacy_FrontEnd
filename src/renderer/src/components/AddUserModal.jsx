@@ -15,7 +15,7 @@ import {
   CheckboxGroup
 } from '@chakra-ui/react'
 import { BsChevronDown } from 'react-icons/bs'
-const AddUserModal = () => {
+const AddUserModal = ({closeModal}) => {
 
   const allCheckedItem = [false, false, false]
 
@@ -86,11 +86,11 @@ const AddUserModal = () => {
         </MenuList>
       </Menu>
       <VStack width={'100%'} justifyContent={'flex-start'}>
-      <Checkbox colorScheme="green"  width={'100%'} isChecked={allChecked}  onChange={(e) => setCheckedItems([e.target.checked, e.target.checked, e.target.checked])}>
+      <Checkbox  width={'100%'} isChecked={allChecked}  onChange={(e) => setCheckedItems([e.target.checked, e.target.checked, e.target.checked])}>
           All Access
         </Checkbox>
       <VStack width={'100%'} alignItems={'flex-start'} pl={5}>
-        <CheckboxGroup colorScheme='green'>
+        <CheckboxGroup >
         <Checkbox   isChecked={checkedItems[0]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])}>
           Acess to Database
         </Checkbox>
@@ -105,7 +105,7 @@ const AddUserModal = () => {
       </VStack>
       <HStack width={'100%'} justifyContent={'right'}>
         <ButtonGroup>
-          <Button colorScheme="red" variant="outline" size={'sm'}>
+          <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
             Cancel
           </Button>
           <Button colorScheme="green" variant="solid" size={'sm'}>

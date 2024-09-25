@@ -6,3 +6,4 @@
 h1{
     font-family: 'jetbrains mono', sans-serif;
 }
+::-webkit-scrollbar {display:none;}

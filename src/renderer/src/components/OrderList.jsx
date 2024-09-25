@@ -1,4 +1,4 @@
-import { SimpleGrid, Grid, Stack, HStack,Text, VStack,Heading, Button,ButtonGroup } from "@chakra-ui/react";
+import { SimpleGrid, Grid, Stack, HStack,Text, VStack,Heading, Button,ButtonGroup, Box } from "@chakra-ui/react";
 import OrderCard from "./OrderCard";
 import { TbPlus, TbMinus } from "react-icons/tb";
 import { useState, useRef } from "react";
@@ -8,6 +8,8 @@ function OrderList({orderData, setOrderData}) {
  
 
   return (
+    <>
+
     <VStack
       columns={1}
       spacing={4}
@@ -37,6 +39,8 @@ function OrderList({orderData, setOrderData}) {
         }
       </AnimatePresence>
     </VStack>
+
+    </>
   );
 }
 

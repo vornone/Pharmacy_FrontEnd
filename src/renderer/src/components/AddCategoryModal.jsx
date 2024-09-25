@@ -3,7 +3,7 @@ import { Button, ButtonGroup, InputGroup, VStack } from '@chakra-ui/react'
 import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
 import useInsertCategory from '../hooks/useInsertCategory'
 
-const AddCategoryModal = () => {
+const AddCategoryModal = ({closeModal}) => {
   const [category, setCategory] = useState({
     category_name: '',
     created_by: '',
@@ -50,14 +50,18 @@ const AddCategoryModal = () => {
         onChange={handleOnChange}
         name="last_modified_by"
       />
-      <HStack width={'100%'} justifyContent={'right'}>
+      <HStack width={'100%'} justifyContent={'space-between'} >
+      <Text fontSize={'sm'} color={error || data.message?'red.500':'green.500'}>{error?error:data.message?data.message:'New Category Inserted'}</Text>
         <ButtonGroup>
-          <Button colorScheme="green" variant="outline" onClick={handleInsert}>
+          <Button colorScheme="red" variant="outline" onClick={closeModal} size={'sm'} >
+              Cancel
+            </Button>
+          <Button colorScheme="green" variant="solid" onClick={handleInsert} size={'sm'} isLoading={loading}>
             Submit
           </Button>
         </ButtonGroup>
       </HStack>
-      <Text color={'red'}>{error}</Text>
+
     </VStack>
   )
 }

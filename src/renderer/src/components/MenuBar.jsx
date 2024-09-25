@@ -27,6 +27,7 @@ import UserTable from './table-component/UserTable'
 import useGetAllUser from '../hooks/useGetAllUser'
 import AddCategoryModal from './AddCategoryModal'
 import AddUserModal from './AddUserModal'
+import AddProductModal from './AddProductModal'
 const dataLeft = [
   {
     name: 'Product',
@@ -57,22 +58,43 @@ const dataRight = [
 ]
 
 function MenuBar() {
-  const { adata, loading, error } = useGetAllUser()
+  const { data, loading, error } = useGetAllUser()
+  const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { modalType, setModalType } = useState('')
-  const handleOpenAddUser = () => {
+  const [modalType, setModalType ] = useState('')
+  const handleOpenModal= (type, boolean) => {
+    setModalType(type)
+    setIsTable(boolean)
     onOpen()
   }
-
+  let modal;
+  let title;
+  let table;
+  switch (modalType) {
+    case 'User':
+      title="Insert User"
+      modal= <AddUserModal closeModal={onClose}/>
+      table= <UserTable data={data} />
+      break;
+    case 'Category':
+      title="Insert Category"
+      modal= <AddCategoryModal closeModal={onClose} />
+      table= <UserTable data={data} />
+      break;
+    case 'Product':
+      title="Insert Product"
+      modal= <AddProductModal />
+      table= <UserTable data={data} />
+  }
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Insert New User</ModalHeader>
+          <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'50vh'}>
-            <AddUserModal />
+          <ModalBody maxHeight={'60vh'}>
+            {isTable ? table:modal}
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
@@ -81,13 +103,13 @@ function MenuBar() {
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           {dataLeft.map((item) => (
             <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
-              <Button leftIcon={item.icon}>{item.name}</Button>
+              <Button leftIcon={item.icon} onClick={() => handleOpenModal(item.name,true)}>{item.name}</Button>
               <IconButton
                 aria-label="Add to friends"
                 icon={<TbPlus />}
                 colorScheme="green"
                 variant={'solid'}
-                onClick={() => handleOpenAddUser()}
+                onClick={() => handleOpenModal(item.name,false)}
               />
             </ButtonGroup>
           ))}
