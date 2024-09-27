@@ -24,6 +24,7 @@ const AddUserModal = ({ closeModal ,data}) => {
   const platformSelectorEvent = (e) => {
     setPlatform(e.role_name)
   }
+  
   const [user, setUser] = useState({
     username: '',
     user_role: ''

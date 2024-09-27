@@ -20,20 +20,18 @@ function ProductGrid({ data, addingOrder }) {
     setItemOffset(newOffset)
   }
   return (
-    <VStack maxHeight={'80dvh'} minheight={'80dvh'} width={'100%'} justifyContent={'space-between'}>
+    <VStack height={'100%'} width={'100%'} justifyContent={'space-between'}>
       <VStack
-        maxHeight={'65dvh'}
-        minHeight={'65dvh'}
-        height={'65dvh'}
+        height={'100%'}
         width={'100%'}
         p={0}
-        border={1}
+        
       >
         <SimpleGrid
-          columns={{ sm: 1, md: 2, lg: 5 }}
+          borer={1}
+          templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(5, 1fr)' }}
           spacing={4}
           width={'100%'}
-          maxHeight={'100%'}
           position={'relative'}
           rowGap={2}
         >

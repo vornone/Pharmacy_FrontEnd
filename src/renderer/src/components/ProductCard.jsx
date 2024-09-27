@@ -13,23 +13,22 @@ function ProductCard({ props, evenhandler}) {
   return (
     <Card
       onClick={evenhandler}
-      height={'100%'}
       borderRadius={0}
       overflow={'hidden'}
       justifyContent={'space-between'}
       p={2}
-      gap={'5%'}
+      gap={3}
     >
       <Image
         bg="gray.100"
         width={'100%'}
-        height={'60%'}
+        height={'130px'}
         src={props.image}
         borderRadius={5}
         objectFit={'cover'}
         objectPosition={'center'}
       ></Image>
-      <CardBody height={'100%'} p={0} >
+      <CardBody  p={0} >
         <VStack justifyContent={'space-between'} width={'100%'} height={'100%'}>
           <Text fontSize={'md'} style={{ textWrap: 'wrap' }}   width={'100%'} as={'b'}>
             {props.name}
