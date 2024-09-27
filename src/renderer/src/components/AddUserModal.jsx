@@ -15,26 +15,14 @@ import {
   CheckboxGroup
 } from '@chakra-ui/react'
 import { BsChevronDown } from 'react-icons/bs'
-const AddUserModal = ({ closeModal }) => {
+const AddUserModal = ({ closeModal ,data}) => {
   const allCheckedItem = [false, false, false]
-
   const [checkedItems, setCheckedItems] = useState(allCheckedItem)
   const allChecked = checkedItems.every(Boolean)
-  const isIndeterminate = checkedItems.some(Boolean) && !allChecked
 
-  const data = [
-    {
-      menuId: 1,
-      menuName: 'Admin'
-    },
-    {
-      menuId: 2,
-      menuName: 'User'
-    }
-  ]
-  const [platform, setPlatform] = useState(data[0].menuName)
+  const [platform, setPlatform] = useState(data[0].role_name)
   const platformSelectorEvent = (e) => {
-    setPlatform(e.menuName)
+    setPlatform(e.role_name)
   }
   const [user, setUser] = useState({
     username: '',
@@ -43,16 +31,17 @@ const AddUserModal = ({ closeModal }) => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target
-    setCategory((prevState) => ({
+    setUser((prevState) => ({
       ...prevState,
       [name]: value
     }))
+    console.log(user)
   }
 
   const handleInsert = () => {
-    insertCategory({
+    insertUser({
       username: user.username,
-      user_role: user.user_role
+      user_role: platform
     })
   }
   return (
@@ -77,8 +66,8 @@ const AddUserModal = ({ closeModal }) => {
         </MenuButton>
         <MenuList>
           {data.map((data) => (
-            <MenuItem key={data.menuId} onClick={() => platformSelectorEvent(data)}>
-              {data.menuName}
+            <MenuItem key={data.role_id} onClick={() => platformSelectorEvent(data)}>
+              {data.role_name}
             </MenuItem>
           ))}
         </MenuList>

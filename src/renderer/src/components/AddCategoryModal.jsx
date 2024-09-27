@@ -5,7 +5,7 @@ import useInsertCategory from '../hooks/useInsertCategory'
 
 const AddCategoryModal = ({ closeModal }) => {
   const { data, loading, error, insertCategory } = useInsertCategory()
-  const [message, setMessage] = useState(false)
+  const [hasMessage, setHasMessage] = useState(false)
   const [category, setCategory] = useState({
     category_name: '',
     created_by: '',
@@ -18,15 +18,15 @@ const AddCategoryModal = ({ closeModal }) => {
       ...prevState,
       [name]: value
     }))
-    setMessage(false)
+    setHasMessage(false)
   }
 
   const handleInsert = () => {
     insertCategory(category)
-    setMessage(true)
+    setHasMessage(true)
   }
   return (
-    <VStack>
+    <VStack width={'100%'} >
       <Input
         type="text"
         placeholder="New Category"
@@ -48,8 +48,8 @@ const AddCategoryModal = ({ closeModal }) => {
         onChange={handleOnChange}
         name="last_modified_by"
       />
-      <HStack width={'100%'} justifyContent={message ? 'space-between' : 'flex-end'}>
-        {!message ? (
+      <HStack width={'100%'} justifyContent={hasMessage ? 'space-between' : 'flex-end'}>
+        {!hasMessage ? (
           ''
         ) : (
           <Text fontSize={'sm'} color={error || data?.message ? 'red.500' : 'green.500'}>
@@ -67,7 +67,7 @@ const AddCategoryModal = ({ closeModal }) => {
             size={'sm'}
             isLoading={loading}
           >
-            Submit
+            ADD
           </Button>
         </ButtonGroup>
       </HStack>

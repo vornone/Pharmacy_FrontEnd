@@ -7,7 +7,7 @@ const useGetAllUser = () => {
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.apiReducer)
   const fetchData = () => {
-    dispatch(queryData('user/getAll', 'GET'))
+    dispatch(queryData('apiReducer', 'user/getAll', 'GET'))
   }
   useEffect(() => {
     data

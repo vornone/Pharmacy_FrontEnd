@@ -5,13 +5,10 @@ import { queryData } from '../actions/ActionsType'
 const useApiCaller = (method, endpoint, payload = null) => {
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.apiReducer)
-
-  useEffect(() => {
-    if (endpoint) {
-      dispatch(queryData(endpoint, method, (payload = null)))
-    }
-  }, [dispatch, method, endpoint, payload])
-  return { data, loading, error }
+  const callApi = () => {
+    dispatch(queryData(endpoint, method, (payload = null)))
+  }
+  return { data, loading, error, callApi }
 }
 
 export default useApiCaller

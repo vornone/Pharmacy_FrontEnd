@@ -7,24 +7,25 @@ export const API_FAILURE = 'API_FAILURE'
 // src/features/apiActions.js
 
 // Action creators
-export const apiRequest = () => ({
-  type: API_REQUEST
+export const apiRequest = (source) => ({
+  type: API_REQUEST,
+  payload: { source }
 })
 
-export const apiSuccess = (data) => ({
+export const apiSuccess = (data, source) => ({
   type: API_SUCCESS,
-  payload: data
+  payload: { data, source }
 })
 
-export const apiFailure = (error) => ({
+export const apiFailure = (error, source) => ({
   type: API_FAILURE,
-  payload: error
+  payload: { error, source }
 })
 
 // Thunk action for making an API call
-export const queryData = (endpoint, method, payload = null, params = {}) => {
+export const queryData = (source, endpoint, method, payload = null, params = {}) => {
   return async (dispatch) => {
-    dispatch(apiRequest())
+    dispatch(apiRequest(source))
     try {
       let response
       switch (method) {
@@ -43,9 +44,9 @@ export const queryData = (endpoint, method, payload = null, params = {}) => {
         default:
           throw new Error('Unsupported method')
       }
-      dispatch(apiSuccess(response.data))
+      dispatch(apiSuccess(response.data, source))
     } catch (error) {
-      dispatch(apiFailure(error.message))
+      dispatch(apiFailure(error.message, source))
     }
   }
 }

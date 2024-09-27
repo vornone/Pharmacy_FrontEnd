@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, ButtonGroup, HStack, IconButton } from '@chakra-ui/react'
+import { Button, ButtonGroup, Flex, HStack, IconButton } from '@chakra-ui/react'
 import { IoLogOut } from 'react-icons/io5'
 import {
   TbArchiveFilled,
@@ -20,7 +20,8 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
+  Spinner
 } from '@chakra-ui/react'
 import ModalTable from './ModalTable'
 import UserTable from './table-component/UserTable'
@@ -28,6 +29,7 @@ import useGetAllUser from '../hooks/useGetAllUser'
 import AddCategoryModal from './AddCategoryModal'
 import AddUserModal from './AddUserModal'
 import AddProductModal from './AddProductModal'
+import useGetAllUserRole from '../hooks/useGetAllUserRole'
 const dataLeft = [
   {
     name: 'Product',
@@ -58,42 +60,48 @@ const dataRight = [
 ]
 
 function MenuBar() {
-  const { data, loading, error, fetchData } = useGetAllUser('user/getAll')
+  const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useGetAllUserRole();
+  const { data: userData, loading: userLoading, error: userError, fetchData } = useGetAllUser()
   const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [modalType, setModalType] = useState('')
   const handleOpenModal = (type, boolean) => {
-    setModalType(type)
     setIsTable(boolean)
+    setModalType(type)
     onOpen()
   }
   let modal
   let title
   let table
+  let tableTitle
   switch (modalType) {
     case 'User':
       title = 'Insert User'
-      modal = <AddUserModal closeModal={onClose} />
-      table = loading ? '' : <UserTable data={data} />
+      modal = roleLoading ? <Spinner /> : <AddUserModal closeModal={onClose} data={roleData} />
+      tableTitle='User Table'
+      table = userLoading ? <Spinner /> : <UserTable  data={userData} />
       break
     case 'Category':
       title = 'Insert Category'
       modal = <AddCategoryModal closeModal={onClose} />
-      table = loading ? '' : <UserTable data={data} />
+      tableTitle='Category Table'
+      table = userLoading ? <Spinner /> : <UserTable data={userData} />
+
       break
     case 'Product':
       title = 'Insert Product'
       modal = <AddProductModal />
-      table = loading ? '' : <UserTable data={data} />
+      tableTitle='Product'
+      table = userLoading ? <Spinner /> : <UserTable data={userData} />
   }
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader>{isTable? tableTitle : title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'60vh'}>{isTable ? table : modal}</ModalBody>
+          <ModalBody maxHeight={'60vh'} height={'60vh'} ><Flex  width={'100%'}  justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>{isTable? table : modal}</Flex></ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
@@ -114,7 +122,9 @@ function MenuBar() {
                 icon={<TbPlus />}
                 colorScheme="green"
                 variant={'solid'}
-                onClick={() => handleOpenModal(item.name, false)}
+                onClick={() => {
+                  fetchRoleData(), handleOpenModal(item.name, false)
+                }}
               />
             </ButtonGroup>
           ))}

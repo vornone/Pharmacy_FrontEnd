@@ -3,11 +3,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from '@reduxjs/toolkit'
 import { thunk } from 'redux-thunk'
 import apiReducer from './reducers/apiReducer'
-import CategoryReducer from './reducers/CategoryReducer'
-
+import categoryReducer from './reducers/categoryReducer'
+import userRoleReducer from './reducers/UserRoleReducer'
 const rootReducer = combineReducers({
   apiReducer: apiReducer,
-  categoryReducer: CategoryReducer
+  categoryReducer: categoryReducer,
+  userRoleReducer: userRoleReducer
 })
 const store = configureStore({
   reducer: rootReducer,

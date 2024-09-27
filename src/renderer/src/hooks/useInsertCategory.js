@@ -6,7 +6,7 @@ const useInsertCategory = () => {
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.categoryReducer)
   const insertCategory = (body) => {
-    dispatch(queryData('category/insert', 'POST', body))
+    dispatch(queryData('categoryReducer', 'category/insert', 'POST', body))
   }
   useEffect(() => {
     data

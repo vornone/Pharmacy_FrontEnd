@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify'
 import MainPage from './pages/MainPage.jsx'
 import UpdateCategory from './pages/test-page/UpdateCategory.jsx'
 import UserTable from './components/table-component/UserTable.jsx'
+import TestAPI from './components/test-component/TestAPI.jsx'
 const App = () => {
   return (
     <>
