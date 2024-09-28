@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Button, ButtonGroup, InputGroup, VStack } from '@chakra-ui/react'
 import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
-import useInsertCategory from '../hooks/useInsertCategory'
+import useCategory from '../hooks/useCategory'
 
 const AddCategoryModal = ({ closeModal }) => {
-  const { data, loading, error, insertCategory } = useInsertCategory()
+  const {data, loading, error, insertCategory} = useCategory()
   const [hasMessage, setHasMessage] = useState(false)
   const [category, setCategory] = useState({
     category_name: '',
@@ -34,7 +34,7 @@ const AddCategoryModal = ({ closeModal }) => {
         onChange={handleOnChange}
         name="category_name"
       />
-      <Input
+      {/* <Input
         type="text"
         placeholder="Created By"
         focusBorderColor="green.300"
@@ -47,13 +47,13 @@ const AddCategoryModal = ({ closeModal }) => {
         focusBorderColor="green.300"
         onChange={handleOnChange}
         name="last_modified_by"
-      />
+      /> */}
       <HStack width={'100%'} justifyContent={hasMessage ? 'space-between' : 'flex-end'}>
         {!hasMessage ? (
           ''
         ) : (
           <Text fontSize={'sm'} color={error || data?.message ? 'red.500' : 'green.500'}>
-            {error ? error : data?.message ? data.message : 'Category added successfully'}
+            {loading ? 'Loading...' : error ? error : data?.message ? data.message : 'Category added successfully'}
           </Text>
         )}
         <ButtonGroup>

@@ -21,16 +21,19 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Spinner
+  Spinner,
+  Text
 } from '@chakra-ui/react'
 import ModalTable from './ModalTable'
 import UserTable from './table-component/UserTable'
-import useGetAllUser from '../hooks/useGetAllUser'
 import AddCategoryModal from './AddCategoryModal'
 import AddUserModal from './AddUserModal'
 import AddProductModal from './AddProductModal'
-import useGetAllUserRole from '../hooks/useGetAllUserRole'
-const dataLeft = [
+import useRole from '../hooks/useRole'
+import CategoryTable from './table-component/CategoryTable'
+import useCategory from '../hooks/useCategory'
+import useUser from '../hooks/useUser'
+const menuLeft = [
   {
     name: 'Product',
     icon: <TbArchiveFilled />
@@ -44,7 +47,7 @@ const dataLeft = [
     icon: <TbUserFilled />
   }
 ]
-const dataRight = [
+const menuRight = [
   {
     name: 'Orders',
     icon: <TbShoppingCartFilled />
@@ -60,15 +63,28 @@ const dataRight = [
 ]
 
 function MenuBar() {
-  const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useGetAllUserRole();
-  const { data: userData, loading: userLoading, error: userError, fetchData } = useGetAllUser()
+  const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole();
+  const {data: categoryData, loading: categoryLoading, error: categoryError, getCategory} = useCategory()
+  const { data: productData, loading: productLoading, error: productError, getUser } = useUser()
   const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [modalType, setModalType] = useState('')
   const handleOpenModal = (type, boolean) => {
+    getUser()
+    getCategory()
+
     setIsTable(boolean)
     setModalType(type)
     onOpen()
+  }
+  const mainModal = (loading, error,modal) => {
+    if (loading) {
+      return <Spinner />
+    } else if (error) {
+      return <Text color={'red'}>{error}</Text>
+    } else {
+      return modal
+    }
   }
   let modal
   let title
@@ -77,42 +93,41 @@ function MenuBar() {
   switch (modalType) {
     case 'User':
       title = 'Insert User'
-      modal = roleLoading ? <Spinner /> : <AddUserModal closeModal={onClose} data={roleData} />
+      modal = mainModal(roleLoading, roleError, <AddUserModal closeModal={onClose} data={roleData} />)
       tableTitle='User Table'
-      table = userLoading ? <Spinner /> : <UserTable  data={userData} />
+      table = mainModal(productLoading, productError, <UserTable closeModal={onClose} data={productData} />)
       break
     case 'Category':
       title = 'Insert Category'
       modal = <AddCategoryModal closeModal={onClose} />
       tableTitle='Category Table'
-      table = userLoading ? <Spinner /> : <UserTable data={userData} />
-
+      table = mainModal(categoryLoading, categoryError, <CategoryTable closeModal={onClose} data={categoryData} />)
       break
     case 'Product':
       title = 'Insert Product'
-      modal = <AddProductModal />
+      modal = <AddProductModal/>
       tableTitle='Product'
-      table = userLoading ? <Spinner /> : <UserTable data={userData} />
+      table = mainModal(categoryLoading, categoryError, <CategoryTable closeModal={onClose} data={categoryData} />)
   }
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent>        
           <ModalHeader>{isTable? tableTitle : title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'60vh'} height={'60vh'} ><Flex  width={'100%'}  justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>{isTable? table : modal}</Flex></ModalBody>
+          <ModalBody maxHeight={'100%'} height={'100%'} ><Flex  width={'100%'}  justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>{isTable? table : modal}</Flex></ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
       <HStack justifyContent={'space-between'} alignItems={'center'}>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
-          {dataLeft.map((item) => (
+          {menuLeft.map((item) => (
             <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
               <Button
                 leftIcon={item.icon}
                 onClick={() => {
-                  fetchData(), handleOpenModal(item.name, true)
+                  handleOpenModal(item.name, true)
                 }}
               >
                 {item.name}
@@ -130,7 +145,7 @@ function MenuBar() {
           ))}
         </HStack>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
-          {dataRight.map((item) => (
+          {menuRight.map((item) => (
             <ButtonGroup
               size="sm"
               isAttached

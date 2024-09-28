@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { queryData } from '../actions/ActionsType'
 import { useEffect } from 'react'
-const useGetAllUserRole = () => {
+const useRole = () => {
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.userRoleReducer)
   const fetchRoleData = () => {
@@ -13,4 +13,4 @@ const useGetAllUserRole = () => {
   }, [fetchRoleData, data])
   return { data: data?.data.list, loading, error, fetchRoleData }
 }
-export default useGetAllUserRole
+export default useRole

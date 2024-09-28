@@ -89,7 +89,7 @@ const AddUserModal = ({ closeModal ,data}) => {
                 setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])
               }
             >
-              Acess to Database
+              Access to Database
             </Checkbox>
             <Checkbox
               isChecked={checkedItems[1]}
@@ -97,7 +97,7 @@ const AddUserModal = ({ closeModal ,data}) => {
                 setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]])
               }
             >
-              Acess to API
+              Access to API
             </Checkbox>
             <Checkbox
               isChecked={checkedItems[2]}

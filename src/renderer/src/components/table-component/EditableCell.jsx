@@ -21,7 +21,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
       size="md"
       onChange={(e) => setValue(e.target.value)}
       onBlur={onBlur}
-
+      readOnly
       variant={"unstyled"}
     />
   );

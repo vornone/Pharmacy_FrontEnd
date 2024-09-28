@@ -8,25 +8,29 @@ const useCategory = () => {
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.categoryReducer)
   const getCategory = () => {
-    dispatch(queryData(apiSource, 'user/getAllRole', 'POST'))
+    dispatch(queryData(apiSource, 'category', 'POST'))
   }
-  const UpdateCategory = (body) => {
+  const updateCategory = (body) => {
     dispatch(queryData(apiSource, 'category/update', 'POST', body))
   }
   const deleteCategory = (body) => {
     dispatch(queryData(apiSource, 'category/delete', 'POST', body))
   }
+  const insertCategory = (body) => {
+    dispatch(queryData(apiSource, 'category/insert', 'POST', body))
+  }
   useEffect(() => {
     data
-  }, [data])
+  }, [insertCategory, data])
 
   return {
-    data: data?.data.list,
+    data: data?.data.category,
     loading,
     error,
     getCategory,
-    UpdateCategory,
-    deleteCategory
+    updateCategory,
+    deleteCategory,
+    insertCategory
   }
 }
 export default useCategory

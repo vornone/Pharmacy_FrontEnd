@@ -1,4 +1,4 @@
-// src/features/apiReducer.js
+
 import { API_REQUEST, API_SUCCESS, API_FAILURE } from '../actions/ActionsType.js'
 
 const initialState = {
@@ -7,10 +7,10 @@ const initialState = {
   error: null
 }
 
-const apiReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case API_REQUEST:
-      if (action.payload.source === 'apiReducer') {
+      if (action.payload.source === 'userReducer') {
         return {
           ...state,
           loading: true,
@@ -18,7 +18,7 @@ const apiReducer = (state = initialState, action) => {
         }
       }
     case API_SUCCESS:
-      if (action.payload.source === 'apiReducer') {
+      if (action.payload.source === 'userReducer') {
         return {
           ...state,
           loading: false,
@@ -26,7 +26,7 @@ const apiReducer = (state = initialState, action) => {
         }
       }
     case API_FAILURE:
-      if (action.payload.source === 'apiReducer') {
+      if (action.payload.source === 'userReducer') {
         return {
           ...state,
           loading: false,
@@ -38,4 +38,4 @@ const apiReducer = (state = initialState, action) => {
   }
 }
 
-export default apiReducer
+export default userReducer
