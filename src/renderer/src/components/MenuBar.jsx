@@ -24,13 +24,12 @@ import {
   Spinner,
   Text
 } from '@chakra-ui/react'
-import ModalTable from './ModalTable'
-import UserTable from './table-component/UserTable'
-import AddCategoryModal from './AddCategoryModal'
-import AddUserModal from './AddUserModal'
-import AddProductModal from './AddProductModal'
+import UserTable from './table/UserTable'
+import CategoryTable from './table/CategoryTable'
+import AddCategoryModal from './modal/AddCategoryModal'
+import AddUserModal from './modal/AddUserModal'
+import AddProductModal from './modal/AddProductModal'
 import useRole from '../hooks/useRole'
-import CategoryTable from './table-component/CategoryTable'
 import useCategory from '../hooks/useCategory'
 import useUser from '../hooks/useUser'
 const menuLeft = [
@@ -63,21 +62,26 @@ const menuRight = [
 ]
 
 function MenuBar() {
-  const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole();
-  const {data: categoryData, loading: categoryLoading, error: categoryError, getCategory} = useCategory()
-  const { data: productData, loading: productLoading, error: productError, getUser } = useUser()
+  const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole()
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error: categoryError,
+    getCategory
+  } = useCategory()
+  const { data: userData, loading: userLoading, error: userError, getUser } = useUser()
   const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [modalType, setModalType] = useState('')
   const handleOpenModal = (type, boolean) => {
     getUser()
     getCategory()
-
+    fetchRoleData()
     setIsTable(boolean)
     setModalType(type)
     onOpen()
   }
-  const mainModal = (loading, error,modal) => {
+  const mainModal = (loading, error, modal) => {
     if (loading) {
       return <Spinner />
     } else if (error) {
@@ -93,30 +97,55 @@ function MenuBar() {
   switch (modalType) {
     case 'User':
       title = 'Insert User'
-      modal = mainModal(roleLoading, roleError, <AddUserModal closeModal={onClose} data={roleData} />)
-      tableTitle='User Table'
-      table = mainModal(productLoading, productError, <UserTable closeModal={onClose} data={productData} />)
+      modal = mainModal(
+        roleLoading,
+        roleError,
+        <AddUserModal closeModal={onClose} data={roleData} />
+      )
+      tableTitle = 'User Table'
+      table = mainModal(userLoading, userError, <UserTable closeModal={onClose} data={userData} />)
       break
     case 'Category':
       title = 'Insert Category'
-      modal = <AddCategoryModal closeModal={onClose} />
-      tableTitle='Category Table'
-      table = mainModal(categoryLoading, categoryError, <CategoryTable closeModal={onClose} data={categoryData} />)
+      modal = <AddCategoryModal closeModal={onClose} data={categoryData} />
+      tableTitle = 'Category Table'
+      table = mainModal(
+        categoryLoading,
+        categoryError,
+        <CategoryTable closeModal={onClose} data={categoryData} />
+      )
       break
     case 'Product':
       title = 'Insert Product'
-      modal = <AddProductModal/>
-      tableTitle='Product'
-      table = mainModal(categoryLoading, categoryError, <CategoryTable closeModal={onClose} data={categoryData} />)
+      modal = mainModal(
+        categoryLoading,
+        categoryError,
+        <AddProductModal closeModal={onClose} data={categoryData} />
+      )
+      tableTitle = 'Product'
+      table = mainModal(
+        categoryLoading,
+        categoryError,
+        <CategoryTable closeModal={onClose} data={categoryData} />
+      )
   }
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
         <ModalOverlay />
-        <ModalContent>        
-          <ModalHeader>{isTable? tableTitle : title}</ModalHeader>
+        <ModalContent>
+          <ModalHeader>{isTable ? tableTitle : title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'100%'} height={'100%'} ><Flex  width={'100%'}  justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>{isTable? table : modal}</Flex></ModalBody>
+          <ModalBody maxHeight={'100%'} height={'100%'}>
+            <Flex
+              width={'100%'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              flexDirection={'column'}
+            >
+              {isTable ? table : modal}
+            </Flex>
+          </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>

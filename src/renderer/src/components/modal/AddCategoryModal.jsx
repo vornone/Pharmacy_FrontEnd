@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Button, ButtonGroup, InputGroup, VStack } from '@chakra-ui/react'
 import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
-import useCategory from '../hooks/useCategory'
+import useCategory from '../../hooks/useCategory'
 
 const AddCategoryModal = ({ closeModal }) => {
-  const {data, loading, error, insertCategory} = useCategory()
+  const { data, loading, error, insertCategory } = useCategory()
   const [hasMessage, setHasMessage] = useState(false)
   const [category, setCategory] = useState({
     category_name: '',
@@ -26,7 +26,7 @@ const AddCategoryModal = ({ closeModal }) => {
     setHasMessage(true)
   }
   return (
-    <VStack width={'100%'} >
+    <VStack width={'100%'}>
       <Input
         type="text"
         placeholder="New Category"
@@ -53,7 +53,13 @@ const AddCategoryModal = ({ closeModal }) => {
           ''
         ) : (
           <Text fontSize={'sm'} color={error || data?.message ? 'red.500' : 'green.500'}>
-            {loading ? 'Loading...' : error ? error : data?.message ? data.message : 'Category added successfully'}
+            {loading
+              ? 'Loading...'
+              : error
+                ? error
+                : data?.message
+                  ? data.message
+                  : 'Category added successfully'}
           </Text>
         )}
         <ButtonGroup>

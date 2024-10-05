@@ -21,12 +21,7 @@ function ProductGrid({ data, addingOrder }) {
   }
   return (
     <VStack height={'100%'} width={'100%'} justifyContent={'space-between'}>
-      <VStack
-        height={'100%'}
-        width={'100%'}
-        p={0}
-        
-      >
+      <VStack height={'100%'} width={'100%'} p={0}>
         <SimpleGrid
           borer={1}
           templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(5, 1fr)' }}

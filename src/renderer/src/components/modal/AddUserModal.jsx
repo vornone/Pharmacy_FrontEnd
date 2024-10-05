@@ -15,7 +15,7 @@ import {
   CheckboxGroup
 } from '@chakra-ui/react'
 import { BsChevronDown } from 'react-icons/bs'
-const AddUserModal = ({ closeModal ,data}) => {
+const AddUserModal = ({ closeModal, data }) => {
   const allCheckedItem = [false, false, false]
   const [checkedItems, setCheckedItems] = useState(allCheckedItem)
   const allChecked = checkedItems.every(Boolean)
@@ -24,7 +24,7 @@ const AddUserModal = ({ closeModal ,data}) => {
   const platformSelectorEvent = (e) => {
     setPlatform(e.role_name)
   }
-  
+
   const [user, setUser] = useState({
     username: '',
     user_role: ''
