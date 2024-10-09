@@ -11,7 +11,7 @@ const useUser = () => {
     dispatch(queryData(apiSource, 'user/getAll', 'POST'))
   }
   const deleteUser = (body) => {
-    dispatch(queryData(apiSource, 'user/delete', 'POST', body))
+    dispatch(queryData('deleteReducer', 'user/delete', 'POST', body))
   }
   useEffect(() => {
     data

@@ -73,6 +73,8 @@ function MenuBar() {
   const [isTable, setIsTable] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [modalType, setModalType] = useState('')
+
+  const copiedUserData = userData ? JSON.parse(JSON.stringify(userData)) : []
   const handleOpenModal = (type, boolean) => {
     getUser()
     getCategory()
@@ -103,7 +105,11 @@ function MenuBar() {
         <AddUserModal closeModal={onClose} data={roleData} />
       )
       tableTitle = 'User Table'
-      table = mainModal(userLoading, userError, <UserTable closeModal={onClose} data={userData} />)
+      table = mainModal(
+        userLoading,
+        userError,
+        <UserTable closeModal={onClose} data={copiedUserData} />
+      )
       break
     case 'Category':
       title = 'Insert Category'

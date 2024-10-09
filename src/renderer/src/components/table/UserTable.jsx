@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import EditableCell from '../table-component/EditableCell.jsx'
 import {
   TableContainer,
@@ -32,23 +32,20 @@ function UserTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
-  const {data: userData, loading : deleteLoading, error:deleteError, getUser,deleteUser} = useUser()
+  const { deleteUser } = useUser()
 
-  useEffect(() => {
-    if (userData) {
-      setTableData(userData); // Update the table data when fetched
-    }
-  }, [userData]);
-    const handleOpenModal = (row) => {
+  const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
-  const handleDeleteRow =async (row) => {
-    await deleteUser({user_id:row.original.user_id})
-    if(!deleteError && !deleteLoading){
-      getUser()
+  const handleDeleteRow = async (row) => {
+    try {
+      await deleteUser({ user_id: row.original.user_id }) // Call the delete API
+      const updatedData = tableData.filter((item) => item.user_id !== row.original.user_id)
+      setTableData(updatedData) // Update the state with the new data array
+    } catch (error) {
+      console.error('Error deleting row:', error)
     }
-    console.log(data)
   }
   const columns = [
     {
@@ -79,7 +76,6 @@ function UserTable({ data }) {
         )
     }
   ]
-
 
   const table = useReactTable({
     data: tableData,
