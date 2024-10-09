@@ -17,11 +17,10 @@ const DeleteRowButton = ({handleDeleteRow}) => {
       <PopoverTrigger>
         <IconButton icon={<TbTrashXFilled/>} colorScheme="red" size={"md"} variant={"ghost"} onClick={onOpen}/>
       </PopoverTrigger>
-      <PopoverContent color='white' bg='blue.800' borderColor='blue.800'>
-        <PopoverHeader pt={4} fontWeight='bold' border='0'>
-        are you sure?
+      <PopoverContent   borderColor='blue.800'>
+        <PopoverHeader  fontWeight='bold' border='0'>
+          are you sure?
         </PopoverHeader>
-        <PopoverArrow bg='blue.800' />
         <PopoverCloseButton />
         <PopoverBody >
         <ButtonGroup size='sm'>

@@ -8,7 +8,8 @@ import {
   HStack,
   Flex,
   ButtonGroup,
-  useColorMode
+  useColorMode,
+  Spinner
 } from '@chakra-ui/react'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import {
@@ -26,12 +27,29 @@ import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-
+import useUser from '../../hooks/useUser.js'
 function UserTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
+  const {data: userData, loading : deleteLoading, error:deleteError, getUser,deleteUser} = useUser()
 
+  useEffect(() => {
+    if (userData) {
+      setTableData(userData); // Update the table data when fetched
+    }
+  }, [userData]);
+    const handleOpenModal = (row) => {
+    onOpen()
+    setRowSelection(row.original)
+  }
+  const handleDeleteRow =async (row) => {
+    await deleteUser({user_id:row.original.user_id})
+    if(!deleteError && !deleteLoading){
+      getUser()
+    }
+    console.log(data)
+  }
   const columns = [
     {
       header: 'N',
@@ -62,14 +80,7 @@ function UserTable({ data }) {
     }
   ]
 
-  const handleOpenModal = (row) => {
-    onOpen()
-    setRowSelection(row.original)
-  }
-  const handleDeleteRow = (row) => {
-    const newData = tableData.filter((item) => item.user_id !== row.original.user_id)
-    setTableData(newData)
-  }
+
   const table = useReactTable({
     data: tableData,
     columns,
@@ -101,6 +112,7 @@ function UserTable({ data }) {
         )
     }
   })
+
   return (
     <>
       <EditUserModal isOpen={isOpen} onClose={onClose} data={rowSelection}></EditUserModal>

@@ -26,12 +26,20 @@ import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import useCategory from '../../hooks/useCategory.js'
 
 function CategoryTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
-
+  const { deleteCategory } = useCategory()
+  const handleOpenModal = (row) => {
+    onOpen()
+    setRowSelection(row.original)
+  }
+  const handleDeleteRow = (row) => {
+    deleteCategory({category_name:row.original.category_name})    
+  }
   const columns = [
     {
       header: 'N',
@@ -56,14 +64,7 @@ function CategoryTable({ data }) {
     }
   ]
 
-  const handleOpenModal = (row) => {
-    onOpen()
-    setRowSelection(row.original)
-  }
-  const handleDeleteRow = (row) => {
-    const newData = tableData.filter((item) => item.category_id !== row.original.category_id)
-    setTableData(newData)
-  }
+
   const table = useReactTable({
     data: tableData,
     columns,

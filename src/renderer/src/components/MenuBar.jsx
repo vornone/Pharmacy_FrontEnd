@@ -131,7 +131,7 @@ function MenuBar() {
   }
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{isTable ? tableTitle : title}</ModalHeader>

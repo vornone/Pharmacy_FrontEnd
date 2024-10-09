@@ -10,15 +10,19 @@ const useUser = () => {
   const getUser = () => {
     dispatch(queryData(apiSource, 'user/getAll', 'POST'))
   }
+  const deleteUser = (body) => {
+    dispatch(queryData(apiSource, 'user/delete', 'POST', body))
+  }
   useEffect(() => {
     data
-  }, [data])
+  }, [dispatch])
 
   return {
-    data: data?.data.list,
+    data: data?.data.user,
     loading,
     error,
-    getUser
+    getUser,
+    deleteUser
   }
 }
 export default useUser
