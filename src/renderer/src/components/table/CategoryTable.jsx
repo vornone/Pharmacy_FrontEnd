@@ -37,8 +37,24 @@ function CategoryTable({ data }) {
     onOpen()
     setRowSelection(row.original)
   }
-  const handleDeleteRow = (row) => {
-    deleteCategory({category_name:row.original.category_name})    
+  const handleDeleteRow = async (row) => {
+    try {
+      deleteCategory({ category_id: row.original.category_id }) // Call the delete API
+      const updatedData = tableData.filter((item) => item.category_id !== row.original.category_id)
+      setTableData(updatedData)
+      const currentRowsOnPage = updatedData.slice(
+        pagination.pageIndex * pagination.pageSize,
+        pagination.pageIndex * pagination.pageSize + pagination.pageSize
+      );
+      if (currentRowsOnPage.length === 0 && pagination.pageIndex > 0) {
+        setPagination((prev) => ({
+          ...prev,
+          pageIndex: prev.pageIndex - 1,
+        }));
+      }
+    } catch (error) {
+      console.error('Error deleting row:', error)
+    }
   }
   const columns = [
     {
@@ -72,6 +88,7 @@ function CategoryTable({ data }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    autoResetAll:false,
     state: {
       rowSelection
     },

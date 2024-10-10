@@ -1,4 +1,5 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { queryData } from '../actions/ActionsType'
 import { useEffect } from 'react'
 
@@ -6,30 +7,27 @@ const useCategory = () => {
   const apiSource = 'categoryReducer'
   const dispatch = useDispatch()
   const { data, loading, error } = useSelector((state) => state.categoryReducer)
+
   const getCategory = () => {
-    dispatch(queryData(apiSource, 'category', 'POST'))
+    dispatch(queryData(apiSource, 'user/getAllRole', 'POST'))
   }
-  const updateCategory = (body) => {
+  const UpdateCategory = (body) => {
     dispatch(queryData(apiSource, 'category/update', 'POST', body))
   }
   const deleteCategory = (body) => {
-    dispatch(queryData('', 'category/delete', 'POST', body))
-  }
-  const insertCategory = (body) => {
-    dispatch(queryData(apiSource, 'category/insert', 'POST', body))
+    dispatch(queryData(apiSource, 'category/delete', 'POST', body))
   }
   useEffect(() => {
     data
-  }, [dispatch])
+  }, [data])
 
   return {
-    data: data?.data.category,
+    data: data?.data.list,
     loading,
     error,
     getCategory,
-    updateCategory,
-    deleteCategory,
-    insertCategory
+    UpdateCategory,
+    deleteCategory
   }
 }
 export default useCategory

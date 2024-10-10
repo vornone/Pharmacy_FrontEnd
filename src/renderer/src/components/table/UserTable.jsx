@@ -28,21 +28,34 @@ import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useUser from '../../hooks/useUser.js'
+
+
+
 function UserTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { deleteUser } = useUser()
-
+  const [pagination, setPagination] = useState({pageIndex: 0, pageSize: 5})
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
   const handleDeleteRow = async (row) => {
     try {
-      await deleteUser({ user_id: row.original.user_id }) // Call the delete API
+      deleteUser({ user_id: row.original.user_id }) // Call the delete API
       const updatedData = tableData.filter((item) => item.user_id !== row.original.user_id)
-      setTableData(updatedData) // Update the state with the new data array
+      setTableData(updatedData)
+      const currentRowsOnPage = updatedData.slice(
+        pagination.pageIndex * pagination.pageSize,
+        pagination.pageIndex * pagination.pageSize + pagination.pageSize
+      );
+      if (currentRowsOnPage.length === 0 && pagination.pageIndex > 0) {
+        setPagination((prev) => ({
+          ...prev,
+          pageIndex: prev.pageIndex - 1,
+        }));
+      }
     } catch (error) {
       console.error('Error deleting row:', error)
     }
@@ -84,15 +97,13 @@ function UserTable({ data }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    autoResetAll: false,
+    pageCount:Math.ceil(tableData.length / pagination.pageSize),
     state: {
-      rowSelection
+      rowSelection,
+      pagination
     },
-    initialState: {
-      pagination: {
-        //custom initial page index
-        pageSize: 5 //custom default page size
-      }
-    },
+    onPaginationChange: setPagination,
     enableRowSelection: ' true',
     meta: {
       updateData: (rowIndex, columnId, value) =>
