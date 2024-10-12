@@ -8,7 +8,17 @@ import {
   HStack,
   Flex,
   ButtonGroup,
-  useColorMode
+  useColorMode,
+  Spinner,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  useToast
 } from '@chakra-ui/react'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import {
@@ -27,12 +37,14 @@ import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useCategory from '../../hooks/useCategory.js'
-
+import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
+import useUpdateData from '../../hooks/useUpdateData.js'
 function CategoryTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { deleteCategory } = useCategory()
+  const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
@@ -88,7 +100,6 @@ function CategoryTable({ data }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    autoResetAll:false,
     state: {
       rowSelection
     },
@@ -115,7 +126,19 @@ function CategoryTable({ data }) {
   })
   return (
     <>
-      <EditUserModal isOpen={isOpen} onClose={onClose} data={rowSelection}></EditUserModal>
+         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Category</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <UpdateCategoryModal rowData={rowSelection} onClose={onClose} data={editData} loading={updateLoading} error={updateError} updateData={updateData}></UpdateCategoryModal>
+          </ModalBody>
+
+          <ModalFooter>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
         <Table variant={'simple'} size={'lg'}>
           <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'green.50'}>

@@ -11,7 +11,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-function EditUserModal({isOpen, onClose ,data}) {
+function EditUserModal({isOpen, onClose ,data, body}) {
   return (
     
     <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
@@ -22,7 +22,7 @@ function EditUserModal({isOpen, onClose ,data}) {
           <ModalBody>
             hello {data.username}, you have {data.role_name} role.
           </ModalBody>
-
+            {body}
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close

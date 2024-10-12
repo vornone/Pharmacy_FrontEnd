@@ -10,7 +10,7 @@ const useCategory = () => {
     dispatch(queryData(apiSource, 'category', 'POST'))
   }
   const updateCategory = (body) => {
-    dispatch(queryData(apiSource, 'category/update', 'POST', body))
+    dispatch(queryData('apiSource', 'category/update', 'POST', body))
   }
   const deleteCategory = (body) => {
     dispatch(queryData('', 'category/delete', 'POST', body))
