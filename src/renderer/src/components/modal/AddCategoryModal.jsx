@@ -72,6 +72,8 @@ const AddCategoryModal = ({ closeModal }) => {
             onClick={handleInsert}
             size={'sm'}
             isLoading={loading}
+            type='submit'
+            
           >
             ADD
           </Button>

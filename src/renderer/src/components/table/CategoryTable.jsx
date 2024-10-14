@@ -39,31 +39,30 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useCategory from '../../hooks/useCategory.js'
 import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
 import useUpdateData from '../../hooks/useUpdateData.js'
+
 function CategoryTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
-  const { deleteCategory } = useCategory()
+  const { deleteCategory, getCategory } = useCategory()
   const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
+
+  const handleUpdateRow = (updatedRow) => {
+    const newData = tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row);
+    setTableData(newData); // Update the table data // Close the modal
+    onClose();
+    updateData(updatedRow)
+  };
+
   const handleDeleteRow = async (row) => {
     try {
       deleteCategory({ category_id: row.original.category_id }) // Call the delete API
       const updatedData = tableData.filter((item) => item.category_id !== row.original.category_id)
       setTableData(updatedData)
-      const currentRowsOnPage = updatedData.slice(
-        pagination.pageIndex * pagination.pageSize,
-        pagination.pageIndex * pagination.pageSize + pagination.pageSize
-      );
-      if (currentRowsOnPage.length === 0 && pagination.pageIndex > 0) {
-        setPagination((prev) => ({
-          ...prev,
-          pageIndex: prev.pageIndex - 1,
-        }));
-      }
     } catch (error) {
       console.error('Error deleting row:', error)
     }
@@ -100,6 +99,7 @@ function CategoryTable({ data }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    autoResetAll: false,
     state: {
       rowSelection
     },
@@ -132,7 +132,7 @@ function CategoryTable({ data }) {
           <ModalHeader>Edit Category</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateCategoryModal rowData={rowSelection} onClose={onClose} data={editData} loading={updateLoading} error={updateError} updateData={updateData}></UpdateCategoryModal>
+            <UpdateCategoryModal rowData={rowSelection} onClose={onClose} data={editData} loading={updateLoading} error={updateError} updateData={handleUpdateRow}></UpdateCategoryModal>
           </ModalBody>
 
           <ModalFooter>

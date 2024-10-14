@@ -163,15 +163,23 @@ function UserTable({ data }) {
             ))}
           </Thead>
           <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                ))}
+            {data.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Td>
+                  ))}
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td textAlign={'center'} colSpan={columns.length} justifyContent={'center'}>
+                  <Text>No data</Text>
+                </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>

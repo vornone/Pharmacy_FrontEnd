@@ -4,12 +4,9 @@ import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
 import useUpdateData from '../../hooks/useUpdateData'
 import useCategory from '../../hooks/useCategory'
 const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData}) => {
-
+  const [formData, setFormData] = useState(data)
   const [hasMessage, setHasMessage] = useState(false)
-  const {getCategory} = useCategory()
-  const [category, setCategory] = useState({
-    category_name: '',
-  })
+  const [category, setCategory] = useState(rowData)
 
   const handleOnChange = (e) => {
     const { name, value } = e.target
@@ -22,12 +19,8 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
   }
 
   const handleUpdate = () => {
-    updateData({
-      category_id: rowData.category_id,
-      category_name: category.category_name,
-    })
-    setHasMessage(true)
-    getCategory()
+    updateData(category)
+
   }
   return (
     <VStack width={'100%'}>
@@ -76,6 +69,7 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
             onClick={handleUpdate}
             size={'sm'}
             isLoading={loading}
+            type='submit'
           >
             Submit
           </Button>
