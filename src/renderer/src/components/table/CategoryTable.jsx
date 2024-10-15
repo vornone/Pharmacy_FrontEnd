@@ -52,10 +52,11 @@ function CategoryTable({ data }) {
   }
 
   const handleUpdateRow = (updatedRow) => {
+    updateData(updatedRow)
     const newData = tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row);
     setTableData(newData); // Update the table data // Close the modal
     onClose();
-    updateData(updatedRow)
+
   };
 
   const handleDeleteRow = async (row) => {
