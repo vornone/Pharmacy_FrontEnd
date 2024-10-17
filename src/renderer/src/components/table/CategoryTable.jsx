@@ -46,19 +46,23 @@ function CategoryTable({ data }) {
   const [tableData, setTableData] = useState(data)
   const { deleteCategory, getCategory } = useCategory()
   const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
+  const [mockData, setMockData] = useState(tableData);
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
-
-  const handleUpdateRow = (updatedRow) => {
-    updateData(updatedRow)
-    const newData = tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row);
-    setTableData(newData); // Update the table data // Close the modal
-    onClose();
-
+//HandleUpdate
+  const handleUpdateRow = async(updatedRow) => {
+    setMockData(tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row));
+    await updateData(updatedRow)
   };
+  useEffect(() => {
+    if (!editData?.category?.message) {
+      setTableData(mockData);
+    }else  console.log(editData.category.message);
+  }, [editData]);
 
+//HandleDelete
   const handleDeleteRow = async (row) => {
     try {
       deleteCategory({ category_id: row.original.category_id }) // Call the delete API
@@ -68,6 +72,7 @@ function CategoryTable({ data }) {
       console.error('Error deleting row:', error)
     }
   }
+//Columns
   const columns = [
     {
       header: 'N',
@@ -92,7 +97,7 @@ function CategoryTable({ data }) {
     }
   ]
 
-
+//Table
   const table = useReactTable({
     data: tableData,
     columns,
@@ -125,9 +130,10 @@ function CategoryTable({ data }) {
         )
     }
   })
+//UI
   return (
     <>
-         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
+        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Category</ModalHeader>

@@ -15,6 +15,7 @@ import {
   CheckboxGroup
 } from '@chakra-ui/react'
 import { BsChevronDown } from 'react-icons/bs'
+import useUser from '../../hooks/useUser'
 const AddUserModal = ({ closeModal, data }) => {
   const allCheckedItem = [false, false, false]
   const [checkedItems, setCheckedItems] = useState(allCheckedItem)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, InputGroup, VStack } from '@chakra-ui/react'
 import { Input, InputLeftElement, Icon, HStack, Text } from '@chakra-ui/react'
 import useUpdateData from '../../hooks/useUpdateData'
@@ -9,19 +9,24 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
   const [category, setCategory] = useState(rowData)
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target
-    setCategory((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-    console.log(category)
-    setHasMessage(false)
+
+    const { name, value } = e.target;
+  const updatedCategory = { ...category, [name]: value };
+  setCategory(updatedCategory);
+  console.log(updatedCategory); // Log the updated category
+  setHasMessage(false);
   }
 
-  const handleUpdate = () => {
-    updateData(category)
+  const handleUpdate = async () => {
+    // Wait for the updateData function to finish updating the state
+    await updateData(category); 
+  
+    // After updateData is done, check and log the message (if it exists)
 
+  
+    setHasMessage(true); // Set hasMessage to show the success or error message
   }
+
   return (
     <VStack width={'100%'}>
       <Input
@@ -49,13 +54,13 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
         {!hasMessage ? (
           ''
         ) : (
-          <Text fontSize={'sm'} color={error || data?.message ? 'red.500' : 'green.500'}>
+          <Text fontSize={'sm'} color={error || data?.category?.message ? 'red.500' : 'green.500'}>
             {loading
               ? 'Loading...'
               : error
                 ? error
-                : data?.message
-                  ? data.message
+                : data?.category.message
+                  ? data.category.message
                   : 'Category updated successfully'}
           </Text>
         )}
