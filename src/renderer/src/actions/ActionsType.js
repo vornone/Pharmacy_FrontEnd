@@ -23,7 +23,7 @@ export const apiFailure = (error, source) => ({
 })
 
 // Thunk action for making an API call
-export const queryData = (source, endpoint, method, payload = null, params = {}) => {
+export const queryData = (source, endpoint, method, payload = null, params = {}, headers = {}) => {
   return async (dispatch) => {
     dispatch(apiRequest(source))
     try {
@@ -33,7 +33,7 @@ export const queryData = (source, endpoint, method, payload = null, params = {})
           response = await apiClient.get(endpoint, { params })
           break
         case 'POST':
-          response = await apiClient.post(endpoint, payload, { params })
+          response = await apiClient.post(endpoint, payload, { params }, { headers })
           break
         case 'PUT':
           response = await apiClient.put(endpoint, payload, { params })

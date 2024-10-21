@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 import LoginForm from './pages/UserManagement/Login/LoginForm.jsx'
 import { ToastContainer } from 'react-toastify'
 import MainPage from './pages/MainPage.jsx'
+import TestAPI from './components/test-component/TestAPI.jsx'
 const App = () => {
   return (
     <>
@@ -18,7 +19,7 @@ const App = () => {
         <HashRouter>
           <Routes>
             <Route path="/login" element={<LoginForm></LoginForm>}></Route>
-            <Route path="/" element={<MainPage></MainPage>}></Route>
+            <Route path="/" element={<TestAPI></TestAPI>}></Route>
           </Routes>
         </HashRouter>
         <ToastContainer />

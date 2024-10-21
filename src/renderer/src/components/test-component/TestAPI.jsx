@@ -1,32 +1,55 @@
 
-// import React, { useEffect } from "react";
-// import useGetAllUser from "../../hooks/useGetAllUser";
-// import useGetAllUserRole from "../../hooks/useGetAllUserRole";
-// const TestAPI = () => {
-//     const { data: data1, loading: loading1, error: error1, fetchData: fetchUserData } = useGetAllUser();
-//     const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useGetAllUserRole();
-    
-//     const handleFetchAllData = () => {
-//         fetchUserData();
-//         fetchRoleData();
+import React, { useEffect, useState } from "react";
+import useProduct from '../../hooks/useProduct';
+import { useToast } from "@chakra-ui/react";
+const TestAPI = () => {
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const { data, loading, error, insertFile } = useProduct(selectedProduct);
+    const toast= useToast()
 
-//     }
+    const handleUploadFile = (event) => {
+        setSelectedProduct(event.target.files[0]);
+    };
 
-//   return <div style={{ textAlign: "center", padding: "20px" }}>
-//     <button onClick={handleFetchAllData}>Fetch Data</button>
-//     <h1>Test API</h1>
-//     {loading1 ? <p>Loading...</p> : null}
-//     {error1 ? <p>Error: {error1}</p> : null}
-//     {data1 ? <p>Data: {JSON.stringify(data1)}</p> : null}
-//     <br />
-//     <br />
-//     <br />
-//     <br />
-//     <br />
-//     {roleLoading ? <p>Loading...</p> : null}
-//     {roleError ? <p>Error: {roleError}</p> : null}
-//     {roleData ? <p>Role Data: {JSON.stringify(roleData[0].role_name)}</p> : null}
-//   </div>;
-// };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!selectedProduct) {
+            toast({
+                title: "Error",
+                description: "Please select a file",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
 
-// export default TestAPI;
+        try{
+            insertFile();
+            toast({
+                title: "Success",
+                description: "File uploaded successfully",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+        }catch(error){
+            toast({
+                title: "Error",
+                description: error.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    };
+
+  return <div style={{ textAlign: "center", padding: "20px" }}>
+    <form onSubmit={handleSubmit}>
+      <input type="file" onChange={handleUploadFile} />
+      <button type="submit">Upload File</button>
+    </form>
+  </div>;
+};
+
+export default TestAPI;
