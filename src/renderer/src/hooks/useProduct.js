@@ -6,21 +6,17 @@ const useProduct = (selectedFile, productData) => {
   const apiSource = 'productReducer'
   const formData = new FormData()
   formData.append('file', selectedFile)
-  formData.append('name', JSON.stringify(productData))
+  formData.append(
+    'inputData',
+    new Blob([JSON.stringify(productData)], {
+      type: 'application/json'
+    })
+  )
 
   const { data, loading, error } = useSelector((state) => state.productReducer)
 
   const insertFile = () => {
-    dispatch(
-      queryData(
-        apiSource,
-        'product/insert',
-        'POST',
-        formData,
-        {},
-        { 'Content-Type': 'multipart/form-data' }
-      )
-    )
+    dispatch(queryData(apiSource, 'product/insert', 'POST', formData))
   }
 
   useEffect(() => {
@@ -28,7 +24,7 @@ const useProduct = (selectedFile, productData) => {
   }, [dispatch])
 
   return {
-    data: data?.data.list,
+    data: data?.data,
     loading,
     error,
     insertFile
