@@ -1,6 +1,4 @@
-// src/features/apiReducer.js
 import { API_REQUEST, API_SUCCESS, API_FAILURE } from '../actions/ActionsType.js'
-
 const initialState = {
   loading: false,
   data: null,

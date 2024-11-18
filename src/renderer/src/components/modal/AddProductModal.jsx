@@ -24,6 +24,7 @@ import { BsChevronDown } from 'react-icons/bs'
 import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
 import useProduct from './../../hooks/useProduct';
+import useInsertProduct from '../../hooks/useInsertProduct'
 
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
   <Input
@@ -40,7 +41,8 @@ const AddProductModal = ({ closeModal, data }) => {
   const [platform, setPlatform] = useState(data.length == 0 ? 'No Data' : data[0].category_name)
   const [imagePreview, setImagePreview] = useState("https://via.placeholder.com/150")
   const [productData, setProductData] = useState({ product_name: '', product_price: 0, product_minimum_stock:0, category_id: data.find((item) => item.category_name === platform).category_id })
-  const {loading: productLoading, error: productError, insertFile } = useProduct(selectedImage, productData)
+  const { loading, error, getProduct } = useProduct(selectedImage, productData)
+  const {insertFile } = useInsertProduct(selectedImage, productData);
   const [selectedDate, setSelectedDate] = useState(null)
 
 
@@ -89,6 +91,7 @@ const AddProductModal = ({ closeModal, data }) => {
 
     try {
       await insertFile()
+      getProduct()
       alert('File uploaded successfully')
     } catch (error) {
       alert(error.message)
@@ -149,7 +152,7 @@ const AddProductModal = ({ closeModal, data }) => {
             <InputRightAddon bg={'none'}>$</InputRightAddon>
           </InputGroup>
           <InputGroup>
-            <Input type="number" placeholder="Minimum Stock"  name='product_minumum_stock' onChange={handleProductChange}/>
+            <Input type="number" placeholder="Minimum Stock"  name='product_minimum_stock' onChange={handleProductChange}/>
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Box width={'100%'}>
