@@ -9,7 +9,6 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
   const [category, setCategory] = useState(rowData)
 
   const handleOnChange = (e) => {
-
     const { name, value } = e.target;
   const updatedCategory = { ...category, [name]: value };
   setCategory(updatedCategory);

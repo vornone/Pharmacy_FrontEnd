@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import useProduct from '../../hooks/useProduct'
-import { Image, useToast } from '@chakra-ui/react'
+import { Image, Input, useToast } from '@chakra-ui/react'
 const TestAPI = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [productData, setProductData] = useState({ product_name: '' })
   const { data, loading, error, insertFile } = useProduct(selectedImage, productData)
+  const inputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    inputRef.current.click(); // Trigger the hidden input element
+  };
   const toast = useToast()
 
   const handleUploadFile = (event) => {
@@ -64,7 +69,13 @@ const TestAPI = () => {
           name="product_name"
           onChange={handleProductChange}
         />
-        <input type="file" onChange={handleUploadFile} accept="image/*" />
+              <input
+        type="file"
+        ref={inputRef}
+        style={{ display: "none" }} // Hide the input
+        onChange={handleUploadFile}
+      />
+      <button type="button" onClick={handleButtonClick}>Upload</button>
         <button type="submit">Upload File</button>
       </form>
       {loading ? (

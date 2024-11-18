@@ -8,13 +8,15 @@ import userRoleReducer from './reducers/UserRoleReducer'
 import productReducer from './reducers/ProductReducers'
 import updateReducer from './reducers/UpdateReducer'
 import deleteReducer from './reducers/DeleteReducer'
+import insertReducer from './reducers/InsertReducer'
 const rootReducer = combineReducers({
   userReducer: userReducer,
   categoryReducer: categoryReducer,
   userRoleReducer: userRoleReducer,
   productReducer: productReducer,
   updateReducer: updateReducer,
-  deleteReducer: deleteReducer
+  deleteReducer: deleteReducer,
+  insertReducer: insertReducer
 })
 const store = configureStore({
   reducer: rootReducer,

@@ -20,7 +20,8 @@ function OrderCharge({ data }) {
     .toFixed(2)
   const discountAmount = parseFloat((discount * subTotal) / 100).toFixed(2)
   const tax = parseFloat(((subTotal - discountAmount) * 0.1).toFixed(2))
-  const total = (subTotal - tax - discountAmount).toFixed(2)
+
+  const total = subTotal - discountAmount + tax
 
   return (
     <Card width={'100%'}>
@@ -47,7 +48,7 @@ function OrderCharge({ data }) {
 
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Text fontSize={'lg'}>Total:</Text>
-            <Text fontSize={'lg'}>${total}</Text>
+            <Text fontSize={'lg'}>${total.toFixed(2)}</Text>
           </HStack>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <InputGroup colorScheme="white">

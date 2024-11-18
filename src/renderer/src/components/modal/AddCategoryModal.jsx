@@ -19,6 +19,7 @@ const AddCategoryModal = ({ closeModal }) => {
       [name]: value
     }))
     setHasMessage(false)
+    console.log(category)
   }
 
   const handleInsert = () => {

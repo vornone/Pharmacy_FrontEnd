@@ -15,7 +15,7 @@ function ProductCard({ props, evenhandler }) {
       <Image
         bg="gray.100"
         width={'100%'}
-        maxHeight={'80px'}
+        height={'130px'}
         src={imgApi + props.product_img}
         borderRadius={5}
         objectFit={'cover'}

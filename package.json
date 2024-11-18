@@ -14,7 +14,7 @@
     "preview": "electron-vite dev"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^2.10.4",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@emotion/react": "^11.13.3",
@@ -35,7 +35,7 @@
     "electron-updater": "^6.1.7",
     "express": "^5.0.0",
     "express-async-handler": "^1.2.0",
-    "framer-motion": "^11.5.4",
+    "framer-motion": "^11.11.17",
     "multer": "^1.4.5-lts.1",
     "path": "^0.12.7",
     "pg": "^8.11.3",
