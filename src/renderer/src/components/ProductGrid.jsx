@@ -31,7 +31,7 @@ function ProductGrid({ data, addingOrder }) {
           rowGap={2}
         >
           {currentItems.map((item) => (
-            <ProductContainer key={item.id}>
+            <ProductContainer key={item.product_id}>
               <ProductCard props={item} evenhandler={() => addingOrder(item)} />
             </ProductContainer>
           ))}

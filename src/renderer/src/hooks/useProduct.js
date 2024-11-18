@@ -18,16 +18,19 @@ const useProduct = (selectedFile, productData) => {
   const insertFile = () => {
     dispatch(queryData(apiSource, 'product/insert', 'POST', formData))
   }
-
+  const getProduct = () => {
+    dispatch(queryData(apiSource, 'product', 'POST'))
+  }
   useEffect(() => {
     data
   }, [dispatch])
 
   return {
-    data: data?.data,
+    data: data?.data.product,
     loading,
     error,
-    insertFile
+    insertFile,
+    getProduct
   }
 }
 

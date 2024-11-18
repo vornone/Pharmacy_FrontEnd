@@ -11,8 +11,11 @@ import {
   Show,
   useColorMode
 } from '@chakra-ui/react'
+import { serverUrl } from '../api-clients/api-clients'
 import React, { useState } from 'react'
 import { TbPlus, TbMinus, TbTrashFilled } from 'react-icons/tb'
+
+const imgApi = serverUrl + '/images/'
 function OrderCard({ data, orderData, setOrderData }) {
   //functions
   function deleteOrder() {
@@ -22,7 +25,7 @@ function OrderCard({ data, orderData, setOrderData }) {
   }
   function handleIncrement() {
     const a = [...orderData]
-    data.orderQuantity >= data.stock
+    data.orderQuantity >= data.product_minimum_stock
       ? alert('out of stock')
       : (data.orderQuantity = data.orderQuantity + 1)
     setOrderData(a)
@@ -54,7 +57,7 @@ function OrderCard({ data, orderData, setOrderData }) {
               bg="gray.100"
               width={'200px'}
               height={'100%'}
-              src={data.image}
+              src={imgApi + data.product_img}
               borderRadius={5}
               objectFit={'cover'}
               objectPosition={'center'}
@@ -69,8 +72,10 @@ function OrderCard({ data, orderData, setOrderData }) {
                     justifyContent={'space-between'}
                     height={'100%'}
                   >
-                    <Text size="sm" as={'b'}>{data.name}</Text>
-                    <Text color={'gray.400'}>${data.price}</Text>
+                    <Text size="sm" as={'b'}>
+                      {data.product_name}
+                    </Text>
+                    <Text color={'gray.400'}>${data.product_price}</Text>
                   </VStack>
                   <VStack
                     width={'50%'}

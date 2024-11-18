@@ -4,10 +4,8 @@ import {
   VStack,
   Text,
   Button,
-
   Card,
   Input,
-
   InputGroup,
   InputLeftElement
 } from '@chakra-ui/react'
@@ -18,7 +16,7 @@ import { RiDiscountPercentFill } from 'react-icons/ri'
 function OrderCharge({ data }) {
   const [discount, setDiscount] = useState(0)
   const subTotal = data
-    .reduce((acc, cur) => acc + parseFloat(cur.price * cur.orderQuantity), 0)
+    .reduce((acc, cur) => acc + parseFloat(cur.product_price * cur.orderQuantity), 0)
     .toFixed(2)
   const discountAmount = parseFloat((discount * subTotal) / 100).toFixed(2)
   const tax = parseFloat(((subTotal - discountAmount) * 0.1).toFixed(2))
@@ -59,7 +57,13 @@ function OrderCharge({ data }) {
                 width={'100%'}
                 shadow={'sm'}
                 type="number"
-                onChange={(e) => e.target.value > 100  ? e.target.value = 100 :e.target.value < 0  ? e.target.value = 0: setDiscount(e.target.value)}
+                onChange={(e) =>
+                  e.target.value > 100
+                    ? (e.target.value = 100)
+                    : e.target.value < 0
+                      ? (e.target.value = 0)
+                      : setDiscount(e.target.value)
+                }
               ></Input>
             </InputGroup>
             <Button colorScheme="green" width={'100%'}>

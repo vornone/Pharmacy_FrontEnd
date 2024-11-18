@@ -20,18 +20,30 @@ import ProductSort from '../components/ProductSort'
 import OrderList from '../components/OrderList'
 import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
-import { mainData, orderData } from '../data/data'
+// import { mainData, orderData } from '../data/data'
+import { orderData } from '../data/data'
+import useProduct from '../hooks/useProduct'
 export default function MainPage() {
+  const { data, loading, error, getProduct } = useProduct()
+  useEffect(() => {
+    getProduct()
+  }, [])
+
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
+  console.log(data)
+
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
-    const existedData = newOrders.some((item) => item.name === e.name)
+    const existedData = newOrders.some((item) => item.product_name === e.product_name)
     if (existedData) {
       newOrders.forEach((item) => {
-        if (item.name === e.name && item.orderQuantity < item.stock) {
+        if (
+          item.product_name === e.product_name &&
+          item.orderQuantity < item.product_minimum_stock
+        ) {
           item.orderQuantity += 1
           setOrders(newOrders)
         }
@@ -84,10 +96,18 @@ export default function MainPage() {
               <ProductSort></ProductSort>
               <ProductFilter></ProductFilter>
             </HStack>
-            <ProductGrid data={mainData} addingOrder={addingOrder}></ProductGrid>
+
+            {error || data === undefined ? (
+              <h1>{error}</h1>
+            ) : loading ? (
+              <h1>Loading...</h1>
+            ) : (
+              <ProductGrid data={data} addingOrder={addingOrder}></ProductGrid>
+            )}
           </VStack>
           <VStack
             bg={colorGenre}
+            s
             width={'50%'}
             height={'100%'}
             justify={'space-between'}

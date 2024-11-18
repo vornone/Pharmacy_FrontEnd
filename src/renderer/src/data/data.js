@@ -1,12 +1,12 @@
 export const mainData = []
 for (let i = 0; i < 200; i++) {
   mainData.push({
-    id: i,
-    price: `${(Math.random() * 11).toFixed(2)}`,
-    name: `Product ${i + 1}`,
-    image:
+    product_id: i,
+    product_price: `${(Math.random() * 11).toFixed(2)}`,
+    product_name: `Product ${i + 1}`,
+    product_img:
       'https://images.unsplash.com/photo-1504274066651-8d31a536b11a?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    stock: `${(Math.random() * 100).toFixed(0)}`,
+    product_minimum_stock: `${(Math.random() * 100).toFixed(0)}`,
     orderQuantity: 0
   })
 }

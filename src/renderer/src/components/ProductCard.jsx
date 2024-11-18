@@ -1,15 +1,8 @@
 import { Card, CardBody, HStack, Image, Text, Heading, VStack } from '@chakra-ui/react'
 import React from 'react'
-
-const Props = {
-  id: 0,
-  price: 0,
-  name: '',
-  image: '',
-  stock: 0
-}
-function ProductCard({ props, evenhandler}) {
-
+import { serverUrl } from '../api-clients/api-clients'
+const imgApi = serverUrl + '/images/'
+function ProductCard({ props, evenhandler }) {
   return (
     <Card
       onClick={evenhandler}
@@ -23,19 +16,19 @@ function ProductCard({ props, evenhandler}) {
         bg="gray.100"
         width={'100%'}
         maxHeight={'80px'}
-        src={props.image}
+        src={imgApi + props.product_img}
         borderRadius={5}
         objectFit={'cover'}
         objectPosition={'center'}
       ></Image>
-      <CardBody  p={0} >
+      <CardBody p={0}>
         <VStack justifyContent={'space-between'} width={'100%'} height={'100%'}>
-          <Text fontSize={'md'} style={{ textWrap: 'wrap' }}   width={'100%'} as={'b'}>
-            {props.name}
+          <Text fontSize={'md'} style={{ textWrap: 'wrap' }} width={'100%'} as={'b'}>
+            {props.product_name}
           </Text>
-          <HStack justifyContent={'space-between'} width={'100%'} >
-            <Text color={'gray.400'}>{props.stock}</Text>
-            <Text >${props.price}</Text>
+          <HStack justifyContent={'space-between'} width={'100%'}>
+            <Text color={'gray.400'}>{props.product_minimum_stock}</Text>
+            <Text>${props.product_price}</Text>
           </HStack>
         </VStack>
       </CardBody>
