@@ -25,15 +25,13 @@ import { orderData } from '../data/data'
 import useProduct from '../hooks/useProduct'
 export default function MainPage() {
   const { data, loading, error, getProduct } = useProduct()
-  useEffect(() => {
-    getProduct()
-  }, [])
-
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
   console.log(data)
-
+  useEffect(() => {
+    getProduct()
+  }, [])
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]

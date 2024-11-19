@@ -23,7 +23,7 @@ import {
 import { BsChevronDown } from 'react-icons/bs'
 import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
-import useProduct from './../../hooks/useProduct';
+import useProduct from './../../hooks/useProduct'
 import useInsertProduct from '../../hooks/useInsertProduct'
 
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -39,35 +39,43 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
 const AddProductModal = ({ closeModal, data }) => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [platform, setPlatform] = useState(data.length == 0 ? 'No Data' : data[0].category_name)
-  const [imagePreview, setImagePreview] = useState("https://via.placeholder.com/150")
-  const [productData, setProductData] = useState({ product_name: '', product_price: 0, product_minimum_stock:0, category_id: data.find((item) => item.category_name === platform).category_id })
-  const { loading, error, getProduct } = useProduct(selectedImage, productData)
-  const {insertFile } = useInsertProduct(selectedImage, productData);
+  const [imagePreview, setImagePreview] = useState('https://via.placeholder.com/150')
+  const [productData, setProductData] = useState({
+    product_name: '',
+    product_price: 0,
+    product_minimum_stock: 0,
+    category_id: data.find((item) => item.category_name === platform).category_id
+  })
+  const { loading, error, getProduct } = useProduct()
+  const { insertFile } = useInsertProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
 
-
-  const inputRef = useRef(null);
+  const inputRef = useRef(null)
 
   const handleUploadClick = () => {
-    inputRef.current.click(); // Trigger the hidden input element
-  };
+    inputRef.current.click() // Trigger the hidden input element
+  }
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
     console.log(JSON.stringify(productData))
   }
   const handleProductChange = (e) => {
-    const { name, value } = e.target;
-  
+    const { name, value } = e.target
+
     // Check if the value should be treated as a number (useful for number inputs)
-    const parsedValue = name === "product_price" || name === "product_minimum_stock" ? (isNaN(value) ? value : Number(value)) : value;
-  
-    const updatedProduct = { ...productData, [name]: parsedValue };
-    
-    setProductData(updatedProduct);
-    console.log(updatedProduct); // Log the updated product data
-  };
-  
+    const parsedValue =
+      name === 'product_price' || name === 'product_minimum_stock'
+        ? isNaN(value)
+          ? value
+          : Number(value)
+        : value
+
+    const updatedProduct = { ...productData, [name]: parsedValue }
+
+    setProductData(updatedProduct)
+    console.log(updatedProduct) // Log the updated product data
+  }
 
   const handleUploadFile = (event) => {
     const file = event.target.files[0]
@@ -80,8 +88,6 @@ const AddProductModal = ({ closeModal, data }) => {
     }
   }
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!selectedImage) {
@@ -91,19 +97,21 @@ const AddProductModal = ({ closeModal, data }) => {
 
     try {
       await insertFile()
-      getProduct()
+
       alert('File uploaded successfully')
     } catch (error) {
       alert(error.message)
     }
-    }
+    getProduct().then(() => {
+      // Refresh product list after successful upload
+    })
+  }
   return (
     <>
-    
-    <input
+      <input
         type="file"
         ref={inputRef}
-        style={{ display: "none" }} // Hide the input
+        style={{ display: 'none' }} // Hide the input
         onChange={handleUploadFile}
       />
       <VStack width={'100%'} gap={3}>
@@ -118,12 +126,25 @@ const AddProductModal = ({ closeModal, data }) => {
               <Image objectFit={'cover'} src={imagePreview} borderRadius={5} height={'150px'} />
             </Box>
 
-            <ButtonGroup height={'100%'} size={'sm'} variant={'outline'} colorScheme="blue" onClick={handleUploadClick}>
+            <ButtonGroup
+              height={'100%'}
+              size={'sm'}
+              variant={'outline'}
+              colorScheme="blue"
+              onClick={handleUploadClick}
+            >
               <Button>edit image</Button>
             </ButtonGroup>
           </Flex>
 
-          <Input type="text" placeholder="Product Name" colorScheme="green" maxLength={20} name='product_name' onChange={handleProductChange}/>
+          <Input
+            type="text"
+            placeholder="Product Name"
+            colorScheme="green"
+            maxLength={20}
+            name="product_name"
+            onChange={handleProductChange}
+          />
           <Menu autoSelect={false}>
             <MenuButton
               as={Button}
@@ -148,11 +169,23 @@ const AddProductModal = ({ closeModal, data }) => {
             </MenuList>
           </Menu>
           <InputGroup>
-            <Input type="number" placeholder="Product Price" maxLength={5} name='product_price' onChange={handleProductChange} step="0.01"/>
+            <Input
+              type="number"
+              placeholder="Product Price"
+              maxLength={5}
+              name="product_price"
+              onChange={handleProductChange}
+              step="0.01"
+            />
             <InputRightAddon bg={'none'}>$</InputRightAddon>
           </InputGroup>
           <InputGroup>
-            <Input type="number" placeholder="Minimum Stock"  name='product_minimum_stock' onChange={handleProductChange}/>
+            <Input
+              type="number"
+              placeholder="Minimum Stock"
+              name="product_minimum_stock"
+              onChange={handleProductChange}
+            />
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Box width={'100%'}>
