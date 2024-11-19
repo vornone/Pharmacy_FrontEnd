@@ -1,7 +1,7 @@
-import { Input } from '@chakra-ui/react'
+import { Input, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
-const EditableCell = ({ getValue, row, column, table }) => {
+const EditableCell = ({ getValue, row, column, table }, {unit}) => {
   const initialValue = getValue()
   const [value, setValue] = useState(initialValue)
 
@@ -16,14 +16,15 @@ const EditableCell = ({ getValue, row, column, table }) => {
   }, [initialValue])
 
   return (
-    <Input
-      value={value.toLowerCase()}
-      size="md"
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={onBlur}
-      readOnly
-      variant={'unstyled'}
-    />
+    <Text maxW={'100px'}>{value}{unit}</Text>
+    // <Input
+    //   value={value.toLowerCase()}
+    //   size="md"
+    //   onChange={(e) => setValue(e.target.value)}
+    //   onBlur={onBlur}
+    //   readOnly
+    //   variant={'unstyled'}
+    // />
   )
 }
 export default EditableCell

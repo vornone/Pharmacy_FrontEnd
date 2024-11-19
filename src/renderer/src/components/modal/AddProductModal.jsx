@@ -1,8 +1,8 @@
+/* eslint-disable react/display-name */
 import React, { useEffect, useState, useRef } from 'react'
 import { Image, InputGroup } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
-import { isSameMonth, set } from 'date-fns'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+
 import {
   Button,
   ButtonGroup,
@@ -10,8 +10,6 @@ import {
   VStack,
   Input,
   InputRightAddon,
-  Checkbox,
-  CheckboxGroup,
   Box,
   Flex,
   Text,
@@ -102,9 +100,7 @@ const AddProductModal = ({ closeModal, data }) => {
     } catch (error) {
       alert(error.message)
     }
-    getProduct().then(() => {
-      // Refresh product list after successful upload
-    })
+    getProduct().then(() => {})
   }
   return (
     <>
