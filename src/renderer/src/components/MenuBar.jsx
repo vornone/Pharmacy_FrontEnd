@@ -34,6 +34,10 @@ import useCategory from '../hooks/useCategory'
 import useUser from '../hooks/useUser'
 import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
+import UpdateProductModal from './modal/UpdateProductModal'
+
+
+
 const menuLeft = [
   {
     name: 'Product',
@@ -63,7 +67,7 @@ const menuRight = [
   }
 ]
 
-function MenuBar() {
+function MenuBar({orderData , setOrderData}) {
   const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole()
   const { data:productData, loading:productLoading, error:productError, getProduct} = useProduct()
   const {
@@ -128,7 +132,7 @@ function MenuBar() {
       table = mainModal(
         categoryLoading,
         categoryError,
-        <ProductTable closeModal={onClose} data={productData} />
+        <ProductTable closeModal={onClose} data={productData} orderData={orderData}  setOrderData={setOrderData}/>
       )
   }
   const handleOpenModal = (type, isTable) => {

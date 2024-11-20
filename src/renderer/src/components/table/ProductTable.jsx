@@ -41,11 +41,13 @@ import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
 import useUpdateData from '../../hooks/useUpdateData.js'
 import useDeleteData from '../../hooks/useDeleteData.js'
 import useProduct from '../../hooks/useProduct.js'
-function ProductTable({ data }) {
+import UpdateProductModal from './../modal/UpdateProductModal';
+
+function ProductTable({ data, orderData, setOrderData }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
-  const { deleteCategory, getCategory } = useCategory()
+  const { data: categoryData, loading: categoryLoading, error: categoryError, deleteCategory, getCategory } = useCategory()
   const { getProduct } = useProduct()
   const {deleteData:deleteProduct} = useDeleteData();
   const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
@@ -70,11 +72,12 @@ function ProductTable({ data }) {
     try {
       setRowSelection(row.original)
       await deleteProduct('product/delete/'+row.original.product_id, 'POST')
-      getProduct().then(res => setTableData(res.data.products))
+      getProduct()
        // Call the delete API
       const updatedData = tableData.filter((item) => item.product_id !== row.original.product_id)
+      const updateOrder =orderData.filter((item) => item.product_id !== row.original.product_id)
       setTableData(updatedData)
-
+      setOrderData(updateOrder)
       console.log(row.original.product_id)
     } catch (error) {
       console.error('Error deleting row:', error)
@@ -149,12 +152,11 @@ function ProductTable({ data }) {
         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Category</ModalHeader>
+          <ModalHeader>Edit Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateCategoryModal rowData={rowSelection} onClose={onClose} data={editData} loading={updateLoading} error={updateError} updateData={handleUpdateRow}></UpdateCategoryModal>
+            <UpdateProductModal categoryData={categoryData} rowData={rowSelection} closeModal={onClose}/>
           </ModalBody>
-
           <ModalFooter>
           </ModalFooter>
         </ModalContent>

@@ -20,12 +20,10 @@ import ProductSort from '../components/ProductSort'
 import OrderList from '../components/OrderList'
 import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
-// import { mainData, orderData } from '../data/data'
-import { orderData } from '../data/data'
 import useProduct from '../hooks/useProduct'
 export default function MainPage() {
   const { data, loading, error, getProduct } = useProduct()
-  const [orders, setOrders] = useState(orderData)
+  const [orders, setOrders] = useState([])
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
   useEffect(() => {
@@ -33,36 +31,20 @@ export default function MainPage() {
   }, [])
   //function
   const addingOrder = (e) => {
-    // Create a copy of the orders array
-    const newOrders = [...orders];
-
-    // Check if the product already exists in the orders array
+    const newOrders = [...orders]
     const existedData = newOrders.some((item) => item.product_name === e.product_name);
 
     if (existedData) {
-        // Update the existing product's order quantity
         const updatedOrders = newOrders.map((item) => {
-            if (
-                item.product_name === e.product_name &&
-                item.orderQuantity < item.product_minimum_stock
-            ) {
-                // Return a new object with updated order quantity
-                return {
-                    ...item,
-                    orderQuantity: item.orderQuantity + 1,
-                };
+            if (item.product_name === e.product_name && item.orderQuantity < item.product_minimum_stock) {
+                return { ...item,orderQuantity: item.orderQuantity + 1};
             }
-            return item;
-        });
-
+            return item;});
         setOrders(updatedOrders);
     } else {
-        // Add a new product to the orders array with initial orderQuantity
         const newProduct = { ...e, orderQuantity: 1 };
         setOrders([...newOrders, newProduct]);
     }
-
-    console.log(orderData, data);
 };
 
   return (
@@ -89,7 +71,7 @@ export default function MainPage() {
       <GridItem area="header" p={'1%'} borderRadius={'10px'}>
         <Flex flexDirection={'column'} gap={'1%'} width={'100%'} justifyContent={'space-between'}>
           <NavBar></NavBar>
-          <MenuBar></MenuBar>
+          <MenuBar orderData={orders} setOrderData={setOrders}></MenuBar>
         </Flex>
       </GridItem>
       <GridItem area="main" width={'100%'} height={'82dvh'} borderRadius={'10px'}>
