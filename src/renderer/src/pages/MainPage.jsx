@@ -42,11 +42,10 @@ export default function MainPage() {
     if (existedData) {
         // Update the existing product's order quantity
         const updatedOrders = newOrders.map((item) => {
-          if (
-            item.product_name === e.product_name &&
-            (item.orderQuantity || 0) < (item.product_minimum_stock || 0)
-          )
-           {
+            if (
+                item.product_name === e.product_name &&
+                item.orderQuantity < item.product_minimum_stock
+            ) {
                 // Return a new object with updated order quantity
                 return {
                     ...item,
