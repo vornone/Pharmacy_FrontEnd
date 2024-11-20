@@ -2,10 +2,10 @@ import { Card, CardBody, HStack, Image, Text, Heading, VStack } from '@chakra-ui
 import React from 'react'
 import { serverUrl } from '../api-clients/api-clients'
 const imgApi = serverUrl + '/images/'
-function ProductCard({ props, evenhandler }) {
+function ProductCard({ props, eventhandler }) {
   return (
     <Card
-      onClick={evenhandler}
+      onClick={eventhandler}
       borderRadius={0}
       overflow={'hidden'}
       justifyContent={'space-between'}

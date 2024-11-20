@@ -32,7 +32,7 @@ function ProductGrid({ data, addingOrder }) {
         >
           {currentItems.map((item) => (
             <ProductContainer key={item.product_id}>
-              <ProductCard props={item} evenhandler={() => addingOrder(item)} />
+              <ProductCard props={item} eventhandler={() => addingOrder(item)} />
             </ProductContainer>
           ))}
         </SimpleGrid>

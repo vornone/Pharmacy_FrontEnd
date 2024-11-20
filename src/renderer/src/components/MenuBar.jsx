@@ -78,15 +78,7 @@ function MenuBar() {
   const [modalType, setModalType] = useState('')
 
   const copiedUserData = userData ? JSON.parse(JSON.stringify(userData)) : []
-  const handleOpenModal = (type, isTable) => {
-    onOpen()
-    getUser()
-    getCategory()
-    fetchRoleData()
-    setIsTable(isTable)
-    setModalType(type)
 
-  }
   const mainModal = (loading, error, modal) => {
     if (loading) {
       return <Spinner />
@@ -139,6 +131,15 @@ function MenuBar() {
         <ProductTable closeModal={onClose} data={productData} />
       )
   }
+  const handleOpenModal = (type, isTable) => {
+    onOpen()
+    getUser()
+    getCategory()
+    fetchRoleData()
+    setIsTable(isTable)
+    setModalType(type)
+
+  }
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
@@ -177,7 +178,7 @@ function MenuBar() {
                 colorScheme="green"
                 variant={'solid'}
                 onClick={() => {
-                  fetchRoleData(), handleOpenModal(item.name, false)
+                  handleOpenModal(item.name, false)
                 }}
               />
             </ButtonGroup>

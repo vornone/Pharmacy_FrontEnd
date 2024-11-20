@@ -28,30 +28,44 @@ export default function MainPage() {
   const [orders, setOrders] = useState(orderData)
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
-  console.log(data)
   useEffect(() => {
     getProduct()
   }, [])
   //function
   const addingOrder = (e) => {
-    const newOrders = [...orders]
-    const existedData = newOrders.some((item) => item.product_name === e.product_name)
+    // Create a copy of the orders array
+    const newOrders = [...orders];
+
+    // Check if the product already exists in the orders array
+    const existedData = newOrders.some((item) => item.product_name === e.product_name);
+
     if (existedData) {
-      newOrders.forEach((item) => {
-        if (
-          item.product_name === e.product_name &&
-          item.orderQuantity < item.product_minimum_stock
-        ) {
-          item.orderQuantity += 1
-          setOrders(newOrders)
-        }
-      })
+        // Update the existing product's order quantity
+        const updatedOrders = newOrders.map((item) => {
+          if (
+            item.product_name === e.product_name &&
+            (item.orderQuantity || 0) < (item.product_minimum_stock || 0)
+          )
+           {
+                // Return a new object with updated order quantity
+                return {
+                    ...item,
+                    orderQuantity: item.orderQuantity + 1,
+                };
+            }
+            return item;
+        });
+
+        setOrders(updatedOrders);
     } else {
-      newOrders.push(e)
-      e.orderQuantity = 1
+        // Add a new product to the orders array with initial orderQuantity
+        const newProduct = { ...e, orderQuantity: 1 };
+        setOrders([...newOrders, newProduct]);
     }
-    setOrders(newOrders)
-  }
+
+    console.log(orderData, data);
+};
+
   return (
     <Grid
       bg={colorMainBg}
@@ -105,7 +119,6 @@ export default function MainPage() {
           </VStack>
           <VStack
             bg={colorGenre}
-            s
             width={'50%'}
             height={'100%'}
             justify={'space-between'}
