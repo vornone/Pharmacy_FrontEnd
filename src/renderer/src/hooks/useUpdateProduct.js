@@ -1,7 +1,7 @@
 import { queryData } from '../actions/ActionsType'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-const useInsertProduct = (selectedFile, productData) => {
+const useUpdateProduct = (selectedFile, productData) => {
   const dispatch = useDispatch()
   const apiSource = 'updateReducer'
   const formData = new FormData()
@@ -15,8 +15,8 @@ const useInsertProduct = (selectedFile, productData) => {
 
   const { data, loading, error } = useSelector((state) => state.updateReducer)
 
-  const insertFile = () => {
-    dispatch(queryData(apiSource, 'product/update', 'POST', formData))
+  const updateProduct = () => {
+    dispatch(queryData(apiSource, 'product/update/' + productData.product_id, 'POST', formData))
   }
   useEffect(() => {
     data
@@ -26,8 +26,8 @@ const useInsertProduct = (selectedFile, productData) => {
     data: data?.data.product,
     loading,
     error,
-    insertFile
+    updateProduct
   }
 }
 
-export default useInsertProduct
+export default useUpdateProduct

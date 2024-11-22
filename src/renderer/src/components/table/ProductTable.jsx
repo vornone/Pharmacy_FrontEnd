@@ -48,7 +48,7 @@ function ProductTable({ data, orderData, setOrderData }) {
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { data: categoryData, loading: categoryLoading, error: categoryError, deleteCategory, getCategory } = useCategory()
-  const { getProduct } = useProduct()
+  const { data: productListData, loading: productLoading, error: productError, getProduct } = useProduct()
   const {deleteData:deleteProduct} = useDeleteData();
   const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
   const [mockData, setMockData] = useState(tableData);
@@ -62,10 +62,8 @@ function ProductTable({ data, orderData, setOrderData }) {
     await updateData(updatedRow)
   };
   useEffect(() => {
-    if (!editData?.category?.message) {
-      setTableData(mockData);
-    }else  console.log(editData.category.message);
-  }, [editData]);
+      setTableData(productListData );
+  }, [productListData]);
 
 //HandleDelete
   const handleDeleteRow = async (row) => {

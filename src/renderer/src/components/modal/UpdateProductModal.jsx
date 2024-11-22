@@ -24,7 +24,7 @@ import { forwardRef } from 'react'
 import useProduct from '../../hooks/useProduct'
 import useInsertProduct from '../../hooks/useInsertProduct'
 import { serverUrl } from '../../api-clients/api-clients'
-
+import useUpdateProduct from './../../hooks/useUpdateProduct';
 const imgApi = serverUrl + '/images/'
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
   <Input
@@ -39,15 +39,20 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
 
 const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
   const [selectedImage, setSelectedImage] = useState(null)
-  const [platform, setPlatform] = useState(categoryData.length == 0 ? 'No Data' : categoryData[0].category_name)
-  const [imagePreview, setImagePreview] = useState(imgApi+rowData.product_img)
+  const [platform, setPlatform] = useState(categoryData.length == 0 ? 'No Data' : categoryData.find((data) => data.category_id == rowData.category_id).category_name)
+
+
   const [productData, setProductData] = useState({
-    product_name: '',
-    product_price: 0,
-    product_minimum_stock: 0,
-    category_id: categoryData.find((item) => item.category_name === platform).category_id
+    product_name: rowData.product_name,
+    product_price: rowData.product_price,
+    product_minimum_stock: rowData.product_minimum_stock,
+    category_id: rowData.category_id,
+    product_id: rowData.product_id,
+    product_img: rowData.product_img
   })
+  const [imagePreview, setImagePreview] = useState(imgApi+productData.product_img)
   const { loading, error, getProduct } = useProduct()
+  const { updateProduct} = useUpdateProduct(selectedImage, productData  )
   const { insertFile } = useInsertProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
 
@@ -59,7 +64,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
-    console.log(JSON.stringify(productData))
+    console.log(productData)
   }
   const handleProductChange = (e) => {
     const { name, value } = e.target
@@ -89,30 +94,36 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
     }
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    if (!selectedImage) {
-      alert('Please select a file')
-      return
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    const finalImg = selectedImage ? selectedImage : productData.product_img;
+    if (!finalImg) {
+      alert('Please select a file');
+      return;
     }
+    await updateProduct(productData);
+    getProduct(); // Refresh product list
+    alert('Product updated successfully');
+    closeModal(); // Close modal after successful update
+    // try {
+    //   await updateProduct(productData);
+    //   getProduct(); // Refresh product list
+    //   alert('Product updated successfully');
+    //   closeModal(); // Close modal after successful update
+    // } catch (error) {
+    //   alert(error.message);
+    // }
 
-    try {
-      await insertFile()
 
-      alert('File uploaded successfully')
-    } catch (error) {
-      alert(error.message)
-    }
-    getProduct().then(() => {})
-  }
+  };
   return (
     <>
-      <input
+      {/* <Input
         type="file"
         ref={inputRef}
         style={{ display: 'none' }} // Hide the input
         onChange={handleUploadFile}
-      />
+      /> */}
       <VStack width={'100%'} gap={3}>
         <VStack width={'100%'} height={'100%'}>
           <Flex
@@ -130,7 +141,6 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
               size={'sm'}
               variant={'outline'}
               colorScheme="blue"
-              onClick={handleUploadClick}
             >
               <Button>edit image</Button>
             </ButtonGroup>
@@ -138,6 +148,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
 
           <Input
             type="text"
+            value={productData.product_name}
             placeholder="Product Name"
             colorScheme="green"
             maxLength={20}
@@ -173,6 +184,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
               placeholder="Product Price"
               maxLength={5}
               name="product_price"
+              value={productData.product_price}
               onChange={handleProductChange}
               step="0.01"
             />
@@ -184,6 +196,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
               placeholder="Minimum Stock"
               name="product_minimum_stock"
               onChange={handleProductChange}
+              value={productData.product_minimum_stock}
             />
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
@@ -203,8 +216,8 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
             <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
               Cancel
             </Button>
-            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleSubmit}>
-              ADD
+            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleUpdate} type='submit'>
+              Update
             </Button>
           </ButtonGroup>
         </HStack>

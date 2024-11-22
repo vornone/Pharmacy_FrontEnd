@@ -30,7 +30,7 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
     <VStack width={'100%'}>
       <Input
         type="text"
-        placeholder={rowData.category_name}
+        value={category.category_name}
         focusBorderColor="green.300"
         onChange={handleOnChange}
         name="category_name"
@@ -73,8 +73,7 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
             onClick={handleUpdate}
             size={'sm'}
             isLoading={loading}
-            type='submit'
-          >
+            type='submit'>
             Submit
           </Button>
         </ButtonGroup>
