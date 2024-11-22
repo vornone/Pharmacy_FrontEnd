@@ -1,6 +1,5 @@
-/* eslint-disable react/display-name */
 import React, { useEffect, useState, useRef } from 'react'
-import { Image, InputGroup } from '@chakra-ui/react'
+import { Image, InputGroup, useToast } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import {
@@ -22,9 +21,9 @@ import { BsChevronDown } from 'react-icons/bs'
 import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
 import useProduct from '../../hooks/useProduct'
-import useInsertProduct from '../../hooks/useInsertProduct'
 import { serverUrl } from '../../api-clients/api-clients'
-import useUpdateProduct from './../../hooks/useUpdateProduct';
+import useUpdateProduct from './../../hooks/useUpdateProduct'
+
 const imgApi = serverUrl + '/images/'
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
   <Input
@@ -39,8 +38,12 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
 
 const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
   const [selectedImage, setSelectedImage] = useState(null)
-  const [platform, setPlatform] = useState(categoryData.length == 0 ? 'No Data' : categoryData.find((data) => data.category_id == rowData.category_id).category_name)
-
+  const [platform, setPlatform] = useState(
+    categoryData.length == 0
+      ? 'No Data'
+      : categoryData.find((data) => data.category_id == rowData.category_id)
+          .category_name
+  )
 
   const [productData, setProductData] = useState({
     product_name: rowData.product_name,
@@ -50,26 +53,25 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
     product_id: rowData.product_id,
     product_img: rowData.product_img
   })
-  const [imagePreview, setImagePreview] = useState(imgApi+productData.product_img)
+  const [imagePreview, setImagePreview] = useState(imgApi + productData.product_img)
   const { loading, error, getProduct } = useProduct()
-  const { updateProduct} = useUpdateProduct(selectedImage, productData  )
-  const { insertFile } = useInsertProduct(selectedImage, productData)
+  const { updateProduct } = useUpdateProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const inputRef = useRef(null)
+  const toast = useToast() // Initialize toast
 
   const handleUploadClick = () => {
     inputRef.current.click() // Trigger the hidden input element
   }
+
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
-    console.log(productData)
   }
+
   const handleProductChange = (e) => {
     const { name, value } = e.target
-
-    // Check if the value should be treated as a number (useful for number inputs)
     const parsedValue =
       name === 'product_price' || name === 'product_minimum_stock'
         ? isNaN(value)
@@ -77,72 +79,76 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
           : Number(value)
         : value
 
-    const updatedProduct = { ...productData, [name]: parsedValue }
-
-    setProductData(updatedProduct)
-    console.log(updatedProduct) // Log the updated product data
+    setProductData({ ...productData, [name]: parsedValue })
   }
 
   const handleUploadFile = (event) => {
     const file = event.target.files[0]
     if (file && file.type.startsWith('image/')) {
-      // Check if it's an image
       setSelectedImage(file)
-      setImagePreview(URL.createObjectURL(file)) // Create a preview URL
+      setImagePreview(URL.createObjectURL(file))
     } else {
-      alert('Please select a valid image file.') // Alert for invalid file
+      toast({
+        title: 'Invalid file type',
+        description: 'Please select a valid image file.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
     }
   }
 
   const handleUpdate = async (event) => {
-    event.preventDefault();
-    const finalImg = selectedImage ? selectedImage : productData.product_img;
+    event.preventDefault()
+    const finalImg = selectedImage ? selectedImage : productData.product_img
     if (!finalImg) {
-      alert('Please select a file');
-      return;
+      toast({
+        title: 'No image selected',
+        description: 'Please select a file before updating.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+      return
     }
-    await updateProduct(productData);
-    getProduct(); // Refresh product list
-    alert('Product updated successfully');
-    closeModal(); // Close modal after successful update
-    // try {
-    //   await updateProduct(productData);
-    //   getProduct(); // Refresh product list
-    //   alert('Product updated successfully');
-    //   closeModal(); // Close modal after successful update
-    // } catch (error) {
-    //   alert(error.message);
-    // }
+    try {
+      await updateProduct(productData)
+      getProduct()
+      toast({
+        title: 'Success',
+        description: 'Product updated successfully.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      })
+      closeModal()
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: error.message || 'An error occurred.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    }
+  }
 
-
-  };
   return (
     <>
-      {/* <Input
+      <Input
         type="file"
         ref={inputRef}
-        style={{ display: 'none' }} // Hide the input
+        style={{ display: 'none' }}
         onChange={handleUploadFile}
-      /> */}
+      />
       <VStack width={'100%'} gap={3}>
         <VStack width={'100%'} height={'100%'}>
-          <Flex
-            justifyContent={'space-between'}
-            width={'100%'}
-            height={'100%'}
-            alignItems={'flex-end'}
-          >
+          <Flex justifyContent={'space-between'} width={'100%'} height={'100%'} alignItems={'flex-end'}>
             <Box>
               <Image objectFit={'cover'} src={imagePreview} borderRadius={5} height={'150px'} />
             </Box>
-
-            <ButtonGroup
-              height={'100%'}
-              size={'sm'}
-              variant={'outline'}
-              colorScheme="blue"
-            >
-              <Button>edit image</Button>
+            <ButtonGroup height={'100%'} size={'sm'} variant={'outline'} colorScheme="blue" onClick={handleUploadClick}>
+              <Button>Edit image</Button>
             </ButtonGroup>
           </Flex>
 
@@ -156,14 +162,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
             onChange={handleProductChange}
           />
           <Menu autoSelect={false}>
-            <MenuButton
-              as={Button}
-              rightIcon={<BsChevronDown />}
-              variant={'solid'}
-              width={'100%'}
-              size={'md'}
-              textAlign={'left'}
-            >
+            <MenuButton as={Button} rightIcon={<BsChevronDown />} variant={'solid'} width={'100%'} size={'md'} textAlign={'left'}>
               <Text fontWeight={'regular'}>{platform}</Text>
             </MenuButton>
             <MenuList>
@@ -216,7 +215,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
             <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
               Cancel
             </Button>
-            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleUpdate} type='submit'>
+            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleUpdate}>
               Update
             </Button>
           </ButtonGroup>

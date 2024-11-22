@@ -21,11 +21,13 @@ import OrderList from '../components/OrderList'
 import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
 import useProduct from '../hooks/useProduct'
+import { useToast } from '@chakra-ui/react'
 export default function MainPage() {
   const { data, loading, error, getProduct } = useProduct()
   const [orders, setOrders] = useState([])
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
+  const toast = useToast()
   useEffect(() => {
     getProduct()
   }, [])
@@ -36,10 +38,19 @@ export default function MainPage() {
 
     if (existedData) {
         const updatedOrders = newOrders.map((item) => {
-            if (item.product_name === e.product_name && item.orderQuantity < item.product_minimum_stock) {
+            if (item.orderQuantity < item.product_minimum_stock) {
                 return { ...item,orderQuantity: item.orderQuantity + 1};
             }
-            return item;});
+            if (item.orderQuantity >= item.product_minimum_stock) {
+                toast({
+                    title: 'Error',
+                    description: 'Maximum order quantity is ' + item.product_minimum_stock,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true
+                })
+            }
+    return item;});
         setOrders(updatedOrders);
     } else {
         const newProduct = { ...e, orderQuantity: 1 };

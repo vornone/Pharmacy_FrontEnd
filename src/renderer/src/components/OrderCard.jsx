@@ -14,10 +14,10 @@ import {
 import { serverUrl } from '../api-clients/api-clients'
 import React, { useState } from 'react'
 import { TbPlus, TbMinus, TbTrashFilled } from 'react-icons/tb'
-
+import { useToast } from '@chakra-ui/react'
 const imgApi = serverUrl + '/images/'
 function OrderCard({ data, orderData, setOrderData }) {
-  //functions
+  const toast = useToast()
   function deleteOrder() {
     data.orderQuantity = 0
     let newOrders = [...orderData].filter((item) => item.orderQuantity !== 0)
@@ -26,7 +26,13 @@ function OrderCard({ data, orderData, setOrderData }) {
   function handleIncrement() {
     const a = [...orderData]
     data.orderQuantity >= data.product_minimum_stock
-      ? alert('out of stock')
+      ? toast({
+        title: 'Error',
+        description: 'Maximum order quantity is ' + data.product_minimum_stock,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
       : (data.orderQuantity = data.orderQuantity + 1)
     setOrderData(a)
   }

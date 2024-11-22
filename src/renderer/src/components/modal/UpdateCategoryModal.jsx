@@ -9,21 +9,16 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
   const [category, setCategory] = useState(rowData)
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
-  const updatedCategory = { ...category, [name]: value };
-  setCategory(updatedCategory);
-  console.log(updatedCategory); // Log the updated category
-  setHasMessage(false);
+      const { name, value } = e.target;
+      const updatedCategory = { ...category, [name]: value };
+      setCategory(updatedCategory);
+      console.log(updatedCategory);
+      setHasMessage(false);
   }
 
   const handleUpdate = async () => {
-    // Wait for the updateData function to finish updating the state
     await updateData(category); 
-  
-    // After updateData is done, check and log the message (if it exists)
-
-  
-    setHasMessage(true); // Set hasMessage to show the success or error message
+    setHasMessage(true);
   }
 
   return (
@@ -35,20 +30,6 @@ const UpdateCategoryModal = ({onClose, rowData, data, loading, error, updateData
         onChange={handleOnChange}
         name="category_name"
       />
-      {/* <Input
-        type="text"
-        placeholder="Created By"
-        focusBorderColor="green.300"
-        onChange={handleOnChange}
-        name="created_by"
-      />
-      <Input
-        type="text"
-        placeholder="Modified By"
-        focusBorderColor="green.300"
-        onChange={handleOnChange}
-        name="last_modified_by"
-      /> */}
       <HStack width={'100%'} justifyContent={hasMessage ? 'space-between' : 'flex-end'}>
         {!hasMessage ? (
           ''
