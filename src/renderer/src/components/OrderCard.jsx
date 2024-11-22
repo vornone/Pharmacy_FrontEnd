@@ -61,7 +61,8 @@ function OrderCard({ data, orderData, setOrderData }) {
           >
             <Image
               bg="gray.100"
-              width={'200px'}
+              minWidth={'150px'}
+              maxW={'150px'}
               height={'100%'}
               src={imgApi + data.product_img}
               borderRadius={5}

@@ -153,7 +153,7 @@ function ProductTable({ data, orderData, setOrderData }) {
           <ModalHeader>Edit Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateProductModal categoryData={categoryData} rowData={rowSelection} closeModal={onClose}/>
+            <UpdateProductModal categoryData={categoryData} rowData={rowSelection} closeModal={onClose} setOrderData={setOrderData}/>
           </ModalBody>
           <ModalFooter>
           </ModalFooter>

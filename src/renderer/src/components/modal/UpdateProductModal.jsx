@@ -36,7 +36,7 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
   />
 ))
 
-const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
+const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData }) => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [platform, setPlatform] = useState(
     categoryData.length == 0
@@ -44,7 +44,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
       : categoryData.find((data) => data.category_id == rowData.category_id)
           .category_name
   )
-
+  const { data,loading, error, getProduct } = useProduct()
   const [productData, setProductData] = useState({
     product_name: rowData.product_name,
     product_price: rowData.product_price,
@@ -54,22 +54,44 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
     product_img: rowData.product_img
   })
   const [imagePreview, setImagePreview] = useState(imgApi + productData.product_img)
-  const { loading, error, getProduct } = useProduct()
+
   const { updateProduct } = useUpdateProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
 
+
+
+  
   const inputRef = useRef(null)
   const toast = useToast() // Initialize toast
-
-  const handleUploadClick = () => {
-    inputRef.current.click() // Trigger the hidden input element
-  }
 
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
   }
+  const handleUploadClick = () => {
+    inputRef.current.click() // Trigger the hidden input element
+  }
 
+  const handleUpdateOrder = (productForUpdate) => {
+    setOrderData((prevOrderData) => {
+      const updatedOrderData = prevOrderData.map((order) => {
+        // Check if the product_id matches
+        if (order.product_id === productForUpdate.product_id) {
+          // If it matches, update the order's product details
+          return {
+            ...order, // Preserve other properties
+            product_name: productForUpdate.product_name,
+            product_price: productForUpdate.product_price,
+            product_minimum_stock: productForUpdate.product_minimum_stock,
+            category_id: productForUpdate.category_id,
+          };
+        }
+        return order; // Return unchanged order if product_id doesn't match
+      });
+      return updatedOrderData; // Return the updated array
+    });
+  };
+  
   const handleProductChange = (e) => {
     const { name, value } = e.target
     const parsedValue =
@@ -114,6 +136,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData }) => {
     try {
       await updateProduct(productData)
       getProduct()
+      handleUpdateOrder(productData)
       toast({
         title: 'Success',
         description: 'Product updated successfully.',

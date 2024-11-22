@@ -31,6 +31,23 @@ export default function MainPage() {
   useEffect(() => {
     getProduct()
   }, [])
+  useEffect(() => {
+    // When product data changes, we may need to refresh or update orders
+    const updatedOrders = orders.map((order) => {
+      // Check if product details need to be updated based on product data
+      const updatedProduct = data.find(
+        (product) => product.product_id === order.product_id
+      );
+      if (updatedProduct) {
+        return {
+          ...order,
+          product_img: updatedProduct.product_img, // Ensure image is updated
+        };
+      }
+      return order; // Return unchanged order if no match found
+    });
+    setOrders(updatedOrders);
+  }, [data]);
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
@@ -38,10 +55,10 @@ export default function MainPage() {
 
     if (existedData) {
         const updatedOrders = newOrders.map((item) => {
-            if (item.orderQuantity < item.product_minimum_stock) {
+            if (item.product_name === e.product_name && item.orderQuantity < item.product_minimum_stock) {
                 return { ...item,orderQuantity: item.orderQuantity + 1};
             }
-            if (item.orderQuantity >= item.product_minimum_stock) {
+            if (item.product_name === e.product_name &&item.orderQuantity >= item.product_minimum_stock) {
                 toast({
                     title: 'Error',
                     description: 'Maximum order quantity is ' + item.product_minimum_stock,
