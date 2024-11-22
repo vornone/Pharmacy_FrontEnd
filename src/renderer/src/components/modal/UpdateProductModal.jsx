@@ -84,6 +84,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
             product_price: productForUpdate.product_price,
             product_minimum_stock: productForUpdate.product_minimum_stock,
             category_id: productForUpdate.category_id,
+            product_img: productForUpdate.product_img
           };
         }
         return order; // Return unchanged order if product_id doesn't match
