@@ -26,6 +26,8 @@ export const apiFailure = (error, source) => ({
 export const queryData = (source, endpoint, method, payload = null, params = {}) => {
   return async (dispatch) => {
     dispatch(apiRequest(source))
+
+    const start = Date.now() // Record the start time
     try {
       let response
       switch (method) {
@@ -44,8 +46,17 @@ export const queryData = (source, endpoint, method, payload = null, params = {})
         default:
           throw new Error('Unsupported method')
       }
+
+      const elapsed = Date.now() - start // Calculate elapsed time
+      const delay = Math.max(250 - elapsed, 0) // Ensure at least 1 second has passed
+      await new Promise((resolve) => setTimeout(resolve, delay)) // Add delay if needed
+
       dispatch(apiSuccess(response.data, source))
     } catch (error) {
+      const elapsed = Date.now() - start
+      const delay = Math.max(250 - elapsed, 0)
+      await new Promise((resolve) => setTimeout(resolve, delay))
+
       dispatch(apiFailure(error.message, source))
     }
   }
