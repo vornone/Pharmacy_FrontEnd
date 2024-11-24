@@ -41,39 +41,39 @@ import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
 import useUpdateData from '../../hooks/useUpdateData.js'
 import useDeleteData from '../../hooks/useDeleteData.js'
 import useProduct from '../../hooks/useProduct.js'
-import UpdateProductModal from './../modal/UpdateProductModal';
+import UpdateProductModal from './../modal/UpdateProductModal'
+import TableFilter from '../table-component/TableFilter.jsx'
 
 function ProductTable({ data, orderData, setOrderData }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
-  const { data: categoryData, loading: categoryLoading, error: categoryError, deleteCategory, getCategory } = useCategory()
-  const { data: productListData, loading: productLoading, error: productError, getProduct } = useProduct()
-  const {deleteData:deleteProduct} = useDeleteData();
-  const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
-  const [mockData, setMockData] = useState(tableData);
+  const { data: categoryData } = useCategory()
+  const {
+    data: productListData,
+    error: productListError,
+    loading: productListLoading,
+    getProduct
+  } = useProduct()
+  const { deleteData: deleteProduct } = useDeleteData()
+  const [columnFilters, setColumnFilters] = useState([])
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
-//HandleUpdate
-  const handleUpdateRow = async(updatedRow) => {
-    setMockData(tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row));
-    await updateData(updatedRow)
-  };
   useEffect(() => {
-      setTableData(productListData );
-  }, [productListData]);
+    if (!productListError && !productListLoading) {
+      setTableData(productListData)
+    }
+  }, [productListData])
 
-//HandleDelete
   const handleDeleteRow = async (row) => {
     try {
       setRowSelection(row.original)
-      await deleteProduct('product/delete/'+row.original.product_id, 'POST')
+      await deleteProduct('product/delete/' + row.original.product_id, 'POST')
       getProduct()
-       // Call the delete API
       const updatedData = tableData.filter((item) => item.product_id !== row.original.product_id)
-      const updateOrder =orderData.filter((item) => item.product_id !== row.original.product_id)
+      const updateOrder = orderData.filter((item) => item.product_id !== row.original.product_id)
       setTableData(updatedData)
       setOrderData(updateOrder)
       console.log(row.original.product_id)
@@ -81,7 +81,6 @@ function ProductTable({ data, orderData, setOrderData }) {
       console.error('Error deleting row:', error)
     }
   }
-//Columns
   const columns = [
     {
       header: 'N',
@@ -90,7 +89,8 @@ function ProductTable({ data, orderData, setOrderData }) {
     {
       accessorKey: 'product_name',
       header: 'Name',
-      cell: EditableCell
+      cell: EditableCell,
+      enableColumnFilter: true
     },
     {
       accessorKey: 'product_price',
@@ -111,7 +111,7 @@ function ProductTable({ data, orderData, setOrderData }) {
     }
   ]
 
-//Table
+  //Table
   const table = useReactTable({
     data: tableData,
     columns,
@@ -121,7 +121,8 @@ function ProductTable({ data, orderData, setOrderData }) {
     getCoreRowModel: getCoreRowModel(),
     autoResetAll: false,
     state: {
-      rowSelection
+      rowSelection,
+      columnFilters
     },
     initialState: {
       pagination: {
@@ -144,19 +145,31 @@ function ProductTable({ data, orderData, setOrderData }) {
         )
     }
   })
-//UI
+  //UI
   return (
     <>
-        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
+      <Flex justifyContent={'space-between'} alignItems={'left'} width={'100%'} mb={2}>
+        <TableFilter
+          setColumnFilters={setColumnFilters}
+          placeholder={'Product Name'}
+          column={'product_name'}
+          columnFilters={columnFilters}
+        />
+      </Flex>
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateProductModal categoryData={categoryData} rowData={rowSelection} closeModal={onClose} setOrderData={setOrderData}/>
+            <UpdateProductModal
+              categoryData={categoryData}
+              rowData={rowSelection}
+              closeModal={onClose}
+              setOrderData={setOrderData}
+            />
           </ModalBody>
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
       <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
@@ -187,7 +200,6 @@ function ProductTable({ data, orderData, setOrderData }) {
                           )
                         }
                         onClick={header.column.getToggleSortingHandler()}
-                    
                         mx={3}
                         boxSize={4}
                         variant={'ghost'}

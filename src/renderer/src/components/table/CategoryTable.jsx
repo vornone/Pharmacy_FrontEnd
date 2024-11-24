@@ -39,30 +39,40 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useCategory from '../../hooks/useCategory.js'
 import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
 import useUpdateData from '../../hooks/useUpdateData.js'
+import SearchInput from '../SearchInput.jsx'
+import TableFilter from '../table-component/TableFilter.jsx'
 
 function CategoryTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { deleteCategory, getCategory } = useCategory()
-  const {data:editData, loading:updateLoading,error:updateError,updateData } = useUpdateData('category/update', 'POST')	
-  const [mockData, setMockData] = useState(tableData);
+  const {
+    data: editData,
+    loading: updateLoading,
+    error: updateError,
+    updateData
+  } = useUpdateData('category/update', 'POST')
+  const [mockData, setMockData] = useState(tableData)
+  const [columnFilters, setColumnFilters] = useState([])
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
-//HandleUpdate
-  const handleUpdateRow = async(updatedRow) => {
-    setMockData(tableData.map(row => row.category_id === updatedRow.category_id ? updatedRow : row));
+  //HandleUpdate
+  const handleUpdateRow = async (updatedRow) => {
+    setMockData(
+      tableData.map((row) => (row.category_id === updatedRow.category_id ? updatedRow : row))
+    )
     await updateData(updatedRow)
-  };
+  }
   useEffect(() => {
     if (!editData?.category?.message) {
-      setTableData(mockData);
-    }else  console.log(editData.category.message);
-  }, [editData]);
+      setTableData(mockData)
+    } else console.log(editData.category.message)
+  }, [editData])
 
-//HandleDelete
+  //HandleDelete
   const handleDeleteRow = async (row) => {
     try {
       deleteCategory({ category_id: row.original.category_id }) // Call the delete API
@@ -72,7 +82,7 @@ function CategoryTable({ data }) {
       console.error('Error deleting row:', error)
     }
   }
-//Columns
+  //Columns
   const columns = [
     {
       header: 'N',
@@ -81,7 +91,9 @@ function CategoryTable({ data }) {
     {
       accessorKey: 'category_name',
       header: 'Name',
-      cell: EditableCell
+      cell: EditableCell,
+      enableColumnFilter: true,
+      filterFn: 'includesString'
     },
     {
       header: 'Action',
@@ -97,7 +109,7 @@ function CategoryTable({ data }) {
     }
   ]
 
-//Table
+  //Table
   const table = useReactTable({
     data: tableData,
     columns,
@@ -107,7 +119,8 @@ function CategoryTable({ data }) {
     getCoreRowModel: getCoreRowModel(),
     autoResetAll: false,
     state: {
-      rowSelection
+      rowSelection,
+      columnFilters
     },
     initialState: {
       pagination: {
@@ -130,20 +143,34 @@ function CategoryTable({ data }) {
         )
     }
   })
-//UI
+  //UI
   return (
     <>
-        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={"2xl"}>
+      <Flex justifyContent={'space-between'} alignItems={'left'} mb={2} width={'100%'}>
+        <TableFilter
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          placeholder="Search by name"
+          column="category_name"
+        ></TableFilter>
+      </Flex>
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Category</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateCategoryModal rowData={rowSelection} onClose={onClose} data={editData} loading={updateLoading} error={updateError} updateData={handleUpdateRow}></UpdateCategoryModal>
+            <UpdateCategoryModal
+              rowData={rowSelection}
+              onClose={onClose}
+              data={editData}
+              loading={updateLoading}
+              error={updateError}
+              updateData={handleUpdateRow}
+            ></UpdateCategoryModal>
           </ModalBody>
 
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
       <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
