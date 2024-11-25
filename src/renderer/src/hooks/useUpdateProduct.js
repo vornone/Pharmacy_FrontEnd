@@ -23,7 +23,7 @@ const useUpdateProduct = (selectedFile, productData) => {
   }, [dispatch])
 
   return {
-    data: data?.data.product,
+    data: data?.data,
     loading,
     error,
     updateProduct

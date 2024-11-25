@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { Image, InputGroup, useToast } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -54,44 +54,47 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
     product_img: rowData.product_img
   })
   const [imagePreview, setImagePreview] = useState(imgApi + productData.product_img)
-
-  const { updateProduct } = useUpdateProduct(selectedImage, productData)
+  const {data: updateData, loading: updateLoading, error: updateError, updateProduct } = useUpdateProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
-
+  const inputRef = useRef(null)
+  const toast = useToast()
 
 
   
-  const inputRef = useRef(null)
-  const toast = useToast() // Initialize toast
+
 
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
   }
   const handleUploadClick = () => {
-    inputRef.current.click() // Trigger the hidden input element
+    inputRef.current.click()
   }
 
-  const handleUpdateOrder = (productForUpdate) => {
-    setOrderData((prevOrderData) => {
-      const updatedOrderData = prevOrderData.map((order) => {
-        // Check if the product_id matches
-        if (order.product_id === productForUpdate.product_id) {
-          // If it matches, update the order's product details
-          return {
-            ...order, // Preserve other properties
-            product_name: productForUpdate.product_name,
-            product_price: productForUpdate.product_price,
-            product_minimum_stock: productForUpdate.product_minimum_stock,
-            category_id: productForUpdate.category_id,
-            product_img: productForUpdate.product_img
-          };
-        }
-        return order; // Return unchanged order if product_id doesn't match
-      });
-      return updatedOrderData; // Return the updated array
-    });
-  };
+  const handleUpdateOrder = useCallback(
+    (productForUpdate) => {
+      setOrderData((prevOrderData) =>
+        prevOrderData.map((order) => {
+          if (order.product_id === productForUpdate.product_id) {
+            return {
+              ...order,
+              product_name: productForUpdate.product_name,
+              product_price: productForUpdate.product_price,
+              product_minimum_stock: productForUpdate.product_minimum_stock,
+              category_id: productForUpdate.category_id,
+              orderQuantity:
+                order.orderQuantity > productForUpdate.product_minimum_stock
+                  ? productForUpdate.product_minimum_stock
+                  : order.orderQuantity,
+            };
+          }
+          return order;
+        })
+      );
+    },
+    [setOrderData]
+  );
+  
   
   const handleProductChange = (e) => {
     const { name, value } = e.target
@@ -122,40 +125,44 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
   }
 
   const handleUpdate = async (event) => {
-    event.preventDefault()
-    const finalImg = selectedImage ? selectedImage : productData.product_img
+    event.preventDefault();
+    const finalImg = selectedImage || productData.product_img;
+  
     if (!finalImg) {
       toast({
         title: 'No image selected',
         description: 'Please select a file before updating.',
         status: 'error',
         duration: 3000,
-        isClosable: true
-      })
+        isClosable: true,
+      });
+      return;
+    }
+    if(productData.product_price <= 0 || productData.product_minimum_stock <= 0 || productData.product_name === ''){
+      toast({ title: 'Error', description: 'Field cannot be empty', status: 'error', duration: 3000, isClosable: true })
       return
     }
     try {
-      await updateProduct(productData)
-      getProduct()
-      handleUpdateOrder(productData)
-      toast({
-        title: 'Success',
-        description: 'Product updated successfully.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      })
-      closeModal()
+      await updateProduct(productData);
+      if(!updateLoading && updateData?.error){
+        toast({ title: 'Error', description: updateData?.error, status: 'error', duration: 3000, isClosable: true })
+      }else{
+        toast({ title: 'Success', description: 'Product updated successfully', status: 'success', duration: 3000, isClosable: true })
+        getProduct()
+      }
+      handleUpdateOrder({ ...productData, product_img: finalImg });
     } catch (error) {
       toast({
         title: 'Update failed',
         description: error.message || 'An error occurred.',
         status: 'error',
         duration: 3000,
-        isClosable: true
-      })
+        isClosable: true,
+      });
     }
-  }
+    console.log(updateData)
+  };
+  
 
   return (
     <>

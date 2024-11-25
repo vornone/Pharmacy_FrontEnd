@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Image, InputGroup } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
-
+import { useToast } from '@chakra-ui/react'
 import {
   Button,
   ButtonGroup,
@@ -34,6 +34,7 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
     readOnly
   />
 ))
+
 const AddProductModal = ({ closeModal, data }) => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [platform, setPlatform] = useState(data.length == 0 ? 'No Data' : data[0].category_name)
@@ -45,73 +46,75 @@ const AddProductModal = ({ closeModal, data }) => {
     category_id: data.find((item) => item.category_name === platform).category_id
   })
   const { loading, error, getProduct } = useProduct()
-  const { insertFile } = useInsertProduct(selectedImage, productData)
+  const { data: insertData, loading: insertLoading, error: insertError, insertProduct } = useInsertProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
-
+  const toast = useToast()
   const inputRef = useRef(null)
 
   const handleUploadClick = () => {
-    inputRef.current.click() // Trigger the hidden input element
+    inputRef.current.click()
   }
   const platformSelectorEvent = (e) => {
     setPlatform(e.category_name)
     setProductData({ ...productData, category_id: e.category_id })
-    console.log(JSON.stringify(productData))
   }
+
   const handleProductChange = (e) => {
     const { name, value } = e.target
-
-    // Check if the value should be treated as a number (useful for number inputs)
     const parsedValue =
       name === 'product_price' || name === 'product_minimum_stock'
         ? isNaN(value)
           ? value
           : Number(value)
         : value
-
     const updatedProduct = { ...productData, [name]: parsedValue }
-
     setProductData(updatedProduct)
-    console.log(updatedProduct) // Log the updated product data
+
   }
 
   const handleUploadFile = (event) => {
     const file = event.target.files[0]
     if (file && file.type.startsWith('image/')) {
-      // Check if it's an image
       setSelectedImage(file)
-      setImagePreview(URL.createObjectURL(file)) // Create a preview URL
+      setImagePreview(URL.createObjectURL(file))
     } else {
-      alert('Please select a valid image file.') // Alert for invalid file
+      toast({ title: 'Invalid file type', description: 'Please select a valid image file.', status: 'error', duration: 3000, isClosable: true })
     }
   }
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!selectedImage) {
-      alert('Please select a file')
+      toast({ title: 'Error', description: 'Please select a file', status: 'error', duration: 3000, isClosable: true })
       return
     }
-
-    try {
-      await insertFile()
-
-      alert('File uploaded successfully')
-    } catch (error) {
-      alert(error.message)
+    if(productData.product_price <= 0 || productData.product_minimum_stock <= 0 || productData.product_name === ''){
+      toast({ title: 'Error', description: 'Field cannot be empty', status: 'error', duration: 3000, isClosable: true })
+      return
     }
-    getProduct().then(() => {})
+    try {
+      await insertProduct()
+      if(insertData?.error){
+        toast({ title: 'Error', description: insertData?.error, status: 'error', duration: 3000, isClosable: true })
+      }else{
+        toast({ title: 'Success', description: 'Product added successfully', status: 'success', duration: 3000, isClosable: true })
+        getProduct()
+      }
+      
+    } catch (error) {
+      toast({ title: 'Error', description: error.message, status: 'error', duration: 3000, isClosable: true })
+    }
+
   }
   return (
     <>
       <input
         type="file"
         ref={inputRef}
-        style={{ display: 'none' }} // Hide the input
+        style={{ display: 'none' }}
         onChange={handleUploadFile}
       />
       <VStack width={'100%'} gap={3}>
-        <VStack width={'100%'} height={'100%'}>
+        <VStack width={'100%'} height={'100%'} alignItems={'flex-start'}>
           <Flex
             justifyContent={'space-between'}
             width={'100%'}
@@ -164,7 +167,7 @@ const AddProductModal = ({ closeModal, data }) => {
               )}
             </MenuList>
           </Menu>
-          <InputGroup>
+          <InputGroup  width={'50%'}>
             <Input
               type="number"
               placeholder="Product Price"
@@ -175,13 +178,14 @@ const AddProductModal = ({ closeModal, data }) => {
             />
             <InputRightAddon bg={'none'}>$</InputRightAddon>
           </InputGroup>
-          <InputGroup>
+          <InputGroup width={'50%'}>
             <Input
               type="number"
               placeholder="Minimum Stock"
               name="product_minimum_stock"
               onChange={handleProductChange}
             />
+            <InputRightAddon bg={'none'} >units</InputRightAddon>
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Box width={'100%'}>

@@ -7,6 +7,7 @@ function ProductContainer({ children }) {
       borderRadius={10}
       overflow={'hidden'}
       shadow={'md'}
+      height={'100%'}
     >
       {children}
     </Box>

@@ -28,7 +28,7 @@ function OrderCard({ data, orderData, setOrderData }) {
     data.orderQuantity >= data.product_minimum_stock
       ? toast({
         title: 'Error',
-        description: 'Maximum order quantity is ' + data.product_minimum_stock,
+        description: 'item is out of stock',
         status: 'error',
         duration: 3000,
         isClosable: true

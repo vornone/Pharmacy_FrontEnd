@@ -13,17 +13,18 @@ const DeleteRowButton = ({handleDeleteRow}) => {
       closeOnBlur
       isOpen={isOpen}
       onClose={onClose}
+      
     >
       <PopoverTrigger>
         <IconButton icon={<TbTrashXFilled/>} colorScheme="red" size={"md"} variant={"ghost"} onClick={onOpen}/>
       </PopoverTrigger>
-      <PopoverContent   borderColor='blue.800'>
+      <PopoverContent   borderColor='blue.800' width={'200px'}  >
         <PopoverHeader  fontWeight='bold' border='0'>
           are you sure?
         </PopoverHeader>
         <PopoverCloseButton />
         <PopoverBody >
-        <ButtonGroup size='sm'>
+        <ButtonGroup size='sm' width={'100%'} justifyContent={'flex-end'} >
             <Button colorScheme='red' onClick={onClose}>No</Button>
             <Button colorScheme='green' ref={initialFocusRef} onClick={handleDeleteRow}>
               Yes

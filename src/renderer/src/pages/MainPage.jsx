@@ -7,7 +7,8 @@ import {
   Flex,
   useColorModeValue,
   OrderedList,
-  Heading
+  Heading,
+  Spinner
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
@@ -32,22 +33,29 @@ export default function MainPage() {
     getProduct()
   }, [])
   useEffect(() => {
-    // When product data changes, we may need to refresh or update orders
-    const updatedOrders = orders.map((order) => {
-      // Check if product details need to be updated based on product data
-      const updatedProduct = data.find(
-        (product) => product.product_id === order.product_id
-      );
-      if (updatedProduct) {
-        return {
-          ...order,
-          product_img: updatedProduct.product_img, // Ensure image is updated
-        };
+    // Only proceed if data is loaded and not empty
+    if (data?.length > 0 && orders.length > 0) {
+      const updatedOrders = orders.map((order) => {
+        const updatedProduct = data.find(
+          (product) => product.product_id === order.product_id
+        );
+        if (updatedProduct) {
+          return {
+            ...order,
+            product_img: updatedProduct.product_img,
+            
+          };
+        }
+        return order;
+      });
+  
+      // Only update if there are actual changes
+      if (JSON.stringify(orders) !== JSON.stringify(updatedOrders)) {
+        setOrders(updatedOrders);
       }
-      return order; // Return unchanged order if no match found
-    });
-    setOrders(updatedOrders);
-  }, [data]);
+    }
+  }, [data, orders]);
+  
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
@@ -61,7 +69,7 @@ export default function MainPage() {
             if (item.product_name === e.product_name &&item.orderQuantity >= item.product_minimum_stock) {
                 toast({
                     title: 'Error',
-                    description: 'Maximum order quantity is ' + item.product_minimum_stock,
+                    description: 'item is out of stock',
                     status: 'error',
                     duration: 3000,
                     isClosable: true
@@ -121,7 +129,7 @@ export default function MainPage() {
             {error || data === undefined ? (
               <h1>{error}</h1>
             ) : loading ? (
-              <h1>Loading...</h1>
+              <Spinner/>
             ) : (
               <ProductGrid data={data} addingOrder={addingOrder}></ProductGrid>
             )}

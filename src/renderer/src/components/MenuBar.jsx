@@ -146,7 +146,7 @@ function MenuBar({orderData , setOrderData}) {
   }
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'4xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{isTable ? tableTitle : title}</ModalHeader>

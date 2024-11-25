@@ -7,13 +7,24 @@ import {
   Card,
   Input,
   InputGroup,
-  InputLeftElement
+  InputLeftElement,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Flex
 } from '@chakra-ui/react'
 import { TbPlus, TbEdit } from 'react-icons/tb'
 import { BsChevronDown } from 'react-icons/bs'
 import { RiDiscountPercentFill } from 'react-icons/ri'
+import OrderReciept from './modal/OrderReciept'
 
 function OrderCharge({ data }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const onClose = () => setIsOpen(false)
   const [discount, setDiscount] = useState(0)
   const subTotal = data
     .reduce((acc, cur) => acc + parseFloat(cur.product_price * cur.orderQuantity), 0)
@@ -24,6 +35,24 @@ function OrderCharge({ data }) {
   const total = subTotal - discountAmount + tax
 
   return (
+    <>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody maxHeight={'100%'} height={'100%'}>
+            <Flex
+              width={'100%'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              flexDirection={'column'}
+            >
+              <OrderReciept orderData={data} ></OrderReciept>
+            </Flex>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
     <Card width={'100%'}>
       <HStack
         alignItems={'top'}
@@ -67,13 +96,14 @@ function OrderCharge({ data }) {
                 }
               ></Input>
             </InputGroup>
-            <Button colorScheme="green" width={'100%'}>
+            <Button colorScheme="green" width={'100%'} onClick={() => setIsOpen(true)}>
               Confirm
             </Button>
           </HStack>
         </VStack>
       </HStack>
     </Card>
+    </>
   )
 }
 

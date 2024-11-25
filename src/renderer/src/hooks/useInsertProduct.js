@@ -15,7 +15,7 @@ const useInsertProduct = (selectedFile, productData) => {
 
   const { data, loading, error } = useSelector((state) => state.insertReducer)
 
-  const insertFile = () => {
+  const insertProduct = () => {
     dispatch(queryData(apiSource, 'product/insert', 'POST', formData))
   }
   useEffect(() => {
@@ -23,10 +23,10 @@ const useInsertProduct = (selectedFile, productData) => {
   }, [dispatch])
 
   return {
-    data: data?.data.product,
+    data: data?.data,
     loading,
     error,
-    insertFile
+    insertProduct
   }
 }
 
