@@ -44,6 +44,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
       : categoryData.find((data) => data.category_id == rowData.category_id)
           .category_name
   )
+  const [isUpdateTriggered, setIsUpdateTriggered] = useState(false);
   const { data,loading, error, getProduct } = useProduct()
   const [productData, setProductData] = useState({
     product_name: rowData.product_name,
@@ -126,8 +127,13 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
 
   const handleUpdate = async (event) => {
     event.preventDefault();
+  
+    // Disable multiple updates by preventing further clicks if already updating
+    if (updateLoading) return;
+  
     const finalImg = selectedImage || productData.product_img;
   
+    // Validation checks
     if (!finalImg) {
       toast({
         title: 'No image selected',
@@ -138,30 +144,56 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
       });
       return;
     }
-    if(productData.product_price <= 0 || productData.product_minimum_stock <= 0 || productData.product_name === ''){
-      toast({ title: 'Error', description: 'Field cannot be empty', status: 'error', duration: 3000, isClosable: true })
-      return
-    }
-    try {
-      await updateProduct(productData);
-      if(!updateLoading && updateData?.error){
-        toast({ title: 'Error', description: updateData?.error, status: 'error', duration: 3000, isClosable: true })
-      }else{
-        toast({ title: 'Success', description: 'Product updated successfully', status: 'success', duration: 3000, isClosable: true })
-        getProduct()
-      }
-      handleUpdateOrder({ ...productData, product_img: finalImg });
-    } catch (error) {
+    if (productData.product_price <= 0 || productData.product_minimum_stock <= 0 || !productData.product_name.trim()) {
       toast({
-        title: 'Update failed',
-        description: error.message || 'An error occurred.',
+        title: 'Error',
+        description: 'All fields must be filled correctly.',
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
+      return;
     }
-    console.log(updateData)
+    try {
+      await updateProduct(productData); // Wait for product update response
+      setIsUpdateTriggered(true);
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: error.message || 'An unexpected error occurred.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } 
   };
+  useEffect(() => {
+    if (isUpdateTriggered) {
+      if (updateData.error) {
+        toast({
+          title: 'Error',
+          description: updateData.error,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          
+        });
+
+      }else {
+        toast({
+          title: 'Success',
+          description: 'Product updated successfully.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        handleUpdateOrder({ ...productData });
+      }
+      getProduct()
+      setIsUpdateTriggered(false);
+    }
+   
+  }, [updateData]);
   
 
   return (
@@ -246,7 +278,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
             <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
               Cancel
             </Button>
-            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleUpdate}>
+            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleUpdate} disabled={updateLoading}>
               Update
             </Button>
           </ButtonGroup>

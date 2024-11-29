@@ -18,9 +18,6 @@ const useUpdateProduct = (selectedFile, productData) => {
   const updateProduct = () => {
     dispatch(queryData(apiSource, 'product/update/' + productData.product_id, 'POST', formData))
   }
-  useEffect(() => {
-    data
-  }, [dispatch])
 
   return {
     data: data?.data,

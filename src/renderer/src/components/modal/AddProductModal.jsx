@@ -93,17 +93,16 @@ const AddProductModal = ({ closeModal, data }) => {
     }
     try {
       await insertProduct()
-      if(insertData?.error){
+      if(!insertLoading && insertData?.error){
         toast({ title: 'Error', description: insertData?.error, status: 'error', duration: 3000, isClosable: true })
       }else{
         toast({ title: 'Success', description: 'Product added successfully', status: 'success', duration: 3000, isClosable: true })
-        getProduct()
+        closeModal()
       }
-      
     } catch (error) {
       toast({ title: 'Error', description: error.message, status: 'error', duration: 3000, isClosable: true })
     }
-
+    getProduct()
   }
   return (
     <>
