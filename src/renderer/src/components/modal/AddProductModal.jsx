@@ -42,11 +42,16 @@ const AddProductModal = ({ closeModal, data }) => {
   const [productData, setProductData] = useState({
     product_name: '',
     product_price: 0,
-    product_minimum_stock: 0,
+    product_qty: 0,
     category_id: data.find((item) => item.category_name === platform).category_id
   })
   const { loading, error, getProduct } = useProduct()
-  const { data: insertData, loading: insertLoading, error: insertError, insertProduct } = useInsertProduct(selectedImage, productData)
+  const {
+    data: insertData,
+    loading: insertLoading,
+    error: insertError,
+    insertProduct
+  } = useInsertProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
   const toast = useToast()
   const inputRef = useRef(null)
@@ -62,14 +67,13 @@ const AddProductModal = ({ closeModal, data }) => {
   const handleProductChange = (e) => {
     const { name, value } = e.target
     const parsedValue =
-      name === 'product_price' || name === 'product_minimum_stock'
+      name === 'product_price' || name === 'product_qty'
         ? isNaN(value)
           ? value
           : Number(value)
         : value
     const updatedProduct = { ...productData, [name]: parsedValue }
     setProductData(updatedProduct)
-
   }
 
   const handleUploadFile = (event) => {
@@ -78,40 +82,75 @@ const AddProductModal = ({ closeModal, data }) => {
       setSelectedImage(file)
       setImagePreview(URL.createObjectURL(file))
     } else {
-      toast({ title: 'Invalid file type', description: 'Please select a valid image file.', status: 'error', duration: 3000, isClosable: true })
+      toast({
+        title: 'Invalid file type',
+        description: 'Please select a valid image file.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
     }
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (!selectedImage) {
-      toast({ title: 'Error', description: 'Please select a file', status: 'error', duration: 3000, isClosable: true })
+      toast({
+        title: 'Error',
+        description: 'Please select a file',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
       return
     }
-    if(productData.product_price <= 0 || productData.product_minimum_stock <= 0 || productData.product_name === ''){
-      toast({ title: 'Error', description: 'Field cannot be empty', status: 'error', duration: 3000, isClosable: true })
+    if (
+      productData.product_price <= 0 ||
+      productData.product_qty <= 0 ||
+      productData.product_name === ''
+    ) {
+      toast({
+        title: 'Error',
+        description: 'Field cannot be empty',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
       return
     }
     try {
       await insertProduct()
-      if(!insertLoading && insertData?.error){
-        toast({ title: 'Error', description: insertData?.error, status: 'error', duration: 3000, isClosable: true })
-      }else{
-        toast({ title: 'Success', description: 'Product added successfully', status: 'success', duration: 3000, isClosable: true })
+      if (!insertLoading && insertData?.error) {
+        toast({
+          title: 'Error',
+          description: insertData?.error,
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Product added successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        })
         closeModal()
       }
     } catch (error) {
-      toast({ title: 'Error', description: error.message, status: 'error', duration: 3000, isClosable: true })
+      toast({
+        title: 'Error',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
     }
     getProduct()
   }
   return (
     <>
-      <input
-        type="file"
-        ref={inputRef}
-        style={{ display: 'none' }}
-        onChange={handleUploadFile}
-      />
+      <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile} />
       <VStack width={'100%'} gap={3}>
         <VStack width={'100%'} height={'100%'} alignItems={'flex-start'}>
           <Flex
@@ -166,7 +205,7 @@ const AddProductModal = ({ closeModal, data }) => {
               )}
             </MenuList>
           </Menu>
-          <InputGroup  width={'50%'}>
+          <InputGroup width={'50%'}>
             <Input
               type="number"
               placeholder="Product Price"
@@ -181,10 +220,10 @@ const AddProductModal = ({ closeModal, data }) => {
             <Input
               type="number"
               placeholder="Minimum Stock"
-              name="product_minimum_stock"
+              name="product_qty"
               onChange={handleProductChange}
             />
-            <InputRightAddon bg={'none'} >units</InputRightAddon>
+            <InputRightAddon bg={'none'}>units</InputRightAddon>
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
             <Box width={'100%'}>

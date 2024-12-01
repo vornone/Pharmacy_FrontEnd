@@ -36,52 +36,50 @@ export default function MainPage() {
     // Only proceed if data is loaded and not empty
     if (data?.length > 0 && orders.length > 0) {
       const updatedOrders = orders.map((order) => {
-        const updatedProduct = data.find(
-          (product) => product.product_id === order.product_id
-        );
+        const updatedProduct = data.find((product) => product.product_id === order.product_id)
         if (updatedProduct) {
           return {
             ...order,
-            product_img: updatedProduct.product_img,
-            
-          };
+            product_img: updatedProduct.product_img
+          }
         }
-        return order;
-      });
-  
+        return order
+      })
+
       // Only update if there are actual changes
       if (JSON.stringify(orders) !== JSON.stringify(updatedOrders)) {
-        setOrders(updatedOrders);
+        setOrders(updatedOrders)
       }
     }
-  }, [data, orders]);
-  
+  }, [data, orders])
+
   //function
   const addingOrder = (e) => {
     const newOrders = [...orders]
-    const existedData = newOrders.some((item) => item.product_name === e.product_name);
+    const existedData = newOrders.some((item) => item.product_name === e.product_name)
 
     if (existedData) {
-        const updatedOrders = newOrders.map((item) => {
-            if (item.product_name === e.product_name && item.orderQuantity < item.product_minimum_stock) {
-                return { ...item,orderQuantity: item.orderQuantity + 1};
-            }
-            if (item.product_name === e.product_name &&item.orderQuantity >= item.product_minimum_stock) {
-                toast({
-                    title: 'Error',
-                    description: 'item is out of stock',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true
-                })
-            }
-    return item;});
-        setOrders(updatedOrders);
+      const updatedOrders = newOrders.map((item) => {
+        if (item.product_name === e.product_name && item.orderQuantity < item.product_qty) {
+          return { ...item, orderQuantity: item.orderQuantity + 1 }
+        }
+        if (item.product_name === e.product_name && item.orderQuantity >= item.product_qty) {
+          toast({
+            title: 'Error',
+            description: 'item is out of stock',
+            status: 'error',
+            duration: 3000,
+            isClosable: true
+          })
+        }
+        return item
+      })
+      setOrders(updatedOrders)
     } else {
-        const newProduct = { ...e, orderQuantity: 1 };
-        setOrders([...newOrders, newProduct]);
+      const newProduct = { ...e, orderQuantity: 1 }
+      setOrders([...newOrders, newProduct])
     }
-};
+  }
 
   return (
     <Grid
@@ -129,7 +127,7 @@ export default function MainPage() {
             {error || data === undefined ? (
               <h1>{error}</h1>
             ) : loading ? (
-              <Spinner/>
+              <Spinner />
             ) : (
               <ProductGrid data={data} addingOrder={addingOrder}></ProductGrid>
             )}

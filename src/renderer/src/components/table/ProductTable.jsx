@@ -89,13 +89,31 @@ function ProductTable({ data, orderData, setOrderData }) {
     {
       accessorKey: 'product_name',
       header: 'Name',
-      cell: EditableCell,
+      cell: ({ getValue }) => {
+        const value = getValue()
+        return (
+          <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden">
+            {value}
+          </Text>
+        )
+      },
       enableColumnFilter: true
     },
     {
       accessorKey: 'product_price',
       header: 'price',
-      cell: EditableCell
+      cell: ({ getValue }) => {
+        const value = getValue()
+        return <Text>${value.toFixed(2)}</Text>
+      }
+    },
+    {
+      accessorKey: 'product_qty',
+      header: 'qty',
+      cell: ({ getValue }) => {
+        const value = getValue()
+        return <Text>{value}</Text>
+      }
     },
     {
       header: 'Action',

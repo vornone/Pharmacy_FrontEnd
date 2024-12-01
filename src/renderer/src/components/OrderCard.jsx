@@ -25,14 +25,14 @@ function OrderCard({ data, orderData, setOrderData }) {
   }
   function handleIncrement() {
     const a = [...orderData]
-    data.orderQuantity >= data.product_minimum_stock
+    data.orderQuantity >= data.product_qty
       ? toast({
-        title: 'Error',
-        description: 'item is out of stock',
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
+          title: 'Error',
+          description: 'item is out of stock',
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
       : (data.orderQuantity = data.orderQuantity + 1)
     setOrderData(a)
   }
