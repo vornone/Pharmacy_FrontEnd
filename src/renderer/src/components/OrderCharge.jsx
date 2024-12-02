@@ -21,6 +21,7 @@ import { TbPlus, TbEdit } from 'react-icons/tb'
 import { BsChevronDown } from 'react-icons/bs'
 import { RiDiscountPercentFill } from 'react-icons/ri'
 import OrderReciept from './modal/OrderReciept'
+import { useToast } from '@chakra-ui/react'
 
 function OrderCharge({ data }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,9 +32,20 @@ function OrderCharge({ data }) {
     .toFixed(2)
   const discountAmount = parseFloat((discount * subTotal) / 100).toFixed(2)
   const tax = parseFloat(((subTotal - discountAmount) * 0.1).toFixed(2))
-
   const total = subTotal - discountAmount + tax
+  const toast = useToast()
 
+  const handleValidation = () => {
+    if (discount > 100 || discount < 0) {
+      toast({
+        title: 'Error',
+        description: 'Discount must be between 0 and 100%',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    } else setIsOpen(true)
+  }
   return (
     <>
     <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
@@ -83,20 +95,16 @@ function OrderCharge({ data }) {
             <InputGroup colorScheme="white">
               <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
               <Input
+                isInvalid={discount > 100 || discount < 0}
                 placeholder="Discount...."
                 width={'100%'}
                 shadow={'sm'}
-                type="number"
                 onChange={(e) =>
-                  e.target.value > 100
-                    ? (e.target.value = 100)
-                    : e.target.value < 0
-                      ? (e.target.value = 0)
-                      : setDiscount(e.target.value)
+                  setDiscount(e.target.value)
                 }
               ></Input>
             </InputGroup>
-            <Button colorScheme="green" width={'100%'} onClick={() => setIsOpen(true)}>
+            <Button colorScheme="green" width={'100%'} onClick={handleValidation}>
               Confirm
             </Button>
           </HStack>
