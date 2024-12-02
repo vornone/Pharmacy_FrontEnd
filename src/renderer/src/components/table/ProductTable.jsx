@@ -18,7 +18,8 @@ import {
   ModalBody,
   ModalCloseButton,
   Input,
-  useToast
+  useToast,
+  Img
 } from '@chakra-ui/react'
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import {
@@ -43,8 +44,9 @@ import useDeleteData from '../../hooks/useDeleteData.js'
 import useProduct from '../../hooks/useProduct.js'
 import UpdateProductModal from './../modal/UpdateProductModal'
 import TableFilter from '../table-component/TableFilter.jsx'
-
+import { serverUrl } from '../../api-clients/api-clients.js'
 function ProductTable({ data, orderData, setOrderData }) {
+  const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
@@ -57,6 +59,7 @@ function ProductTable({ data, orderData, setOrderData }) {
   } = useProduct()
   const { deleteData: deleteProduct } = useDeleteData()
   const [columnFilters, setColumnFilters] = useState([])
+
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
@@ -82,9 +85,26 @@ function ProductTable({ data, orderData, setOrderData }) {
     }
   }
   const columns = [
+    // {
+    //   header: 'N',
+    //   cell: ({ row }) => <Text width={50}>{row.index + 1}</Text>
+    // },
     {
-      header: 'N',
-      cell: ({ row }) => <Text width={50}>{row.index + 1}</Text>
+      accessorKey: 'product_img',
+      header: 'Image',
+      cell: ({ getValue }) => {
+        const value = getValue()
+        return (
+          <Img
+            src={imgApi + value}
+            width="75px"
+            height="75px"
+            objectFit="cover"
+            objectPosition="center"
+          />
+        )
+      },
+      enableSorting: false
     },
     {
       accessorKey: 'product_name',
@@ -113,6 +133,14 @@ function ProductTable({ data, orderData, setOrderData }) {
       cell: ({ getValue }) => {
         const value = getValue()
         return <Text>{value}</Text>
+      }
+    },
+    {
+      accessorKey: 'category_id',
+      header: 'cat',
+      cell: ({ getValue }) => {
+        const value = getValue()
+        return <Text>{categoryData.find((item) => item.category_id === value).category_name}</Text>
       }
     },
     {
@@ -174,7 +202,7 @@ function ProductTable({ data, orderData, setOrderData }) {
           columnFilters={columnFilters}
         />
       </Flex>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} isCentered size={'2xl'}>
+      <Modal size="6xl" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Product</ModalHeader>
@@ -191,7 +219,7 @@ function ProductTable({ data, orderData, setOrderData }) {
         </ModalContent>
       </Modal>
       <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
-        <Table variant={'simple'} size={'lg'}>
+        <Table variant="simple">
           <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'green.50'}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
