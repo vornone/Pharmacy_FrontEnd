@@ -202,7 +202,7 @@ function ProductTable({ data, orderData, setOrderData }) {
           columnFilters={columnFilters}
         />
       </Flex>
-      <Modal size="6xl" isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size={'md'} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Product</ModalHeader>

@@ -36,8 +36,6 @@ import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
 import UpdateProductModal from './modal/UpdateProductModal'
 
-
-
 const menuLeft = [
   {
     name: 'Product',
@@ -67,9 +65,14 @@ const menuRight = [
   }
 ]
 
-function MenuBar({orderData , setOrderData}) {
+function MenuBar({ orderData, setOrderData }) {
   const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole()
-  const { data:productData, loading:productLoading, error:productError, getProduct} = useProduct()
+  const {
+    data: productData,
+    loading: productLoading,
+    error: productError,
+    getProduct
+  } = useProduct()
   const {
     data: categoryData,
     loading: categoryLoading,
@@ -132,7 +135,12 @@ function MenuBar({orderData , setOrderData}) {
       table = mainModal(
         categoryLoading,
         categoryError,
-        <ProductTable closeModal={onClose} data={productData} orderData={orderData}  setOrderData={setOrderData}/>
+        <ProductTable
+          closeModal={onClose}
+          data={productData}
+          orderData={orderData}
+          setOrderData={setOrderData}
+        />
       )
   }
   const handleOpenModal = (type, isTable) => {
@@ -142,11 +150,10 @@ function MenuBar({orderData , setOrderData}) {
     fetchRoleData()
     setIsTable(isTable)
     setModalType(type)
-
   }
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'4xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'6xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{isTable ? tableTitle : title}</ModalHeader>
