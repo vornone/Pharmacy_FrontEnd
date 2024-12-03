@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import EditableCell from '../table-component/EditableCell.jsx'
 import {
   TableContainer,
   Button,
-  Icon,
   Text,
-  HStack,
   Flex,
-  ButtonGroup,
+  InputGroup,
+  Input,
   useColorMode,
-  Spinner,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
-  ModalBody,
   ModalCloseButton,
-  Input,
-  useToast,
+  ModalBody,
+  ModalFooter,
+  Checkbox,
+  ButtonGroup,
   Img
 } from '@chakra-ui/react'
-import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -30,21 +26,20 @@ import {
   getPaginationRowModel,
   getFilteredRowModel
 } from '@tanstack/react-table'
+import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
-import { TbEdit, TbChevronDown, TbChevronUp, TbPlus, TbArrowsSort } from 'react-icons/tb'
-import EditUserModal from '../EditUserModal.jsx'
+import { TbChevronDown, TbChevronUp, TbArrowsSort } from 'react-icons/tb'
 import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useCategory from '../../hooks/useCategory.js'
-import UpdateCategoryModal from '../modal/UpdateCategoryModal.jsx'
-import useUpdateData from '../../hooks/useUpdateData.js'
 import useDeleteData from '../../hooks/useDeleteData.js'
 import useProduct from '../../hooks/useProduct.js'
 import UpdateProductModal from './../modal/UpdateProductModal'
 import TableFilter from '../table-component/TableFilter.jsx'
 import { serverUrl } from '../../api-clients/api-clients.js'
+
 function ProductTable({ data, orderData, setOrderData }) {
   const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -59,11 +54,14 @@ function ProductTable({ data, orderData, setOrderData }) {
   } = useProduct()
   const { deleteData: deleteProduct } = useDeleteData()
   const [columnFilters, setColumnFilters] = useState([])
+  const [discount, setDiscount] = useState(50)
+  const [productDiscounts, setProductDiscounts] = useState({})
 
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
+
   useEffect(() => {
     if (!productListError && !productListLoading) {
       setTableData(productListData)
@@ -79,29 +77,57 @@ function ProductTable({ data, orderData, setOrderData }) {
       const updateOrder = orderData.filter((item) => item.product_id !== row.original.product_id)
       setTableData(updatedData)
       setOrderData(updateOrder)
-      console.log(row.original.product_id)
     } catch (error) {
       console.error('Error deleting row:', error)
     }
   }
+
+  const applySelectedDiscount = () => {
+    const selectedRows = table.getSelectedRowModel().rows
+    const newDiscounts = {...productDiscounts}
+    
+    selectedRows.forEach(row => {
+      const productId = row.original.product_id
+      newDiscounts[productId] = discount
+    })
+    
+    setProductDiscounts(newDiscounts)
+  }
+
   const columns = [
-    // {
-    //   header: 'N',
-    //   cell: ({ row }) => <Text width={50}>{row.index + 1}</Text>
-    // },
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          isChecked={table.getIsAllRowsSelected()}
+          isIndeterminate={table.getIsSomeRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          isChecked={row.getIsSelected()}
+          isIndeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      size: 'sm',
+      width: '50px'
+    },
     {
       accessorKey: 'product_img',
       header: 'Image',
       cell: ({ getValue }) => {
         const value = getValue()
         return (
-          <Img
-            src={imgApi + value}
-            width="75px"
-            height="75px"
-            objectFit="cover"
-            objectPosition="center"
-          />
+                  <Img
+                    src={imgApi + value}
+                    width="70px"
+                    height="70px"
+                    objectFit="cover"
+                    objectPosition="center"
+                  />
         )
       },
       enableSorting: false
@@ -119,25 +145,55 @@ function ProductTable({ data, orderData, setOrderData }) {
       },
       enableColumnFilter: true
     },
-    {
-      accessorKey: 'product_price',
-      header: 'price',
-      cell: ({ getValue }) => {
-        const value = getValue()
-        return <Text>${value.toFixed(2)}</Text>
-      }
-    },
+    
     {
       accessorKey: 'product_qty',
-      header: 'qty',
+      header: 'Qty',
       cell: ({ getValue }) => {
         const value = getValue()
         return <Text>{value}</Text>
       }
     },
     {
+      accessorKey: 'product_price',
+      header: 'Price',
+      cell: ({ row }) => {
+        const productId = row.original.product_id
+        const originalPrice = row.original.product_price
+        const productDiscount = productDiscounts[productId] || 0
+
+        if (productDiscount > 0) {
+          return (
+            <>
+              <Text textDecoration={'line-through'} color={'gray.400'}>
+                ${originalPrice.toFixed(2)}
+              </Text>
+              <Text>
+                ${((originalPrice * (100 - productDiscount)) / 100).toFixed(2)}
+              </Text>
+            </>
+          )
+        } else {
+          return <Text>${originalPrice.toFixed(2)}</Text>
+        }
+      }
+    },
+    {
+      header: 'discount',
+      cell: ({ row }) => {
+        const productId = row.original.product_id
+        const productDiscount = productDiscounts[productId] || 0
+        if (productDiscount > 0) {
+          return <Text color={'green.400'}>{productDiscount}%</Text>
+        } else {
+          return <Text color={'gray.400'}>none</Text>
+        }
+      },
+    },
+    
+    {
       accessorKey: 'category_id',
-      header: 'cat',
+      header: 'Cat',
       cell: ({ getValue }) => {
         const value = getValue()
         return <Text>{categoryData.find((item) => item.category_id === value).category_name}</Text>
@@ -157,10 +213,10 @@ function ProductTable({ data, orderData, setOrderData }) {
     }
   ]
 
-  //Table
   const table = useReactTable({
     data: tableData,
     columns,
+    onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -172,11 +228,10 @@ function ProductTable({ data, orderData, setOrderData }) {
     },
     initialState: {
       pagination: {
-        //custom initial page index
-        pageSize: 5 //custom default page size
+        pageSize: 5
       }
     },
-    enableRowSelection: ' true',
+    enableRowSelection: true,
     meta: {
       updateData: (rowIndex, columnId, value) =>
         setTableData((prev) =>
@@ -191,17 +246,36 @@ function ProductTable({ data, orderData, setOrderData }) {
         )
     }
   })
-  //UI
+
   return (
     <>
-      <Flex justifyContent={'space-between'} alignItems={'left'} width={'100%'} mb={2}>
+      <Flex justifyContent={'space-between'} alignItems={'center'} width={'100%'} mb={2}>
         <TableFilter
           setColumnFilters={setColumnFilters}
           placeholder={'Product Name'}
           column={'product_name'}
           columnFilters={columnFilters}
         />
+        <InputGroup gap={2} borderRadius={10} justifyContent={'flex-end'} alignItems={'center'}>
+          <Input
+            type='number'
+            width={'70px'}
+            value={discount}
+            onChange={(e) => setDiscount(Number(e.target.value))}
+            max={100}
+            min={0}
+          />
+          <Button 
+            colorScheme={'green'} 
+            size={'sm'}  
+            onClick={applySelectedDiscount}
+            isDisabled={table.getSelectedRowModel().rows.length === 0}
+          >
+            Apply Discount
+          </Button>
+        </InputGroup>
       </Flex>
+
       <Modal size={'md'} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -218,6 +292,7 @@ function ProductTable({ data, orderData, setOrderData }) {
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
+
       <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
         <Table variant="simple">
           <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'green.50'}>
@@ -289,4 +364,5 @@ function ProductTable({ data, orderData, setOrderData }) {
     </>
   )
 }
+
 export default ProductTable

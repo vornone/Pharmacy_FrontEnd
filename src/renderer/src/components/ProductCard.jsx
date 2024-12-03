@@ -19,7 +19,7 @@ function ProductCard({ props, eventhandler }) {
       <Image
         bg="gray.100"
         width="100%"
-        height="130px"
+        height="150px"
         src={imgApi + props.product_img}
         borderRadius={5}
         objectFit="cover"
