@@ -39,7 +39,7 @@ import useProduct from '../../hooks/useProduct.js'
 import UpdateProductModal from './../modal/UpdateProductModal'
 import TableFilter from '../table-component/TableFilter.jsx'
 import { serverUrl } from '../../api-clients/api-clients.js'
-
+import useUpdateProduct from '../../hooks/useUpdateProduct.js'
 function ProductTable({ data, orderData, setOrderData }) {
   const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -56,12 +56,11 @@ function ProductTable({ data, orderData, setOrderData }) {
   const [columnFilters, setColumnFilters] = useState([])
   const [discount, setDiscount] = useState(50)
   const [productDiscounts, setProductDiscounts] = useState({})
-
+  const { applyDiscountToMultipleProducts } = useUpdateProduct()
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
-
   useEffect(() => {
     if (!productListError && !productListLoading) {
       setTableData(productListData)
@@ -83,9 +82,11 @@ function ProductTable({ data, orderData, setOrderData }) {
   }
 
   const applySelectedDiscount = () => {
-    const selectedRows = table.getSelectedRowModel().rows
+    const selectedRows = table.getSelectedRowModel().rows.original
     const newDiscounts = {...productDiscounts}
-    
+    console.log(selectedRows)
+    applyDiscountToMultipleProducts(selectedRows, { product_discount: discount })
+
     selectedRows.forEach(row => {
       const productId = row.original.product_id
       newDiscounts[productId] = discount

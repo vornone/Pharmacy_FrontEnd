@@ -134,7 +134,7 @@ export default function MainPage() {
           </VStack>
           <VStack
             bg={colorGenre}
-            width={'50%'}
+            width={'40%'}
             height={'100%'}
             justify={'space-between'}
             borderRadius={'10px'}

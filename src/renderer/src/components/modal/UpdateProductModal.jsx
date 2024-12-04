@@ -61,6 +61,7 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
     updateProduct
   } = useUpdateProduct(selectedImage, productData)
   const [selectedDate, setSelectedDate] = useState(null)
+
   const inputRef = useRef(null)
   const toast = useToast()
 
