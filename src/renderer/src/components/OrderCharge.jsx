@@ -27,9 +27,11 @@ function OrderCharge({ data }) {
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const [discount, setDiscount] = useState(0)
-  const subTotal = data
-    .reduce((acc, cur) => acc + parseFloat(cur.product_price * cur.orderQuantity), 0)
-    .toFixed(2)
+
+  const subTotal = data.reduce((acc, cur) => {
+    const itemPrice = cur.discount_price ?? cur.product_price
+    return acc + parseFloat((itemPrice * cur.orderQuantity).toFixed(2))
+  }, 0)
   const discountAmount = parseFloat((discount * subTotal) / 100).toFixed(2)
   const tax = parseFloat(((subTotal - discountAmount) * 0.1).toFixed(2))
   const total = subTotal - discountAmount + tax
@@ -48,7 +50,7 @@ function OrderCharge({ data }) {
   }
   return (
     <>
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
@@ -59,58 +61,56 @@ function OrderCharge({ data }) {
               alignItems={'center'}
               flexDirection={'column'}
             >
-              <OrderReciept orderData={data} ></OrderReciept>
+              <OrderReciept orderData={data}></OrderReciept>
             </Flex>
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
-    <Card width={'100%'}>
-      <HStack
-        alignItems={'top'}
-        justifyContent={'space-between'}
-        width={'100%'}
-        p={3}
-        borderRadius={10}
-      >
-        <VStack alignItems={'flex-start'} width={'100%'}>
-          <HStack justifyContent={'space-between'} width={'100%'}>
-            <Text color={'gray.400'}>Subtotal:</Text>
-            <Text color={'gray.400'}>${subTotal}</Text>
-          </HStack>
-          <HStack justifyContent={'space-between'} width={'100%'}>
-            <Text color={'gray.400'}>Discount:</Text>
-            <Text color={'green.500'}>-{discountAmount}</Text>
-          </HStack>
-          <HStack justifyContent={'space-between'} width={'100%'}>
-            <Text color={'gray.400'}>Tax:</Text>
-            <Text color={'gray.400'}>${tax}</Text>
-          </HStack>
+      <Card width={'100%'}>
+        <HStack
+          alignItems={'top'}
+          justifyContent={'space-between'}
+          width={'100%'}
+          p={3}
+          borderRadius={10}
+        >
+          <VStack alignItems={'flex-start'} width={'100%'}>
+            <HStack justifyContent={'space-between'} width={'100%'}>
+              <Text color={'gray.400'}>Subtotal:</Text>
+              <Text color={'gray.400'}>${subTotal.toFixed(2)}</Text>
+            </HStack>
+            <HStack justifyContent={'space-between'} width={'100%'}>
+              <Text color={'gray.400'}>Discount:</Text>
+              <Text color={'red.500'}>-{discountAmount}</Text>
+            </HStack>
+            <HStack justifyContent={'space-between'} width={'100%'}>
+              <Text color={'gray.400'}>VAT:</Text>
+              <Text color={'gray.400'}>${tax}</Text>
+            </HStack>
 
-          <HStack justifyContent={'space-between'} width={'100%'}>
-            <Text fontSize={'lg'}>Total:</Text>
-            <Text fontSize={'lg'}>${total.toFixed(2)}</Text>
-          </HStack>
-          <HStack justifyContent={'space-between'} width={'100%'}>
-            <InputGroup colorScheme="white">
-              <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
-              <Input
-                isInvalid={discount > 100 || discount < 0}
-                placeholder="Discount...."
-                width={'100%'}
-                shadow={'sm'}
-                onChange={(e) =>
-                  setDiscount(e.target.value)
-                }
-              ></Input>
-            </InputGroup>
-            <Button colorScheme="green" width={'100%'} onClick={handleValidation}>
-              Confirm
-            </Button>
-          </HStack>
-        </VStack>
-      </HStack>
-    </Card>
+            <HStack justifyContent={'space-between'} width={'100%'}>
+              <Text fontSize={'lg'}>Total:</Text>
+              <Text fontSize={'lg'}>${total.toFixed(2)}</Text>
+            </HStack>
+            <HStack justifyContent={'space-between'} width={'100%'}>
+              <InputGroup colorScheme="white">
+                <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
+                <Input
+                  isInvalid={discount > 100 || discount < 0}
+                  placeholder="Discount...."
+                  width={'100%'}
+                  shadow={'sm'}
+                  onChange={(e) => setDiscount(e.target.value)}
+                ></Input>
+              </InputGroup>
+              <Button colorScheme="green" width={'100%'} onClick={handleValidation}>
+                Confirm
+              </Button>
+            </HStack>
+          </VStack>
+        </HStack>
+      </Card>
     </>
   )
 }

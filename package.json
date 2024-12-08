@@ -11,7 +11,9 @@
     "prebuild": "electron-vite build",
     "dev": "concurrently \"npm run build\" \"electron-forge start\"",
     "build": "electron-vite build",
-    "preview": "electron-vite dev"
+    "preview": "electron-vite dev",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.10.4",

@@ -40,7 +40,8 @@ export default function MainPage() {
         if (updatedProduct) {
           return {
             ...order,
-            product_img: updatedProduct.product_img
+            product_img: updatedProduct.product_img,
+            product_dicount: updatedProduct.product_dicount
           }
         }
         return order

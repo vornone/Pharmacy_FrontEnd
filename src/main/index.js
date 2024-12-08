@@ -10,6 +10,7 @@ function createWindow() {
     width: 900,
     height: 670,
     show: false,
+    icon: join(__dirname, '../../build/icon.ico'),
     autoHideMenuBar: false,
     webPreferences: {
       webSecurity: false,

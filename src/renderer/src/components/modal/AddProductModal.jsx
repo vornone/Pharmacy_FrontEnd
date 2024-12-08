@@ -55,7 +55,7 @@ const AddProductModal = ({ closeModal, data }) => {
   const [selectedDate, setSelectedDate] = useState(null)
   const toast = useToast()
   const inputRef = useRef(null)
-
+  const [isAddProductTriggered, setIsAddProductTriggered] = useState(false)
   const handleUploadClick = () => {
     inputRef.current.click()
   }
@@ -93,10 +93,13 @@ const AddProductModal = ({ closeModal, data }) => {
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!selectedImage) {
+    if (insertLoading) return
+
+    const finalImg = selectedImage || productData.product_img
+    if (!finalImg) {
       toast({
-        title: 'Error',
-        description: 'Please select a file',
+        title: 'No image selected',
+        description: 'Please select a file before updating.',
         status: 'error',
         duration: 3000,
         isClosable: true
@@ -106,11 +109,11 @@ const AddProductModal = ({ closeModal, data }) => {
     if (
       productData.product_price <= 0 ||
       productData.product_qty <= 0 ||
-      productData.product_name === ''
+      !productData.product_name.trim()
     ) {
       toast({
         title: 'Error',
-        description: 'Field cannot be empty',
+        description: 'All fields must be filled correctly.',
         status: 'error',
         duration: 3000,
         isClosable: true
@@ -118,11 +121,24 @@ const AddProductModal = ({ closeModal, data }) => {
       return
     }
     try {
-      await insertProduct()
-      if (!insertLoading && insertData?.error) {
+      await insertProduct(productData) // Wait for product update response
+      setIsAddProductTriggered(true)
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: error.message || 'An unexpected error occurred.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    }
+  }
+  useEffect(() => {
+    if (isAddProductTriggered) {
+      if (insertError || insertData.error) {
         toast({
           title: 'Error',
-          description: insertData?.error,
+          description: insertError || insertData.error,
           status: 'error',
           duration: 3000,
           isClosable: true
@@ -130,24 +146,16 @@ const AddProductModal = ({ closeModal, data }) => {
       } else {
         toast({
           title: 'Success',
-          description: 'Product added successfully',
+          description: 'Product updated successfully.',
           status: 'success',
           duration: 3000,
           isClosable: true
         })
-        closeModal()
       }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
+      getProduct()
+      setIsAddProductTriggered(false)
     }
-    getProduct()
-  }
+  }, [insertData])
   return (
     <>
       <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile} />

@@ -45,7 +45,6 @@ function OrderCard({ data, orderData, setOrderData }) {
       setOrderData(a)
     }
   }
-
   return (
     <>
       {data.orderQuantity >= 1 ? (
@@ -81,7 +80,30 @@ function OrderCard({ data, orderData, setOrderData }) {
                     <Text size="sm" as={'b'}>
                       {data.product_name}
                     </Text>
-                    <Text color={'gray.400'}>${data.product_price}</Text>
+
+                    <Text
+                      color={'gray.400'}
+                      textDecoration={data.product_discount > 0 ? 'line-through' : ''}
+                    >
+                      ${data.product_price.toFixed(2)}
+                    </Text>
+                    {data.product_discount > 0 ? (
+                      <Flex gap={2}>
+                        <Text color={'red.400'} fontSize={'sm'}>
+                          (-{data.product_discount}%)
+                        </Text>
+                        <Text fontWeight={'bold'}>
+                          {
+                            (data.discount_price = (
+                              data.product_price *
+                              (1 - data.product_discount / 100)
+                            ).toFixed(2))
+                          }
+                        </Text>
+                      </Flex>
+                    ) : (
+                      <></>
+                    )}
                   </VStack>
                   <VStack
                     width={'50%'}

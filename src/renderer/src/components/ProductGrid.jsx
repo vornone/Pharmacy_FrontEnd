@@ -1,29 +1,37 @@
-import { SimpleGrid, Flex, VStack } from '@chakra-ui/react'
-import '../css/pagination.css'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
+import { SimpleGrid, VStack } from '@chakra-ui/react'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import ReactPaginate from 'react-paginate'
 import ProductCard from './ProductCard'
 import ProductContainer from './ProductContainer'
-import ReactPaginate from 'react-paginate'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import '../css/pagination.css'
 
-function ProductGrid({ data, addingOrder }) {
+const ProductGrid = React.memo(({ data, addingOrder }) => {
   const [itemOffset, setItemOffset] = useState(0)
-
   const itemsPerPage = 15
 
-  const endOffset = itemOffset + itemsPerPage
-  const currentItems = data.slice(itemOffset, endOffset)
-  const pageCount = Math.ceil(data.length / itemsPerPage)
+  // Memoize current items and page count to prevent unnecessary recalculations
+  const { currentItems, pageCount } = useMemo(() => {
+    const endOffset = itemOffset + itemsPerPage
+    return {
+      currentItems: data.slice(itemOffset, endOffset),
+      pageCount: Math.ceil(data.length / itemsPerPage)
+    }
+  }, [data, itemOffset, itemsPerPage])
 
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % data.length
-    setItemOffset(newOffset)
-  }
+  // Memoize page click handler to prevent recreation on every render
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * itemsPerPage) % data.length
+      setItemOffset(newOffset)
+    },
+    [data.length, itemsPerPage]
+  )
+
   return (
     <VStack height={'100%'} width={'100%'} justifyContent={'space-between'}>
       <VStack height={'100%'} width={'100%'} p={0}>
         <SimpleGrid
-          borer={1}
           templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(6, 1fr)' }}
           spacing={4}
           width={'100%'}
@@ -55,6 +63,6 @@ function ProductGrid({ data, addingOrder }) {
       />
     </VStack>
   )
-}
+})
 
 export default ProductGrid

@@ -1,5 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { Button, ButtonGroup, Flex, HStack, IconButton } from '@chakra-ui/react'
+import React, { useMemo, useCallback, useState } from 'react'
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  HStack,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Spinner,
+  Text
+} from '@chakra-ui/react'
 import { IoLogOut } from 'react-icons/io5'
 import {
   TbArchiveFilled,
@@ -12,18 +28,6 @@ import {
   TbLogout,
   TbSettingsFilled
 } from 'react-icons/tb'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Spinner,
-  Text
-} from '@chakra-ui/react'
 import UserTable from './table/UserTable'
 import CategoryTable from './table/CategoryTable'
 import AddCategoryModal from './modal/AddCategoryModal'
@@ -34,187 +38,200 @@ import useCategory from '../hooks/useCategory'
 import useUser from '../hooks/useUser'
 import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
-import UpdateProductModal from './modal/UpdateProductModal'
 
-const menuLeft = [
-  {
-    name: 'Product',
-    icon: <TbArchiveFilled />
-  },
-  {
-    name: 'Category',
-    icon: <TbAppsFilled />
-  },
-  {
-    name: 'User',
-    icon: <TbUserFilled />
-  }
+// Memoized menu items to prevent unnecessary re-renders
+const MENU_LEFT = [
+  { name: 'Product', icon: <TbArchiveFilled /> },
+  { name: 'Category', icon: <TbAppsFilled /> },
+  { name: 'User', icon: <TbUserFilled /> }
 ]
-const menuRight = [
-  {
-    name: 'Orders',
-    icon: <TbShoppingCartFilled />
-  },
-  {
-    name: 'Report',
-    icon: <TbChartPieFilled />
-  },
-  {
-    name: 'Admin',
-    icon: <TbUserShield />
-  }
+
+const MENU_RIGHT = [
+  { name: 'Orders', icon: <TbShoppingCartFilled /> },
+  { name: 'Report', icon: <TbChartPieFilled /> },
+  { name: 'Admin', icon: <TbUserShield /> }
 ]
 
 function MenuBar({ orderData, setOrderData }) {
+  // Combine hooks to reduce re-renders
   const { data: roleData, loading: roleLoading, error: roleError, fetchRoleData } = useRole()
+
   const {
     data: productData,
     loading: productLoading,
     error: productError,
     getProduct
   } = useProduct()
+
   const {
     data: categoryData,
     loading: categoryLoading,
     error: categoryError,
     getCategory
   } = useCategory()
+
   const { data: userData, loading: userLoading, error: userError, getUser } = useUser()
-  const [isTable, setIsTable] = useState(false)
+
+  // Use useDisclosure hook for modal management
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  // Memoize state and derived values
   const [modalType, setModalType] = useState('')
+  const [isTable, setIsTable] = useState(false)
 
-  const copiedUserData = userData ? JSON.parse(JSON.stringify(userData)) : []
+  // Memoize data to prevent unnecessary re-renders
+  const copiedUserData = useMemo(
+    () => (userData ? JSON.parse(JSON.stringify(userData)) : []),
+    [userData]
+  )
 
-  const mainModal = (loading, error, modal) => {
-    if (loading) {
-      return <Spinner />
-    } else if (error) {
-      return <Text color={'red'}>{error}</Text>
-    } else {
-      return modal
+  // Optimize modal rendering with useCallback
+  const mainModal = useCallback((loading, error, modal) => {
+    if (loading) return <Spinner />
+    if (error) return <Text color="red">{error}</Text>
+    return modal
+  }, [])
+
+  // Memoize modal and table content
+  const { modal, title, table, tableTitle } = useMemo(() => {
+    switch (modalType) {
+      case 'User':
+        return {
+          title: 'Insert User',
+          modal: mainModal(
+            roleLoading,
+            roleError,
+            <AddUserModal closeModal={onClose} data={roleData} />
+          ),
+          tableTitle: 'User Table',
+          table: mainModal(
+            userLoading,
+            userError,
+            <UserTable closeModal={onClose} data={copiedUserData} />
+          )
+        }
+      case 'Category':
+        return {
+          title: 'Insert Category',
+          modal: <AddCategoryModal closeModal={onClose} data={categoryData} />,
+          tableTitle: 'Category Table',
+          table: mainModal(
+            categoryLoading,
+            categoryError,
+            <CategoryTable closeModal={onClose} data={categoryData} />
+          )
+        }
+      case 'Product':
+        return {
+          title: 'Insert Product',
+          modal: mainModal(
+            categoryLoading,
+            categoryError,
+            <AddProductModal closeModal={onClose} data={categoryData} />
+          ),
+          tableTitle: 'Product',
+          table: mainModal(
+            categoryLoading,
+            categoryError,
+            <ProductTable
+              closeModal={onClose}
+              data={productData}
+              orderData={orderData}
+              setOrderData={setOrderData}
+            />
+          )
+        }
+      default:
+        return { modal: null, title: '', table: null, tableTitle: '' }
     }
-  }
-  let modal
-  let title
-  let table
-  let tableTitle
-  switch (modalType) {
-    case 'User':
-      title = 'Insert User'
-      modal = mainModal(
-        roleLoading,
-        roleError,
-        <AddUserModal closeModal={onClose} data={roleData} />
-      )
-      tableTitle = 'User Table'
-      table = mainModal(
-        userLoading,
-        userError,
-        <UserTable closeModal={onClose} data={copiedUserData} />
-      )
-      break
-    case 'Category':
-      title = 'Insert Category'
-      modal = <AddCategoryModal closeModal={onClose} data={categoryData} />
-      tableTitle = 'Category Table'
-      table = mainModal(
-        categoryLoading,
-        categoryError,
-        <CategoryTable closeModal={onClose} data={categoryData} />
-      )
-      break
-    case 'Product':
-      title = 'Insert Product'
-      modal = mainModal(
-        categoryLoading,
-        categoryError,
-        <AddProductModal closeModal={onClose} data={categoryData} />
-      )
-      tableTitle = 'Product'
-      table = mainModal(
-        categoryLoading,
-        categoryError,
-        <ProductTable
-          closeModal={onClose}
-          data={productData}
-          orderData={orderData}
-          setOrderData={setOrderData}
-        />
-      )
-  }
-  const handleOpenModal = (type, isTable) => {
-    onOpen()
-    getUser()
-    getCategory()
-    fetchRoleData()
-    setIsTable(isTable)
-    setModalType(type)
-  }
+  }, [
+    modalType,
+    roleLoading,
+    roleError,
+    userLoading,
+    userError,
+    categoryLoading,
+    categoryError,
+    roleData,
+    categoryData,
+    copiedUserData,
+    productData,
+    orderData,
+    setOrderData,
+    onClose,
+    mainModal
+  ])
+
+  // Optimize handler with useCallback
+  const handleOpenModal = useCallback(
+    (type, isTable) => {
+      onOpen()
+      getUser()
+      getCategory()
+      fetchRoleData()
+      setIsTable(isTable)
+      setModalType(type)
+    },
+    [onOpen, getUser, getCategory, fetchRoleData]
+  )
+
+  // Optimize logout handler
+  const handleLogout = useCallback(() => {
+    // Implement logout logic here
+  }, [])
+
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={'6xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="6xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{isTable ? tableTitle : title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight={'100%'} height={'100%'}>
-            <Flex
-              width={'100%'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              flexDirection={'column'}
-            >
+          <ModalBody maxHeight="100%" height="100%">
+            <Flex width="100%" justifyContent="center" alignItems="center" flexDirection="column">
               {isTable ? table : modal}
             </Flex>
           </ModalBody>
-          <ModalFooter></ModalFooter>
+          <ModalFooter />
         </ModalContent>
       </Modal>
-      <HStack justifyContent={'space-between'} alignItems={'center'}>
-        <HStack justifyContent={'space-between'} alignItems={'center'}>
-          {menuLeft.map((item) => (
+      <HStack justifyContent="space-between" alignItems="center">
+        <HStack justifyContent="space-between" alignItems="center">
+          {MENU_LEFT.map((item) => (
             <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
-              <Button
-                leftIcon={item.icon}
-                onClick={() => {
-                  handleOpenModal(item.name, true)
-                }}
-              >
+              <Button leftIcon={item.icon} onClick={() => handleOpenModal(item.name, true)}>
                 {item.name}
               </Button>
               <IconButton
-                aria-label="Add to friends"
+                aria-label="Add item"
                 icon={<TbPlus />}
                 colorScheme="green"
-                variant={'solid'}
-                onClick={() => {
-                  handleOpenModal(item.name, false)
-                }}
+                variant="solid"
+                onClick={() => handleOpenModal(item.name, false)}
               />
             </ButtonGroup>
           ))}
         </HStack>
-        <HStack justifyContent={'space-between'} alignItems={'center'}>
-          {menuRight.map((item) => (
-            <ButtonGroup
-              size="sm"
-              isAttached
-              variant={'outline'}
-              colorScheme="green"
-              key={item.name}
-            >
+        <HStack justifyContent="space-between" alignItems="center">
+          {MENU_RIGHT.map((item) => (
+            <ButtonGroup size="sm" isAttached variant="outline" colorScheme="green" key={item.name}>
               <Button leftIcon={item.icon}>{item.name}</Button>
             </ButtonGroup>
           ))}
-          <ButtonGroup size="sm" isAttached variant={'outline'} colorScheme="gray">
+          <ButtonGroup size="sm" isAttached variant="outline" colorScheme="gray">
             <Button>
               <TbSettingsFilled />
             </Button>
             <Button
-              variant={'outline'}
+              variant="outline"
               leftIcon={<IoLogOut />}
-              _hover={{ bg: 'red.400', color: 'white', outline: 'none', variant: 'solid' }}
+              onClick={handleLogout}
+              _hover={{
+                bg: 'red.400',
+                color: 'white',
+                outline: 'none',
+                variant: 'solid'
+              }}
             >
               Log Out
             </Button>

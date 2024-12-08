@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
   TableContainer,
   Button,
@@ -16,7 +16,9 @@ import {
   ModalFooter,
   Checkbox,
   ButtonGroup,
-  Img
+  Img,
+  useToast,
+  Spinner
 } from '@chakra-ui/react'
 import {
   useReactTable,
@@ -40,179 +42,275 @@ import UpdateProductModal from './../modal/UpdateProductModal'
 import TableFilter from '../table-component/TableFilter.jsx'
 import { serverUrl } from '../../api-clients/api-clients.js'
 import useUpdateProduct from '../../hooks/useUpdateProduct.js'
+import { debounce } from 'lodash'
 function ProductTable({ data, orderData, setOrderData }) {
   const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { data: categoryData } = useCategory()
+  const toast = useToast()
   const {
     data: productListData,
     error: productListError,
     loading: productListLoading,
     getProduct
   } = useProduct()
+  const {
+    data: discountData,
+    loading: discountLoading,
+    error: discountError,
+    addDiscount
+  } = useUpdateProduct()
   const { deleteData: deleteProduct } = useDeleteData()
   const [columnFilters, setColumnFilters] = useState([])
-  const [discount, setDiscount] = useState(50)
-  const [productDiscounts, setProductDiscounts] = useState({})
-  const { applyDiscountToMultipleProducts } = useUpdateProduct()
+  const [discount, setDiscount] = useState(0)
+  const debouncedGetProduct = useMemo(() => debounce(getProduct, 300), [getProduct])
+
+  // Memoized toast configurations to reduce redundancy
+  const toastConfig = useMemo(
+    () => ({
+      duration: 3000,
+      isClosable: true,
+      position: 'bottom-center'
+    }),
+    []
+  )
+
+  // Centralized toast method
+  const showToast = useCallback(
+    (title, description, status) => {
+      toast({
+        title,
+        description,
+        status,
+        ...toastConfig
+      })
+    },
+    [toast, toastConfig]
+  )
+
+  // Track selection of rows
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
+
+  // Update table data when product list changes
   useEffect(() => {
     if (!productListError && !productListLoading) {
       setTableData(productListData)
     }
   }, [productListData])
 
+  // Handle row deletion
   const handleDeleteRow = async (row) => {
     try {
       setRowSelection(row.original)
       await deleteProduct('product/delete/' + row.original.product_id, 'POST')
-      getProduct()
       const updatedData = tableData.filter((item) => item.product_id !== row.original.product_id)
       const updateOrder = orderData.filter((item) => item.product_id !== row.original.product_id)
       setTableData(updatedData)
       setOrderData(updateOrder)
+      showToast('Success', 'Product deleted successfully', 'success')
     } catch (error) {
       console.error('Error deleting row:', error)
+      showToast('Error', 'Failed to delete product', 'error')
     }
   }
 
-  const applySelectedDiscount = () => {
-    const selectedRows = table.getSelectedRowModel().rows.original
-    const newDiscounts = {...productDiscounts}
-    console.log(selectedRows)
-    applyDiscountToMultipleProducts(selectedRows, { product_discount: discount })
+  // Apply discount to selected rows
+  const applySelectedDiscount = async () => {
+    // Validate discount percentage
+    if (discount < 0 || discount > 100) {
+      showToast('Invalid Discount', 'Discount must be between 0 and 100', 'error')
+      return
+    }
 
-    selectedRows.forEach(row => {
-      const productId = row.original.product_id
-      newDiscounts[productId] = discount
-    })
-    
-    setProductDiscounts(newDiscounts)
+    const selectedRows = table.getSelectedRowModel().rows
+
+    if (selectedRows.length === 0) {
+      showToast('No Products Selected', 'Please select products to apply discount', 'warning')
+      return
+    }
+
+    try {
+      // Batch update discounts with reduced console logging
+      const discountPromises = selectedRows.map((row) =>
+        addDiscount(row.original.product_id, { product_discount: discount })
+      )
+
+      // Wait for all discount updates to complete
+      const results = await Promise.allSettled(discountPromises)
+
+      // Check for any failed updates with more efficient error handling
+      const failedUpdates = results.filter((result) => result.status === 'rejected')
+      if (failedUpdates.length > 0) {
+        showToast(
+          'Partial Update',
+          `${failedUpdates.length} out of ${results.length} product updates failed`,
+          'warning'
+        )
+      }
+
+      // Efficiently update local state
+      const updatedData = tableData.map((item) => {
+        const selectedRow = selectedRows.find((row) => row.original.product_id === item.product_id)
+        return selectedRow ? { ...item, product_discount: discount } : item
+      })
+
+      const updatedOrderData = orderData.map((orderItem) => {
+        const matchingProduct = updatedData.find(
+          (product) => product.product_id === orderItem.product_id
+        )
+        return matchingProduct
+          ? {
+              ...orderItem,
+              product_discount: matchingProduct.product_discount,
+              discount_price:
+                matchingProduct.product_price * (1 - matchingProduct.product_discount / 100)
+            }
+          : orderItem
+      })
+      // Update state
+      setTableData(updatedData)
+      setOrderData(updatedOrderData)
+      debouncedGetProduct()
+      if (!productListError && !productListLoading) {
+        showToast(
+          'Discount Applied',
+          `${selectedRows.length} product(s) updated with ${discount}% discount`,
+          'success'
+        )
+      }
+    } catch (error) {
+      console.error('Error applying discounts:', error)
+      showToast('Error', 'Failed to apply discounts', 'error')
+    }
   }
 
-  const columns = [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          isChecked={table.getIsAllRowsSelected()}
-          isIndeterminate={table.getIsSomeRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          isChecked={row.getIsSelected()}
-          isIndeterminate={row.getIsSomeSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      size: 'sm',
-      width: '50px'
-    },
-    {
-      accessorKey: 'product_img',
-      header: 'Image',
-      cell: ({ getValue }) => {
-        const value = getValue()
-        return (
-                  <Img
-                    src={imgApi + value}
-                    width="70px"
-                    height="70px"
-                    objectFit="cover"
-                    objectPosition="center"
-                  />
-        )
+  // Memoize columns to prevent unnecessary re-renders
+  const columns = useMemo(
+    () => [
+      {
+        id: 'select',
+        header: ({ table }) => (
+          <Checkbox
+            isChecked={table.getIsAllRowsSelected()}
+            isIndeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+            borderColor={useColorMode().colorMode == 'light' ? 'black' : 'white'}
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            isChecked={row.getIsSelected()}
+            isIndeterminate={row.getIsSomeSelected()}
+            onChange={row.getToggleSelectedHandler()}
+            borderColor={'gray.600'}
+          />
+        ),
+        enableSorting: false,
+        size: 'sm',
+        width: '50px'
       },
-      enableSorting: false
-    },
-    {
-      accessorKey: 'product_name',
-      header: 'Name',
-      cell: ({ getValue }) => {
-        const value = getValue()
-        return (
-          <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden">
-            {value}
-          </Text>
-        )
-      },
-      enableColumnFilter: true
-    },
-    
-    {
-      accessorKey: 'product_qty',
-      header: 'Qty',
-      cell: ({ getValue }) => {
-        const value = getValue()
-        return <Text>{value}</Text>
-      }
-    },
-    {
-      accessorKey: 'product_price',
-      header: 'Price',
-      cell: ({ row }) => {
-        const productId = row.original.product_id
-        const originalPrice = row.original.product_price
-        const productDiscount = productDiscounts[productId] || 0
-
-        if (productDiscount > 0) {
+      {
+        accessorKey: 'product_img',
+        header: 'Image',
+        cell: ({ getValue }) => {
+          const value = getValue()
           return (
-            <>
-              <Text textDecoration={'line-through'} color={'gray.400'}>
-                ${originalPrice.toFixed(2)}
-              </Text>
-              <Text>
-                ${((originalPrice * (100 - productDiscount)) / 100).toFixed(2)}
-              </Text>
-            </>
+            <Img
+              src={imgApi + value}
+              width="70px"
+              height="70px"
+              objectFit="cover"
+              objectPosition="center"
+            />
           )
-        } else {
-          return <Text>${originalPrice.toFixed(2)}</Text>
-        }
-      }
-    },
-    {
-      header: 'discount',
-      cell: ({ row }) => {
-        const productId = row.original.product_id
-        const productDiscount = productDiscounts[productId] || 0
-        if (productDiscount > 0) {
-          return <Text color={'green.400'}>{productDiscount}%</Text>
-        } else {
-          return <Text color={'gray.400'}>none</Text>
+        },
+        enableSorting: false
+      },
+      {
+        accessorKey: 'product_name',
+        header: 'Name',
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return (
+            <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden">
+              {value}
+            </Text>
+          )
+        },
+        enableColumnFilter: true
+      },
+      {
+        accessorKey: 'product_qty',
+        header: 'Qty',
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return <Text>{value}</Text>
         }
       },
-    },
-    
-    {
-      accessorKey: 'category_id',
-      header: 'Cat',
-      cell: ({ getValue }) => {
-        const value = getValue()
-        return <Text>{categoryData.find((item) => item.category_id === value).category_name}</Text>
+      {
+        accessorKey: 'product_price',
+        header: 'Price',
+        cell: ({ row }) => {
+          const productId = row.original.product_id
+          const originalPrice = row.original.product_price
+          const productDiscount = row.original.product_discount || 0
+
+          if (productDiscount > 0) {
+            return (
+              <>
+                <Text textDecoration={'line-through'} color={'gray.400'}>
+                  ${originalPrice.toFixed(2)}
+                </Text>
+                <Text>${((originalPrice * (100 - productDiscount)) / 100).toFixed(2)}</Text>
+              </>
+            )
+          } else {
+            return <Text>${originalPrice.toFixed(2)}</Text>
+          }
+        }
+      },
+      {
+        accessorKey: 'product_discount',
+        header: 'Discount',
+        cell: ({ getValue }) => {
+          const discountValue = Number(getValue() || 0)
+          if (discountValue > 0) {
+            return <Text color={'red.400'}>-{discountValue}%</Text>
+          } else {
+            return <Text color={'gray.400'}>none</Text>
+          }
+        }
+      },
+      {
+        accessorKey: 'category_id',
+        header: 'Cat',
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return (
+            <Text>{categoryData.find((item) => item.category_id === value).category_name}</Text>
+          )
+        }
+      },
+      {
+        header: 'Action',
+        cell: ({ row }) =>
+          row.length !== 0 ? (
+            <Flex>
+              <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
+              <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)} />
+            </Flex>
+          ) : (
+            ''
+          )
       }
-    },
-    {
-      header: 'Action',
-      cell: ({ row }) =>
-        row.length !== 0 ? (
-          <Flex>
-            <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
-            <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)} />
-          </Flex>
-        ) : (
-          ''
-        )
-    }
-  ]
+    ],
+    [categoryData]
+  )
 
   const table = useReactTable({
     data: tableData,
@@ -259,24 +357,32 @@ function ProductTable({ data, orderData, setOrderData }) {
         />
         <InputGroup gap={2} borderRadius={10} justifyContent={'flex-end'} alignItems={'center'}>
           <Input
-            type='number'
-            width={'70px'}
-            value={discount}
+            type="number"
+            width={'100px'}
             onChange={(e) => setDiscount(Number(e.target.value))}
             max={100}
             min={0}
+            value={discount}
+            placeholder="%"
+            size={'sm'}
           />
-          <Button 
-            colorScheme={'green'} 
-            size={'sm'}  
+          <Button
+            colorScheme={'green'}
+            size={'sm'}
             onClick={applySelectedDiscount}
-            isDisabled={table.getSelectedRowModel().rows.length === 0}
+            isDisabled={
+              table.getSelectedRowModel().rows.length === 0 ||
+              discount > 100 ||
+              discount < 0 ||
+              discountLoading
+            }
           >
-            Apply Discount
+            {discountLoading ? <Spinner /> : 'Apply Discount'}
           </Button>
         </InputGroup>
       </Flex>
 
+      {/* Rest of the component remains the same */}
       <Modal size={'md'} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -333,7 +439,7 @@ function ProductTable({ data, orderData, setOrderData }) {
             ))}
           </Thead>
           <Tbody>
-            {data.length > 0 ? (
+            {tableData.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
                   {row.getVisibleCells().map((cell) => (
