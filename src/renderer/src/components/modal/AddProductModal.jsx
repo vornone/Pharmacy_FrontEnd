@@ -91,6 +91,7 @@ const AddProductModal = ({ closeModal, data }) => {
       })
     }
   }
+  
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (insertLoading) return

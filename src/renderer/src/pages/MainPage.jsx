@@ -1,18 +1,6 @@
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Show,
-  VStack,
-  Flex,
-  useColorModeValue,
-  OrderedList,
-  Heading,
-  Spinner
-} from '@chakra-ui/react'
+import { Grid, GridItem, HStack, VStack, Flex, useColorModeValue, Spinner } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
-import { redirect } from 'react-router-dom'
 import MenuBar from '../components/MenuBar'
 import ProductGrid from '../components/ProductGrid'
 import SearchInput from '../components/SearchInput'
@@ -23,38 +11,31 @@ import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
 import useProduct from '../hooks/useProduct'
 import { useToast } from '@chakra-ui/react'
+
 export default function MainPage() {
   const { data, loading, error, getProduct } = useProduct()
+
   const [orders, setOrders] = useState([])
+  const [searchQuery, setSearchQuery] = useState('') // State for the search query
   const colorGenre = useColorModeValue('gray.50', 'gray.800')
   const colorMainBg = useColorModeValue('white', 'gray.900')
   const toast = useToast()
+
+  // Fetch products on component mount
   useEffect(() => {
     getProduct()
   }, [])
-  useEffect(() => {
-    // Only proceed if data is loaded and not empty
-    if (data?.length > 0 && orders.length > 0) {
-      const updatedOrders = orders.map((order) => {
-        const updatedProduct = data.find((product) => product.product_id === order.product_id)
-        if (updatedProduct) {
-          return {
-            ...order,
-            product_img: updatedProduct.product_img,
-            product_dicount: updatedProduct.product_dicount
-          }
-        }
-        return order
-      })
 
-      // Only update if there are actual changes
-      if (JSON.stringify(orders) !== JSON.stringify(updatedOrders)) {
-        setOrders(updatedOrders)
-      }
-    }
-  }, [data, orders])
+  // Filter products based on the search query
+  const filteredData = data?.filter((item) =>
+    item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  // Update search query
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value)
+  }
 
-  //function
+  // Add product to orders
   const addingOrder = (e) => {
     const newOrders = [...orders]
     const existedData = newOrders.some((item) => item.product_name === e.product_name)
@@ -67,7 +48,7 @@ export default function MainPage() {
         if (item.product_name === e.product_name && item.orderQuantity >= item.product_qty) {
           toast({
             title: 'Error',
-            description: 'item is out of stock',
+            description: 'Item is out of stock',
             status: 'error',
             duration: 3000,
             isClosable: true
@@ -105,10 +86,11 @@ export default function MainPage() {
     >
       <GridItem area="header" p={'1%'} borderRadius={'10px'}>
         <Flex flexDirection={'column'} gap={'1%'} width={'100%'} justifyContent={'space-between'}>
-          <NavBar></NavBar>
-          <MenuBar orderData={orders} setOrderData={setOrders}></MenuBar>
+          <NavBar />
+          <MenuBar orderData={orders} setOrderData={setOrders} />
         </Flex>
       </GridItem>
+
       <GridItem area="main" width={'100%'} height={'82dvh'} borderRadius={'10px'}>
         <HStack width={'100%'} height={'100%'} justifyContent={'space-between'}>
           <VStack
@@ -120,9 +102,12 @@ export default function MainPage() {
             justifyContent={'flex-start'}
           >
             <HStack justifyContent={'space-between'} width={'100%'}>
-              <SearchInput></SearchInput>
-              <ProductSort></ProductSort>
-              <ProductFilter></ProductFilter>
+              <SearchInput
+                placeholder={'Search Product'}
+                handleChange={handleSearchChange} // Handle input change
+              />
+              <ProductSort />
+              <ProductFilter />
             </HStack>
 
             {error || data === undefined ? (
@@ -130,9 +115,10 @@ export default function MainPage() {
             ) : loading ? (
               <Spinner />
             ) : (
-              <ProductGrid data={data} addingOrder={addingOrder}></ProductGrid>
+              <ProductGrid data={filteredData} addingOrder={addingOrder} />
             )}
           </VStack>
+
           <VStack
             bg={colorGenre}
             width={'40%'}
@@ -141,9 +127,9 @@ export default function MainPage() {
             borderRadius={'10px'}
             p={'1%'}
           >
-            <OrderHeader></OrderHeader>
-            <OrderList orderData={orders} setOrderData={setOrders}></OrderList>
-            <OrderCharge data={orders}></OrderCharge>
+            <OrderHeader />
+            <OrderList orderData={orders} setOrderData={setOrders} />
+            <OrderCharge data={orders} />
           </VStack>
         </HStack>
       </GridItem>

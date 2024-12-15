@@ -112,6 +112,7 @@ function ProductTable({ data, orderData, setOrderData }) {
       const updateOrder = orderData.filter((item) => item.product_id !== row.original.product_id)
       setTableData(updatedData)
       setOrderData(updateOrder)
+      debouncedGetProduct()
       showToast('Success', 'Product deleted successfully', 'success')
     } catch (error) {
       console.error('Error deleting row:', error)
