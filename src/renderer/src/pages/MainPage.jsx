@@ -11,7 +11,7 @@ import OrderHeader from '../components/OrderHeader'
 import OrderCharge from '../components/OrderCharge'
 import useProduct from '../hooks/useProduct'
 import { useToast } from '@chakra-ui/react'
-
+import { Toast } from '@chakra-ui/react'
 export default function MainPage() {
   const { data, loading, error, getProduct } = useProduct()
 
@@ -61,6 +61,9 @@ export default function MainPage() {
       const newProduct = { ...e, orderQuantity: 1 }
       setOrders([...newOrders, newProduct])
     }
+  }
+  if (loading) {
+    return <Toast title="App is loading" status="loading" duration={3000} />
   }
 
   return (

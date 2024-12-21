@@ -8,8 +8,8 @@ export const login = (inputData, redirectUrl) => async (dispatch) => {
     const { data } = await post(url.loginUrl, inputData, '', false)
 
     await dispatch({ type: actions.LOGIN_SUCCESS, payload: { data } })
-    localStorage.setItem('user', JSON.stringify(data.user))
-    localStorage.setItem('token', data.token)
+    sessionStorage.setItem('user', JSON.stringify(data.user))
+    sessionStorage.setItem('token', data.token)
     toast.success(data.message)
     window.location.replace(`${window.location.origin}${redirectUrl}`)
   } catch (error) {
