@@ -1,5 +1,5 @@
 import { Flex, VStack, FormHelperText, Icon } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FormControl,
   InputGroup,
@@ -20,7 +20,6 @@ function LoginForm({ onLogin }) {
   const [isError, setIsError] = useState(false)
   const dispatch = useDispatch()
   const redirectUrl = ''
-
   const handleInputChange = (e) => setInput({ ...input, [e.target.name]: e.target.value })
   const handleShow = () => setShow(!show)
 
@@ -31,6 +30,12 @@ function LoginForm({ onLogin }) {
       onLogin() // Notify the parent component of successful login
     }
   }
+  useEffect(() => {
+    const previousUser = sessionStorage.getItem('user')
+    if (previousUser) {
+      setInput({ ...input, username: JSON.parse(previousUser).username });
+    }
+  },[])
 
   return (
     <VStack width={'20%'}>
@@ -39,7 +44,8 @@ function LoginForm({ onLogin }) {
           <InputLeftElement pointerEvents="none">
             <Icon as={FaUserFriends} />
           </InputLeftElement>
-          <Input type="text" placeholder="Username" name="username" onChange={handleInputChange} />
+          <Input type="text" placeholder="Username" name="username" onChange={handleInputChange} 
+              onKeyDown={e => e.key === 'Enter' && handleLogin()} defaultValue={input.username} />
         </InputGroup>
       </FormControl>
       <FormControl isInvalid={isError}>
@@ -53,6 +59,7 @@ function LoginForm({ onLogin }) {
               onChange={handleInputChange}
               placeholder="Password"
               type={show ? 'text' : 'password'}
+              onKeyDown={e => e.key === 'Enter' && handleLogin()}
             />
             <InputRightElement width={'4.5rem'}>
               <Icon boxSize={5} as={show ? IoMdEye : IoMdEyeOff} onClick={handleShow}></Icon>

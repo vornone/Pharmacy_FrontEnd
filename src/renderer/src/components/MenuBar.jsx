@@ -177,8 +177,9 @@ function MenuBar({ orderData, setOrderData }) {
 
   // Optimize logout handler
   const handleLogout = useCallback(() => {
-    // Implement logout logic here
-  }, [])
+    sessionStorage.removeItem('token','user.password')
+    window.location.reload() 
+  })
 
   return (
     <div>

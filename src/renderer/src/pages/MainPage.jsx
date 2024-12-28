@@ -62,9 +62,6 @@ export default function MainPage() {
       setOrders([...newOrders, newProduct])
     }
   }
-  if (loading) {
-    return <Toast title="App is loading" status="loading" duration={3000} />
-  }
 
   return (
     <Grid
