@@ -97,6 +97,7 @@ function OrderCharge({ data }) {
               <InputGroup colorScheme="white">
                 <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
                 <Input
+                  type='number'
                   isInvalid={discount > 100 || discount < 0}
                   placeholder="Discount...."
                   width={'100%'}
@@ -104,7 +105,7 @@ function OrderCharge({ data }) {
                   onChange={(e) => setDiscount(e.target.value)}
                 ></Input>
               </InputGroup>
-              <Button colorScheme="green" width={'100%'} onClick={handleValidation}>
+              <Button colorScheme="green" width={'100%'} onClick={handleValidation} isDisabled={discount > 100 || discount < 0}>
                 Confirm
               </Button>
             </HStack>

@@ -11,7 +11,7 @@ const ProductCard = memo(
     return (
       <Card
         onClick={eventhandler}
-        borderRadius={0}
+        borderRadius={5}
         overflow="hidden"
         justifyContent="space-between"
         p={2}
@@ -33,7 +33,7 @@ const ProductCard = memo(
         <CardBody p={0} display="flex" flexDirection="column" flex="1">
           <VStack justifyContent="space-between" width="100%" height="100%">
             <Flex width={'100%'}>
-              <Text fontSize="md" textAlign="left" isTruncated fontWeight="bold" width="100%">
+              <Text fontSize="md" textAlign="left"  fontWeight="bold" width="100%">
                 {product_name}
               </Text>
               <Text

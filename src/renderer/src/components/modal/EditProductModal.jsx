@@ -22,7 +22,7 @@ import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
 import useProduct from '../../hooks/useProduct'
 import { serverUrl } from '../../api-clients/api-clients'
-import useUpdateProduct from './../../hooks/useUpdateProduct'
+import useUpdateProduct from '../../hooks/useUpdateProduct'
 
 const imgApi = serverUrl + '/images/'
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -36,7 +36,7 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
   />
 ))
 
-const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData }) => {
+const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, apiFunction }) => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [platform, setPlatform] = useState(
     categoryData.length == 0
@@ -45,7 +45,14 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
   )
   const [isUpdateTriggered, setIsUpdateTriggered] = useState(false)
   const { data, loading, error, getProduct } = useProduct()
-  const [productData, setProductData] = useState(rowData)
+  const [productData, setProductData] = useState({
+    product_name: rowData.product_name,
+    product_price: rowData.product_price,
+    product_qty: rowData.product_qty,
+    category_id: rowData.category_id,
+    product_id: rowData.product_id,
+    product_img: rowData.product_img
+  })
   const [imagePreview, setImagePreview] = useState(imgApi + productData.product_img)
   const {
     data: updateData,
@@ -300,4 +307,4 @@ const UpdateProductModal = ({ closeModal, categoryData, rowData, setOrderData })
   )
 }
 
-export default UpdateProductModal
+export default EditProductModal

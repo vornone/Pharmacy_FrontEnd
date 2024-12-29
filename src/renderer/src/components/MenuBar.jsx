@@ -28,6 +28,7 @@ import {
   TbLogout,
   TbSettingsFilled
 } from 'react-icons/tb'
+import { FaBoxes } from "react-icons/fa";
 import UserTable from './table/UserTable'
 import CategoryTable from './table/CategoryTable'
 import AddCategoryModal from './modal/AddCategoryModal'
@@ -39,9 +40,11 @@ import useUser from '../hooks/useUser'
 import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
 
+
 // Memoized menu items to prevent unnecessary re-renders
 const MENU_LEFT = [
   { name: 'Product', icon: <TbArchiveFilled /> },
+  {name: 'Import', icon: <FaBoxes /> },
   { name: 'Category', icon: <TbAppsFilled /> },
   { name: 'User', icon: <TbUserFilled /> }
 ]
@@ -49,7 +52,7 @@ const MENU_LEFT = [
 const MENU_RIGHT = [
   { name: 'Orders', icon: <TbShoppingCartFilled /> },
   { name: 'Report', icon: <TbChartPieFilled /> },
-  { name: 'Admin', icon: <TbUserShield /> }
+  { name: 'Admin', icon: <TbUserShield /> },
 ]
 
 function MenuBar({ orderData, setOrderData }) {
@@ -199,7 +202,7 @@ function MenuBar({ orderData, setOrderData }) {
       <HStack justifyContent="space-between" alignItems="center">
         <HStack justifyContent="space-between" alignItems="center">
           {MENU_LEFT.map((item) => (
-            <ButtonGroup size="sm" isAttached variant="outline" key={item.name}>
+            <ButtonGroup size="sm" isAttached variant="solid" colorScheme="green" key={item.name}>
               <Button leftIcon={item.icon} onClick={() => handleOpenModal(item.name, true)}>
                 {item.name}
               </Button>
@@ -207,7 +210,7 @@ function MenuBar({ orderData, setOrderData }) {
                 aria-label="Add item"
                 icon={<TbPlus />}
                 colorScheme="green"
-                variant="solid"
+                variant="outline"
                 onClick={() => handleOpenModal(item.name, false)}
               />
             </ButtonGroup>
@@ -215,24 +218,19 @@ function MenuBar({ orderData, setOrderData }) {
         </HStack>
         <HStack justifyContent="space-between" alignItems="center">
           {MENU_RIGHT.map((item) => (
-            <ButtonGroup size="sm" isAttached variant="outline" colorScheme="green" key={item.name}>
+            <ButtonGroup size="sm" isAttached variant="solid" colorScheme="green" key={item.name}>
               <Button leftIcon={item.icon}>{item.name}</Button>
             </ButtonGroup>
           ))}
           <ButtonGroup size="sm" isAttached variant="outline" colorScheme="gray">
-            <Button>
+            <Button variant={'outline'} colorScheme='blue'>
               <TbSettingsFilled />
             </Button>
             <Button
-              variant="outline"
+              variant="solid"
+              colorScheme='red'
               leftIcon={<IoLogOut />}
               onClick={handleLogout}
-              _hover={{
-                bg: 'red.400',
-                color: 'white',
-                outline: 'none',
-                variant: 'solid'
-              }}
             >
               Log Out
             </Button>

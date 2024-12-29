@@ -31,7 +31,7 @@ function LoginForm({ onLogin }) {
     }
   }
   useEffect(() => {
-    const previousUser = sessionStorage.getItem('user')
+    const previousUser = localStorage.getItem('user')
     if (previousUser) {
       setInput({ ...input, username: JSON.parse(previousUser).username });
     }

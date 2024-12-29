@@ -358,12 +358,11 @@ function ProductTable({ data, orderData, setOrderData }) {
         />
         <InputGroup gap={2} borderRadius={10} justifyContent={'flex-end'} alignItems={'center'}>
           <Input
-            type="number"
+            type='number'
             width={'100px'}
             onChange={(e) => setDiscount(Number(e.target.value))}
             max={100}
             min={0}
-            value={discount}
             placeholder="%"
             size={'sm'}
           />
@@ -371,6 +370,7 @@ function ProductTable({ data, orderData, setOrderData }) {
             colorScheme={'green'}
             size={'sm'}
             onClick={applySelectedDiscount}
+            width={'150px'}
             isDisabled={
               table.getSelectedRowModel().rows.length === 0 ||
               discount > 100 ||
