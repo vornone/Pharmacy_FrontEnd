@@ -20,9 +20,7 @@ import {
 import { BsChevronDown } from 'react-icons/bs'
 import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
-import useProduct from '../../hooks/useProduct'
 import { serverUrl } from '../../api-clients/api-clients'
-import useUpdateProduct from '../../hooks/useUpdateProduct'
 
 const imgApi = serverUrl + '/images/'
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -36,66 +34,39 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
   />
 ))
 
-const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, apiFunction }) => {
+const initialProductData = {
+  product_name: '',
+  product_img: '',
+  product_qty: 0,
+  product_price: 0,
+  product_discount: 0
+}
+const EditProductModal = ({
+  closeModal,
+  categoryData,
+  rowData,
+  selectedCategory,
+  onConfirm,
+  handleUploadFile,
+  isLoading,
+  imagePreview
+}) => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [platform, setPlatform] = useState(
     categoryData.length == 0
       ? 'No Data'
-      : categoryData.find((data) => data.category_id == rowData.category_id).category_name
+      : rowData
+        ? categoryData.find((data) => data.category_id == rowData.category_id).category_name
+        : categoryData[0].category_name
   )
-  const [isUpdateTriggered, setIsUpdateTriggered] = useState(false)
-  const { data, loading, error, getProduct } = useProduct()
-  const [productData, setProductData] = useState({
-    product_name: rowData.product_name,
-    product_price: rowData.product_price,
-    product_qty: rowData.product_qty,
-    category_id: rowData.category_id,
-    product_id: rowData.product_id,
-    product_img: rowData.product_img
-  })
-  const [imagePreview, setImagePreview] = useState(imgApi + productData.product_img)
-  const {
-    data: updateData,
-    loading: updateLoading,
-    error: updateError,
-    updateProduct
-  } = useUpdateProduct(selectedImage, productData)
+  const [productData, setProductData] = useState(rowData)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const inputRef = useRef(null)
-  const toast = useToast()
 
-  const platformSelectorEvent = (e) => {
-    setPlatform(e.category_name)
-    setProductData({ ...productData, category_id: e.category_id })
-  }
   const handleUploadClick = () => {
     inputRef.current.click()
   }
-
-  const handleUpdateOrder = useCallback(
-    (productForUpdate) => {
-      setOrderData((prevOrderData) =>
-        prevOrderData.map((order) => {
-          if (order.product_id === productForUpdate.product_id) {
-            return {
-              ...order,
-              product_name: productForUpdate.product_name,
-              product_price: productForUpdate.product_price,
-              product_qty: productForUpdate.product_qty,
-              category_id: productForUpdate.category_id,
-              orderQuantity:
-                order.orderQuantity > productForUpdate.product_qty
-                  ? productForUpdate.product_qty
-                  : order.orderQuantity
-            }
-          }
-          return order
-        })
-      )
-    },
-    [setOrderData]
-  )
 
   const handleProductChange = (e) => {
     const { name, value } = e.target
@@ -108,89 +79,6 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
 
     setProductData({ ...productData, [name]: parsedValue })
   }
-
-  const handleUploadFile = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-      setSelectedImage(file)
-      setImagePreview(URL.createObjectURL(file))
-    } else {
-      toast({
-        title: 'Invalid file type',
-        description: 'Please select a valid image file.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
-    }
-  }
-
-  const handleUpdate = async (event) => {
-    event.preventDefault()
-    if (updateLoading) return
-
-    const finalImg = selectedImage || productData.product_img
-    if (!finalImg) {
-      toast({
-        title: 'No image selected',
-        description: 'Please select a file before updating.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
-      return
-    }
-    if (
-      productData.product_price <= 0 ||
-      productData.product_qty <= 0 ||
-      !productData.product_name.trim()
-    ) {
-      toast({
-        title: 'Error',
-        description: 'All fields must be filled correctly.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
-      return
-    }
-    try {
-      await updateProduct(productData) // Wait for product update response
-      setIsUpdateTriggered(true)
-    } catch (error) {
-      toast({
-        title: 'Update failed',
-        description: error.message || 'An unexpected error occurred.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true
-      })
-    }
-  }
-  useEffect(() => {
-    if (isUpdateTriggered) {
-      if (updateData.error) {
-        toast({
-          title: 'Error',
-          description: updateData.error,
-          status: 'error',
-          duration: 3000,
-          isClosable: true
-        })
-      } else {
-        toast({
-          title: 'Success',
-          description: 'Product updated successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true
-        })
-        handleUpdateOrder({ ...productData })
-      }
-      getProduct()
-      setIsUpdateTriggered(false)
-    }
-  }, [updateData])
 
   return (
     <>
@@ -218,9 +106,12 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
           </Flex>
 
           <Input
-            isInvalid={productData.product_name.length > 30 || productData.product_name.length == 0}
+            isInvalid={
+              rowData &&
+              (productData.product_name.length > 30 || productData.product_name.length == 0)
+            }
             type="text"
-            value={productData.product_name}
+            value={rowData && productData.product_name}
             placeholder="Product Name"
             maxLength={30}
             name="product_name"
@@ -242,10 +133,7 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
                 <MenuItem>No Data</MenuItem>
               ) : (
                 categoryData.map((categoryData) => (
-                  <MenuItem
-                    key={categoryData.category_name}
-                    onClick={() => platformSelectorEvent(categoryData)}
-                  >
+                  <MenuItem key={categoryData.category_name} onClick={selectedCategory}>
                     {categoryData.category_name}
                   </MenuItem>
                 ))
@@ -254,13 +142,13 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
           </Menu>
           <InputGroup>
             <Input
-              isInvalid={productData.product_price <= 0}
+              isInvalid={rowData && productData.product_price <= 0}
               type="number"
               placeholder="Product Price"
               maxLength={5}
               name="product_price"
-              value={productData.product_price}
-              onChange={handleProductChange}
+              value={rowData && productData.product_price}
+              onChange={rowData && handleProductChange}
             />
             <InputRightAddon bg={'none'}>$</InputRightAddon>
           </InputGroup>
@@ -269,9 +157,9 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
               type="number"
               placeholder="Minimum Stock"
               name="product_qty"
-              onChange={handleProductChange}
-              value={productData.product_qty}
-              isInvalid={productData.product_qty <= 0}
+              onChange={rowData && handleProductChange}
+              value={rowData && productData.product_qty}
+              isInvalid={rowData && productData.product_qty <= 0}
             />
           </InputGroup>
           <HStack justifyContent={'space-between'} width={'100%'}>
@@ -295,10 +183,10 @@ const EditProductModal = ({ closeModal, categoryData, rowData, setOrderData, api
               colorScheme="green"
               variant="solid"
               size={'sm'}
-              onClick={handleUpdate}
-              disabled={updateLoading}
+              onClick={onConfirm}
+              disabled={isLoading}
             >
-              Update
+              Confirm
             </Button>
           </ButtonGroup>
         </HStack>

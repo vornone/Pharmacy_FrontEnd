@@ -23,7 +23,6 @@ import DatePicker from 'react-datepicker'
 import { forwardRef } from 'react'
 import useProduct from './../../hooks/useProduct'
 import useInsertProduct from '../../hooks/useInsertProduct'
-import EditProductModal from './EditProductModal'
 
 const CustomInput = forwardRef(({ value, onClick }, ref) => (
   <Input
@@ -160,15 +159,104 @@ const AddProductModal = ({ closeModal, data }) => {
   }, [insertData])
   return (
     <>
-      <EditProductModal
-        closeModal={closeModal}
-        categoryData={data}
-        onConfirm={handleSubmit}
-        handleUploadFile={handleUploadFile}
-        selectedCategory={platformSelectorEvent}
-        isLoading={insertLoading}
-        imagePreview={imagePreview}
-      />
+      <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile} />
+      <VStack width={'100%'} gap={3}>
+        <VStack width={'100%'} height={'100%'} alignItems={'flex-start'}>
+          <Flex
+            justifyContent={'space-between'}
+            width={'100%'}
+            height={'100%'}
+            alignItems={'flex-end'}
+          >
+            <Box>
+              <Image objectFit={'cover'} src={imagePreview} borderRadius={5} height={'150px'} />
+            </Box>
+
+            <ButtonGroup
+              height={'100%'}
+              size={'sm'}
+              variant={'outline'}
+              colorScheme="blue"
+              onClick={handleUploadClick}
+            >
+              <Button>edit image</Button>
+            </ButtonGroup>
+          </Flex>
+
+          <Input
+            type="text"
+            placeholder="Product Name"
+            colorScheme="green"
+            maxLength={20}
+            name="product_name"
+            onChange={handleProductChange}
+          />
+          <Menu autoSelect={false}>
+            <MenuButton
+              as={Button}
+              rightIcon={<BsChevronDown />}
+              variant={'solid'}
+              width={'100%'}
+              size={'md'}
+              textAlign={'left'}
+            >
+              <Text fontWeight={'regular'}>{platform}</Text>
+            </MenuButton>
+            <MenuList>
+              {data == null ? (
+                <MenuItem>No Data</MenuItem>
+              ) : (
+                data.map((data) => (
+                  <MenuItem key={data.category_name} onClick={() => platformSelectorEvent(data)}>
+                    {data.category_name}
+                  </MenuItem>
+                ))
+              )}
+            </MenuList>
+          </Menu>
+          <InputGroup width={'50%'}>
+            <Input
+              type="number"
+              placeholder="Product Price"
+              maxLength={5}
+              name="product_price"
+              onChange={handleProductChange}
+              step="0.01"
+            />
+            <InputRightAddon bg={'none'}>$</InputRightAddon>
+          </InputGroup>
+          <InputGroup width={'50%'}>
+            <Input
+              type="number"
+              placeholder="Minimum Stock"
+              name="product_qty"
+              onChange={handleProductChange}
+            />
+            <InputRightAddon bg={'none'}>units</InputRightAddon>
+          </InputGroup>
+          <HStack justifyContent={'space-between'} width={'100%'}>
+            <Box width={'100%'}>
+              <DatePicker
+                width={'100%'}
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                customInput={<CustomInput />}
+                dateFormat="dd/MMMM/YYYY"
+              ></DatePicker>
+            </Box>
+          </HStack>
+        </VStack>
+        <HStack width={'100%'} justifyContent={'right'}>
+          <ButtonGroup>
+            <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button colorScheme="green" variant="solid" size={'sm'} onClick={handleSubmit}>
+              ADD
+            </Button>
+          </ButtonGroup>
+        </HStack>
+      </VStack>
     </>
   )
 }
