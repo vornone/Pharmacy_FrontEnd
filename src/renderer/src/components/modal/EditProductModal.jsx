@@ -161,7 +161,7 @@ const EditProductModal = ({
         <HStack width={'100%'} justifyContent={'right'}>
           <ButtonGroup>
             <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
-              cancel
+              Cancel
             </Button>
             <Button
               colorScheme="green"
