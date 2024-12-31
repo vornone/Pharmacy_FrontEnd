@@ -358,7 +358,7 @@ function ProductTable({ data, orderData, setOrderData }) {
         />
         <InputGroup gap={2} borderRadius={10} justifyContent={'flex-end'} alignItems={'center'}>
           <Input
-            type='number'
+            type="number"
             width={'100px'}
             onChange={(e) => setDiscount(Number(e.target.value))}
             max={100}
@@ -384,9 +384,9 @@ function ProductTable({ data, orderData, setOrderData }) {
       </Flex>
 
       {/* Rest of the component remains the same */}
-      <Modal size={'md'} isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxH={'max-content'} maxW={'max-content'} minW={'lg'}>
           <ModalHeader>Edit Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

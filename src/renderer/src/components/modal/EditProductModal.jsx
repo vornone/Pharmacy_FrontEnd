@@ -39,45 +39,29 @@ const initialProductData = {
   product_img: '',
   product_qty: 0,
   product_price: 0,
-  product_discount: 0
+  product_discount: 0,
+  category_id: 0
 }
 const EditProductModal = ({
   closeModal,
   categoryData,
   rowData,
+  chooseCategory,
   selectedCategory,
   onConfirm,
   handleUploadFile,
   isLoading,
-  imagePreview
+  imagePreview,
+  handleProductChange
 }) => {
   const [selectedImage, setSelectedImage] = useState(null)
-  const [platform, setPlatform] = useState(
-    categoryData.length == 0
-      ? 'No Data'
-      : rowData
-        ? categoryData.find((data) => data.category_id == rowData.category_id).category_name
-        : categoryData[0].category_name
-  )
-  const [productData, setProductData] = useState(rowData)
+  const [productData, setProductData] = useState(rowData ? rowData : initialProductData)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const inputRef = useRef(null)
 
   const handleUploadClick = () => {
     inputRef.current.click()
-  }
-
-  const handleProductChange = (e) => {
-    const { name, value } = e.target
-    const parsedValue =
-      name === 'product_price' || name === 'product_qty'
-        ? isNaN(value)
-          ? value
-          : Number(value)
-        : value
-
-    setProductData({ ...productData, [name]: parsedValue })
   }
 
   return (
@@ -126,15 +110,15 @@ const EditProductModal = ({
               size={'md'}
               textAlign={'left'}
             >
-              <Text fontWeight={'regular'}>{platform}</Text>
+              <Text fontWeight={'regular'}>{selectedCategory}</Text>
             </MenuButton>
             <MenuList>
               {categoryData == null ? (
                 <MenuItem>No Data</MenuItem>
               ) : (
-                categoryData.map((categoryData) => (
-                  <MenuItem key={categoryData.category_name} onClick={selectedCategory}>
-                    {categoryData.category_name}
+                categoryData.map((category) => (
+                  <MenuItem key={category.category_name} onClick={() => chooseCategory(category)}>
+                    {category.category_name}
                   </MenuItem>
                 ))
               )}
@@ -148,7 +132,7 @@ const EditProductModal = ({
               maxLength={5}
               name="product_price"
               value={rowData && productData.product_price}
-              onChange={rowData && handleProductChange}
+              onChange={handleProductChange}
             />
             <InputRightAddon bg={'none'}>$</InputRightAddon>
           </InputGroup>
@@ -157,7 +141,7 @@ const EditProductModal = ({
               type="number"
               placeholder="Minimum Stock"
               name="product_qty"
-              onChange={rowData && handleProductChange}
+              onChange={handleProductChange}
               value={rowData && productData.product_qty}
               isInvalid={rowData && productData.product_qty <= 0}
             />

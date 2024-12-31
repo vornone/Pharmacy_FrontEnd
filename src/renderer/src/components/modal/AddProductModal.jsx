@@ -46,6 +46,7 @@ const AddProductModal = ({ closeModal, data }) => {
     product_qty: 0,
     category_id: data.find((item) => item.category_name === platform).category_id
   })
+
   const { loading, error, getProduct } = useProduct()
   const {
     data: insertData,
@@ -60,9 +61,13 @@ const AddProductModal = ({ closeModal, data }) => {
   const handleUploadClick = () => {
     inputRef.current.click()
   }
-  const platformSelectorEvent = (e) => {
-    setPlatform(e.category_name)
-    setProductData({ ...productData, category_id: e.category_id })
+  const platformSelectorEvent = (chooseCategory) => {
+    console.log('Selected Category:', chooseCategory) // Debug log
+    setPlatform(chooseCategory.category_name) // Update platform
+    setProductData((prevData) => ({
+      ...prevData,
+      category_id: chooseCategory.category_id
+    })) // Update product data
   }
 
   const handleProductChange = (e) => {
@@ -94,6 +99,7 @@ const AddProductModal = ({ closeModal, data }) => {
   }
 
   const handleSubmit = async (event) => {
+    console.log(productData)
     event.preventDefault()
     if (insertLoading) return
 
@@ -158,6 +164,9 @@ const AddProductModal = ({ closeModal, data }) => {
       setIsAddProductTriggered(false)
     }
   }, [insertData])
+  useEffect(() => {
+    console.log(productData)
+  }, [handleSubmit])
   return (
     <>
       <EditProductModal
@@ -165,9 +174,11 @@ const AddProductModal = ({ closeModal, data }) => {
         categoryData={data}
         onConfirm={handleSubmit}
         handleUploadFile={handleUploadFile}
-        selectedCategory={platformSelectorEvent}
+        chooseCategory={platformSelectorEvent}
         isLoading={insertLoading}
         imagePreview={imagePreview}
+        selectedCategory={platform}
+        handleProductChange={handleProductChange}
       />
     </>
   )

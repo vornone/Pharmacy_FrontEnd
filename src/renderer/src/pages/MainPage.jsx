@@ -17,8 +17,8 @@ export default function MainPage() {
 
   const [orders, setOrders] = useState([])
   const [searchQuery, setSearchQuery] = useState('') // State for the search query
-  const colorGenre = useColorModeValue('gray.50', 'gray.800')
-  const colorMainBg = useColorModeValue('white', 'gray.900')
+  const colorGenre = useColorModeValue('gray.100', 'gray.800')
+  const colorMainBg = useColorModeValue('gray.50', 'gray.900')
   const toast = useToast()
 
   // Fetch products on component mount
