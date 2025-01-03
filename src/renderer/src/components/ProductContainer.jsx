@@ -1,5 +1,5 @@
-import { Box, keyframes } from '@chakra-ui/react'
-
+import { Box} from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
 const fadeIn = keyframes`
   from {
     opacity: 0;

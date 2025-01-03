@@ -39,7 +39,7 @@ import useCategory from '../hooks/useCategory'
 import useUser from '../hooks/useUser'
 import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
-
+import ImportProductModal from './modal/ImportProductModal'
 // Memoized menu items to prevent unnecessary re-renders
 const MENU_LEFT = [
   { name: 'Product', icon: <TbArchiveFilled /> },
@@ -143,6 +143,25 @@ function MenuBar({ orderData, setOrderData }) {
             />
           )
         }
+        case 'Import':
+        return {
+          title: 'Import Product',
+          modal: mainModal(
+            categoryLoading,
+            categoryError,
+            <ImportProductModal />
+          ),
+          tableTitle: 'Import Product',
+          table: mainModal(
+            categoryLoading,
+            categoryError,
+            <ProductTable
+              closeModal={onClose}
+              data={productData}
+              orderData={orderData}
+              setOrderData={setOrderData}
+            />
+          )}
       default:
         return { modal: null, title: '', table: null, tableTitle: '' }
     }
