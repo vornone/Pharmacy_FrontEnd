@@ -31,7 +31,7 @@ function ProductSort() {
           rightIcon={<BsChevronDown />}
           variant={'outline'}
           size={'sm'}
-          width={120}
+          width={200}
         >
           <Text fontWeight={'regular'}>{platform}</Text>
         </MenuButton>
