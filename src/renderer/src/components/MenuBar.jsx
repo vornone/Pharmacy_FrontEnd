@@ -143,14 +143,10 @@ function MenuBar({ orderData, setOrderData }) {
             />
           )
         }
-        case 'Import':
+      case 'Import':
         return {
           title: 'Import Product',
-          modal: mainModal(
-            categoryLoading,
-            categoryError,
-            <ImportProductModal />
-          ),
+          modal: mainModal(categoryLoading, categoryError, <ImportProductModal />),
           tableTitle: 'Import Product',
           table: mainModal(
             categoryLoading,
@@ -161,7 +157,8 @@ function MenuBar({ orderData, setOrderData }) {
               orderData={orderData}
               setOrderData={setOrderData}
             />
-          )}
+          )
+        }
       default:
         return { modal: null, title: '', table: null, tableTitle: '' }
     }
