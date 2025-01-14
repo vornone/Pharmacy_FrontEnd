@@ -192,6 +192,7 @@ function ImportProductTable({ importData }) {
       }
     ],
     []
+    //
   )
 
   const table = useReactTable({
