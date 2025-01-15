@@ -123,14 +123,15 @@ function ImportProductTable({ importData }) {
             borderColor={useColorMode().colorMode == 'light' ? 'black' : 'white'}
           />
         ),
-        cell: ({ row }) => (
-          <Checkbox
-            isChecked={row.getIsSelected()}
-            isIndeterminate={row.getIsSomeSelected()}
-            onChange={row.getToggleSelectedHandler()}
-            borderColor={'gray.600'}
-          />
-        ),
+        cell: ({ row }) =>
+          row.getValue('product_name') && (
+            <Checkbox
+              isChecked={row.getIsSelected()}
+              isIndeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler()}
+              borderColor={'gray.600'}
+            />
+          ),
         enableSorting: false,
         size: 'sm',
         width: '50px'
@@ -145,7 +146,7 @@ function ImportProductTable({ importData }) {
         enableSorting: false
       },
       {
-        accessorKey: 'import_qty',
+        accessorKey: 'import_quantity',
         header: 'Qty',
         cell: ({ getValue }) => {
           const value = getValue()
@@ -157,31 +158,35 @@ function ImportProductTable({ importData }) {
         header: 'import',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text>{value}</Text>
+          return value && <Text>${value}</Text>
         },
         enableColumnFilter: true
       },
 
       {
         accessorKey: 'shipping_price',
-        header: 'Price',
+        header: 'Shipping',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text>{value}</Text>
+          return value && <Text>${value}</Text>
         }
       },
       {
         accessorKey: 'total_price',
         header: 'total',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return <Text>{value}</Text>
+        cell: ({ row }) => {
+          const value =
+            (row.getValue('import_price') - row.getValue('shipping_price')) *
+            row.getValue('import_quantity')
+          return row.getValue('product_name') && <Text>${value}</Text>
         }
       },
       {
         header: 'Action',
         cell: ({ row }) =>
-          row.length !== 0 ? (
+          !row.getValue('product_name') ? (
+            <Flex height={'35px'}></Flex>
+          ) : row.length !== 0 ? (
             <Flex>
               <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
               <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)} />
