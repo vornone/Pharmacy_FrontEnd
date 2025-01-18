@@ -32,7 +32,7 @@ const ProductGrid = React.memo(({ data, addingOrder }) => {
     <VStack height={'100%'} width={'100%'} justifyContent={'space-between'}>
       <VStack height={'100%'} width={'100%'} p={0}>
         <SimpleGrid
-          templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(6, 1fr)' }}
+          templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(5, 1fr)' }}
           spacing={4}
           width={'100%'}
           position={'relative'}

@@ -36,16 +36,18 @@ const ProductCard = memo(
               <Text fontSize="md" textAlign="left"  fontWeight="bold" width="100%">
                 {product_name}
               </Text>
-              <Text
-                fontSize="md"
-                textAlign="right"
-                isTruncated
-                fontWeight="bold"
-                width="100%"
-                color={'red.400'}
-              >
-                -{product_discount}%
-              </Text>
+              {product_discount > 0 && (
+                <Text
+                  fontSize="md"
+                  textAlign="right"
+                  isTruncated
+                  fontWeight="bold"
+                  width="100%"
+                  color={'red.400'}
+                >
+                  -{product_discount}%
+                </Text>
+              )}
             </Flex>
 
             <HStack justifyContent="space-between" width="100%">

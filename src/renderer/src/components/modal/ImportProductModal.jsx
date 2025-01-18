@@ -14,7 +14,8 @@ import {
   InputRightAddon,
   InputGroup,
   Icon,
-  VStack
+  VStack,
+  useToast
 } from '@chakra-ui/react'
 import useProduct from '../../hooks/useProduct'
 import { BsCurrencyDollar } from 'react-icons/bs'
@@ -42,26 +43,30 @@ const SearchableSelect = ({ options, placeholder, onSelect, value }) => {
   })
 
   const handleInputChange = (e) => {
-    if (e.target.value !== '' || e.target.value !== undefined) {
-      setSearch(e.target.value)
-      setSelectedOption('')
-    }
-
-    if (!isOpen) {
+    const newValue = e.target.value
+    setSearch(newValue)
+    setSelectedOption('')
+    onSelect('')
+    if (!isOpen && newValue) {
       setIsOpen(true)
     }
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace' && (value || selectedOption)) {
+      setSearch('')
+      setSelectedOption('')
+      onSelect('')
+    }
+  }
   const filteredOptions =
     options?.filter((option) => option.name.toLowerCase().includes(search.toLowerCase())) || []
-
   const handleOptionClick = (option) => {
     setSelectedOption(option.name)
     setSearch(option.name)
     onSelect(option.name)
     setIsOpen(false)
   }
-
   return (
     <Box position="relative" w="full">
       <InputGroup>
@@ -71,10 +76,10 @@ const SearchableSelect = ({ options, placeholder, onSelect, value }) => {
           onClick={() => setIsOpen(true)}
           value={value || selectedOption || search}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           autoComplete="off"
         />
       </InputGroup>
-
       {isOpen && (
         <Box
           ref={ref}
@@ -120,6 +125,7 @@ function ImportProductModal() {
   const { data, loading, error, getProduct } = useProduct()
   const [selectedProduct, setSelectedProduct] = useState('')
   const [importList, setImportList] = useState([])
+  const toast = useToast()
   const [productToBeImported, setProductToBeImported] = useState({
     product_name: '',
     import_price: 0,
@@ -127,13 +133,10 @@ function ImportProductModal() {
     shipping_price: 0,
     total_price: 0
   })
-
   const options = data?.map((item) => ({
     value: item.product_id,
     name: item.product_name
   }))
-
-  // Function to pad the import list with empty rows to maintain 5-row blocks
   const getPaddedImportList = () => {
     const currentLength = importList.length
     const targetLength = Math.ceil(currentLength / 5) * 5
@@ -146,14 +149,10 @@ function ImportProductModal() {
     }
 
     if (currentLength === 0) {
-      // If list is empty, return 5 empty rows
       return Array(5).fill(emptyRow)
     }
-
-    // Add empty rows to reach the next multiple of 5
     const paddingNeeded = targetLength - currentLength
     const paddingRows = Array(paddingNeeded).fill(emptyRow)
-
     return [...importList, ...paddingRows]
   }
 
@@ -168,19 +167,79 @@ function ImportProductModal() {
   }
 
   const handleAddToImportList = () => {
-    setImportList([...importList, productToBeImported])
+    const existedProduct = importList.find((item) => item.product_name === productToBeImported.product_name)
+    if (productToBeImported.shipping_price<= productToBeImported.import_price) {
+        toast({
+            title: 'Error',
+            description: 'Shipping price must be less than import price',
+            status: 'error',
+            duration: 3000,
+            isClosable: true
+    })
+        return
+    }
+    if (productToBeImported.shipping_price<=0 || productToBeImported.import_quantity<=0 || productToBeImported.import_price<=0) {
+        toast({
+            title: 'Error',
+            description: 'Please fill in all fields',
+            status: 'error',
+            duration: 3000,
+            isClosable: true
+        })
+        return
+    }
+    if (!productToBeImported.product_name || !productToBeImported.import_price || !productToBeImported.import_quantity || !productToBeImported.shipping_price) {
+        toast({
+            title: 'Error',
+            description: 'Please fill in all fields',
+            status: 'error',
+            duration: 3000,
+            isClosable: true
+        })
+        return
+    }
+    if (existedProduct) {
+        const updatedImportList = importList.map((item) => {
+            if (item.product_name === productToBeImported.product_name) {
+                const newQuantity = Number(item.import_quantity) + Number(productToBeImported.import_quantity)
+                const newShippingPrice = Number(item.shipping_price) + Number(productToBeImported.shipping_price)
+                const newTotalPrice = (newQuantity * Number(productToBeImported.import_price)) + newShippingPrice
+                
+                return {
+                    ...item,
+                    import_quantity: newQuantity,
+                    shipping_price: newShippingPrice,
+                    import_price: Number(productToBeImported.import_price), // Keep the latest import price
+                    total_price: newTotalPrice
+                }
+            }
+            return item
+        })
+        setImportList(updatedImportList)
+    } else {
+        // Calculate total price for new product
+        const totalPrice = (Number(productToBeImported.import_quantity) * Number(productToBeImported.import_price)) + 
+                          Number(productToBeImported.shipping_price)
+        
+        setImportList([...importList, {
+            ...productToBeImported,
+            import_price: Number(productToBeImported.import_price),
+            import_quantity: Number(productToBeImported.import_quantity),
+            shipping_price: Number(productToBeImported.shipping_price),
+            total_price: totalPrice
+        }])
+    }
 
     // Reset form after adding
     setProductToBeImported({
-      product_name: '',
-      import_price: 0,
-      import_quantity: 0,
-      shipping_price: 0,
-      total_price: 0
+        product_name: '',
+        import_price: 0,
+        import_quantity: 0,
+        shipping_price: 0,
+        total_price: 0
     })
     setSelectedProduct('')
-  }
-
+}
   return (
     <>
       <VStack gap={5}>
@@ -221,11 +280,13 @@ function ImportProductModal() {
                 }
               />
             </InputGroup>
-            <InputGroup>
+            <InputGroup >
               <InputLeftAddon justifyContent="center" minW="35%" maxW="35%">
                 <Text>Shipping Price</Text>
               </InputLeftAddon>
               <Input
+                isInvalid={productToBeImported.shipping_price <= 0 || productToBeImported.shipping_price > productToBeImported.import_price}
+                type="number"
                 placeholder="Enter Shipping Price"
                 onChange={onChange}
                 name="shipping_price"
@@ -238,7 +299,6 @@ function ImportProductModal() {
         </Flex>
         <Flex width="100%" justifyContent="flex-end">
           <Button
-            leftIcon={<BsCurrencyDollar />}
             colorScheme="green"
             onClick={handleAddToImportList}
           >
