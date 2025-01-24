@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   HStack,
   VStack,
@@ -17,17 +17,16 @@ import {
   ModalCloseButton,
   Flex
 } from '@chakra-ui/react'
-import { TbPlus, TbEdit } from 'react-icons/tb'
-import { BsChevronDown } from 'react-icons/bs'
+
 import { RiDiscountPercentFill } from 'react-icons/ri'
 import OrderReciept from './modal/OrderReciept'
 import { useToast } from '@chakra-ui/react'
-
+import OrderConfirmModal from './modal/OrderConfirmModal'
 function OrderCharge({ data }) {
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const [discount, setDiscount] = useState(0)
-
+  
   const subTotal = data.reduce((acc, cur) => {
     const itemPrice = cur.discount_price ?? cur.product_price
     return acc + parseFloat((itemPrice * cur.orderQuantity).toFixed(2))
@@ -37,6 +36,13 @@ function OrderCharge({ data }) {
   const total = subTotal - discountAmount + tax
   const toast = useToast()
 
+
+  const [orderCalculation, setOrderCalculation] = useState({
+    subTotal: subTotal,
+    discountAmount: discountAmount,
+    tax: tax,
+    total: total
+  })
   const handleValidation = () => {
     if (discount > 100 || discount < 0) {
       toast({
@@ -48,6 +54,15 @@ function OrderCharge({ data }) {
       })
     } else setIsOpen(true)
   }
+  useEffect(() => {
+    setOrderCalculation({
+      subTotal: subTotal,
+      discountAmount: discountAmount,
+      tax: tax,
+      total: total
+    })
+    console.log(orderCalculation)
+  }, [ subTotal, discountAmount, tax, total])
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
@@ -61,7 +76,7 @@ function OrderCharge({ data }) {
               alignItems={'center'}
               flexDirection={'column'}
             >
-              <OrderReciept orderData={data}></OrderReciept>
+              <OrderConfirmModal orderData={[...data]}/>
             </Flex>
           </ModalBody>
           <ModalFooter></ModalFooter>
