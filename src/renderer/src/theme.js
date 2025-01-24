@@ -8,7 +8,7 @@ const config = {
   styles: {
     global: () => ({
       body: {
-        fontFamily: '"Roboto", "Noto", sans-serif"'
+        fontFamily: '"Inter", "Noto", sans-serif"'
       }
     })
   }

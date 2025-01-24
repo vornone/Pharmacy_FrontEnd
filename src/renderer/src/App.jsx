@@ -54,7 +54,10 @@ const App = () => {
       })
     }
   }, [isServerRunning, toast])
-
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true)
+    navigate('/') // Navigate to home page after login
+  }
   return (
     <Flex
       width={'100dvw'}
@@ -72,23 +75,12 @@ const App = () => {
       ) : (
         <HashRouter>
           <Routes>
+            <Route path="/" element={isAuthenticated ? <MainPage /> : <Navigate to="/login" />} />
             <Route
               path="/login"
               element={
-                isAuthenticated ? (
-                  <Navigate to="/" replace />
-                ) : (
-                  <LoginForm
-                    onLogin={() => {
-                      setIsAuthenticated(true)
-                    }}
-                  />
-                )
+                isAuthenticated ? <Navigate to="/" /> : <LoginForm onLogin={handleLoginSuccess} />
               }
-            />
-            <Route
-              path="/"
-              element={isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />}
             />
           </Routes>
         </HashRouter>

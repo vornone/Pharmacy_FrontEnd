@@ -412,7 +412,7 @@ function ProductTable({ data, orderData, setOrderData }) {
                     borderColor={'gray.600'}
                     textColor={useColorMode().colorMode === 'dark' ? 'white' : 'gray.800'}
                     fontWeight={'bold'}
-                    fontFamily={'jetbrains mono'}
+                    fontFamily={'Inter'}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getCanSort() && (

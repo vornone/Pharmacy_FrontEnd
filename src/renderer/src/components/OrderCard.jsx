@@ -60,8 +60,8 @@ function OrderCard({ data, orderData, setOrderData }) {
           >
             <Image
               bg="gray.100"
+              maxWidth={'100px'}
               minWidth={'100px'}
-              height={'100%'}
               src={imgApi + data.product_img}
               borderRadius={5}
               objectFit={'cover'}
@@ -69,18 +69,18 @@ function OrderCard({ data, orderData, setOrderData }) {
             ></Image>
 
             <HStack width={'100%'} justifyContent={'space-between'}>
-              <CardBody height={'100%'} p={1}>
+              <CardBody height={'100%'} p={0}>
                 <HStack height={'100%'} width={'100%'}>
                   <VStack
                     width={'100%'}
                     alignItems={'left'}
                     justifyContent={'space-between'}
                     height={'100%'}
+                    gap={0}
                   >
                     <Text size="sm" as={'b'}>
                       {data.product_name}
                     </Text>
-
                     <Text
                       color={'gray.400'}
                       textDecoration={data.product_discount > 0 ? 'line-through' : ''}
@@ -88,7 +88,7 @@ function OrderCard({ data, orderData, setOrderData }) {
                       ${data.product_price.toFixed(2)}
                     </Text>
                     {data.product_discount > 0 ? (
-                      <Flex gap={2}>
+                      <Flex gap={1}>
                         <Text color={'red.400'} fontSize={'sm'}>
                           (-{data.product_discount}%)
                         </Text>

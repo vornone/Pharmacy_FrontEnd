@@ -35,30 +35,12 @@ import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-import useCategory from '../../hooks/useCategory.js'
-import useDeleteData from '../../hooks/useDeleteData.js'
-import useProduct from '../../hooks/useProduct.js'
-import UpdateProductModal from './../modal/UpdateProductModal'
-import TableFilter from '../table-component/TableFilter.jsx'
-import { serverUrl } from '../../api-clients/api-clients.js'
-import useUpdateProduct from '../../hooks/useUpdateProduct.js'
-import { debounce } from 'lodash'
 function ImportProductTable({ importData }) {
-  const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
-  const [tableData, setTableData] = useState(importData)
+  const [tableData, setTableData] = useState([...importData])
   const toast = useToast()
-  const {
-    data: productListData,
-    error: productListError,
-    loading: productListLoading,
-    getProduct
-  } = useProduct()
-  const { deleteData: deleteProduct } = useDeleteData()
   const [columnFilters, setColumnFilters] = useState([])
-  const [discount, setDiscount] = useState(0)
-  const debouncedGetProduct = useMemo(() => debounce(getProduct, 300), [getProduct])
 
   // Memoized toast configurations to reduce redundancy
   const toastConfig = useMemo(
@@ -91,23 +73,18 @@ function ImportProductTable({ importData }) {
 
   // Update table data when product list changes
   useEffect(() => {
-    if (!productListError && !productListLoading) {
-      setTableData(productListData)
-    }
-  }, [productListData])
+    setTableData(importData)
+  }, [importData])
 
   // Handle row deletion
   const handleDeleteRow = async (row) => {
     try {
       setRowSelection(row.original)
-      const updatedData = tableData.filter((item) => item.product_id !== row.original.product_id)
+      const updatedData = tableData.filter(
+        (item) => item.product_name !== row.original.product_name
+      )
       setTableData(updatedData)
-      debouncedGetProduct()
-      showToast('Success', 'Product deleted successfully', 'success')
-    } catch (error) {
-      console.error('Error deleting row:', error)
-      showToast('Error', 'Failed to delete product', 'error')
-    }
+    } catch (error) {}
   }
 
   // Memoize columns to prevent unnecessary re-renders
@@ -174,11 +151,9 @@ function ImportProductTable({ importData }) {
       {
         accessorKey: 'total_price',
         header: 'total',
-        cell: ({ row }) => {
-          const value =
-            (row.getValue('import_price') - row.getValue('shipping_price')) *
-            row.getValue('import_quantity')
-          return row.getValue('product_name') && <Text>${value}</Text>
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return value && <Text>${value}</Text>
         }
       },
       {
@@ -200,7 +175,7 @@ function ImportProductTable({ importData }) {
   )
 
   const table = useReactTable({
-    data: importData,
+    data: tableData,
     columns,
     onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
@@ -257,7 +232,7 @@ function ImportProductTable({ importData }) {
                     borderColor={'gray.600'}
                     textColor={useColorMode().colorMode === 'dark' ? 'white' : 'gray.800'}
                     fontWeight={'bold'}
-                    fontFamily={'jetbrains mono'}
+                    fontFamily={'Inter'}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getCanSort() && (
@@ -285,23 +260,15 @@ function ImportProductTable({ importData }) {
             ))}
           </Thead>
           <Tbody>
-            {tableData.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Td>
-                  ))}
-                </Tr>
-              ))
-            ) : (
-              <Tr>
-                <Td textAlign={'center'} colSpan={columns.length} justifyContent={'center'}>
-                  <Text>No data</Text>
-                </Td>
+            {table.getRowModel().rows.map((row) => (
+              <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                ))}
               </Tr>
-            )}
+            ))}
           </Tbody>
         </Table>
       </TableContainer>

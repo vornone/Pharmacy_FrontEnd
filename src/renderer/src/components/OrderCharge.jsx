@@ -88,7 +88,6 @@ function OrderCharge({ data }) {
               <Text color={'gray.400'}>VAT:</Text>
               <Text color={'gray.400'}>${tax}</Text>
             </HStack>
-
             <HStack justifyContent={'space-between'} width={'100%'}>
               <Text fontSize={'lg'}>Total:</Text>
               <Text fontSize={'lg'}>${total.toFixed(2)}</Text>
@@ -97,7 +96,7 @@ function OrderCharge({ data }) {
               <InputGroup colorScheme="white">
                 <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
                 <Input
-                  type='number'
+                  type="number"
                   isInvalid={discount > 100 || discount < 0}
                   placeholder="Discount...."
                   width={'100%'}
@@ -105,8 +104,13 @@ function OrderCharge({ data }) {
                   onChange={(e) => setDiscount(e.target.value)}
                 ></Input>
               </InputGroup>
-              <Button colorScheme="green" width={'100%'} onClick={handleValidation} isDisabled={discount > 100 || discount < 0}>
-                Confirm
+              <Button
+                colorScheme="green"
+                width={'100%'}
+                onClick={handleValidation}
+                isDisabled={discount > 100 || discount < 0}
+              >
+                Place Order
               </Button>
             </HStack>
           </VStack>

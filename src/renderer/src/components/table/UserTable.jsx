@@ -29,14 +29,12 @@ import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import useUser from '../../hooks/useUser.js'
 
-
-
 function UserTable({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState(data)
   const { deleteUser } = useUser()
-  const [pagination, setPagination] = useState({pageIndex: 0, pageSize: 5})
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 })
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
@@ -49,12 +47,12 @@ function UserTable({ data }) {
       const currentRowsOnPage = updatedData.slice(
         pagination.pageIndex * pagination.pageSize,
         pagination.pageIndex * pagination.pageSize + pagination.pageSize
-      );
+      )
       if (currentRowsOnPage.length === 0 && pagination.pageIndex > 0) {
         setPagination((prev) => ({
           ...prev,
-          pageIndex: prev.pageIndex - 1,
-        }));
+          pageIndex: prev.pageIndex - 1
+        }))
       }
     } catch (error) {
       console.error('Error deleting row:', error)
@@ -98,7 +96,7 @@ function UserTable({ data }) {
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
     autoResetAll: false,
-    pageCount:Math.ceil(tableData.length / pagination.pageSize),
+    pageCount: Math.ceil(tableData.length / pagination.pageSize),
     state: {
       rowSelection,
       pagination
@@ -134,7 +132,7 @@ function UserTable({ data }) {
                     borderColor={'gray.600'}
                     textColor={useColorMode().colorMode === 'dark' ? 'white' : 'gray.800'}
                     fontWeight={'bold'}
-                    fontFamily={'jetbrains mono'}
+                    fontFamily={'Inter'}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getCanSort() && (

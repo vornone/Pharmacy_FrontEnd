@@ -33,7 +33,7 @@ const ProductCard = memo(
         <CardBody p={0} display="flex" flexDirection="column" flex="1">
           <VStack justifyContent="space-between" width="100%" height="100%">
             <Flex width={'100%'}>
-              <Text fontSize="md" textAlign="left"  fontWeight="bold" width="100%">
+              <Text fontSize="md" textAlign="left" fontWeight="bold" width="100%">
                 {product_name}
               </Text>
               {product_discount > 0 && (

@@ -42,11 +42,11 @@ function OrderHeader() {
       >
         <VStack alignItems={'flex-start'}>
           <Text fontSize={'2xl'} fontWeight={'medium'}>
-            New Order
+            Cart
           </Text>
-          <Text color={'gray.400'}>Order Number: #0000</Text>
+          <Text color={'gray.400'}>order:#0000</Text>
         </VStack>
-        <Menu autoSelect={false}>
+        {/* <Menu autoSelect={false}>
           <MenuButton
             as={Button}
             rightIcon={<BsChevronDown />}
@@ -64,13 +64,13 @@ function OrderHeader() {
               </MenuItem>
             ))}
           </MenuList>
-        </Menu>
-        <IconButton
+        </Menu> */}
+        {/* <IconButton
           size="md"
           colorScheme="gray"
           icon={<TbEdit />}
           borderRadius={'full'}
-        ></IconButton>
+        ></IconButton> */}
       </HStack>
     </Card>
   )

@@ -18,7 +18,6 @@ import {
   useToast
 } from '@chakra-ui/react'
 import useProduct from '../../hooks/useProduct'
-import { BsCurrencyDollar } from 'react-icons/bs'
 import { useColorModeValue } from '@chakra-ui/react'
 import ImportProductTable from '../table/ImportProductTable'
 
@@ -167,79 +166,89 @@ function ImportProductModal() {
   }
 
   const handleAddToImportList = () => {
-    const existedProduct = importList.find((item) => item.product_name === productToBeImported.product_name)
-    if (productToBeImported.shipping_price<= productToBeImported.import_price) {
-        toast({
-            title: 'Error',
-            description: 'Shipping price must be less than import price',
-            status: 'error',
-            duration: 3000,
-            isClosable: true
-    })
-        return
+    if (productToBeImported.shipping_price >= productToBeImported.import_price) {
+      toast({
+        title: 'Error',
+        description: 'Shipping price must be less than import price',
+        variant: 'destructive'
+      })
+      return
     }
-    if (productToBeImported.shipping_price<=0 || productToBeImported.import_quantity<=0 || productToBeImported.import_price<=0) {
-        toast({
-            title: 'Error',
-            description: 'Please fill in all fields',
-            status: 'error',
-            duration: 3000,
-            isClosable: true
-        })
-        return
+    if (
+      productToBeImported.shipping_price <= 0 ||
+      productToBeImported.import_quantity <= 0 ||
+      productToBeImported.import_price <= 0
+    ) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all fields with valid values',
+        variant: 'destructive'
+      })
+      return
     }
-    if (!productToBeImported.product_name || !productToBeImported.import_price || !productToBeImported.import_quantity || !productToBeImported.shipping_price) {
-        toast({
-            title: 'Error',
-            description: 'Please fill in all fields',
-            status: 'error',
-            duration: 3000,
-            isClosable: true
-        })
-        return
+    if (
+      !productToBeImported.product_name ||
+      !productToBeImported.import_price ||
+      !productToBeImported.import_quantity ||
+      !productToBeImported.shipping_price
+    ) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all fields',
+        variant: 'destructive'
+      })
+      return
     }
-    if (existedProduct) {
-        const updatedImportList = importList.map((item) => {
-            if (item.product_name === productToBeImported.product_name) {
-                const newQuantity = Number(item.import_quantity) + Number(productToBeImported.import_quantity)
-                const newShippingPrice = Number(item.shipping_price) + Number(productToBeImported.shipping_price)
-                const newTotalPrice = (newQuantity * Number(productToBeImported.import_price)) + newShippingPrice
-                
-                return {
-                    ...item,
-                    import_quantity: newQuantity,
-                    shipping_price: newShippingPrice,
-                    import_price: Number(productToBeImported.import_price), // Keep the latest import price
-                    total_price: newTotalPrice
-                }
-            }
-            return item
-        })
-        setImportList(updatedImportList)
-    } else {
-        // Calculate total price for new product
-        const totalPrice = (Number(productToBeImported.import_quantity) * Number(productToBeImported.import_price)) + 
-                          Number(productToBeImported.shipping_price)
-        
-        setImportList([...importList, {
-            ...productToBeImported,
-            import_price: Number(productToBeImported.import_price),
-            import_quantity: Number(productToBeImported.import_quantity),
-            shipping_price: Number(productToBeImported.shipping_price),
-            total_price: totalPrice
-        }])
-    }
+    const existingProductIndex = importList.findIndex(
+      (item) =>
+        item.product_name === productToBeImported.product_name &&
+        Number(item.import_price) === Number(productToBeImported.import_price) &&
+        Number(item.shipping_price) === Number(productToBeImported.shipping_price)
+    )
+    if (existingProductIndex !== -1) {
+      const updatedImportList = [...importList]
+      const existingProduct = updatedImportList[existingProductIndex]
+      const newQuantity =
+        Number(existingProduct.import_quantity) + Number(productToBeImported.import_quantity)
+      const newTotalPrice =
+        newQuantity * Number(existingProduct.import_price) + Number(existingProduct.shipping_price)
+      updatedImportList[existingProductIndex] = {
+        ...existingProduct,
+        import_quantity: newQuantity,
+        total_price: newTotalPrice
+      }
 
-    // Reset form after adding
+      setImportList(updatedImportList)
+    } else {
+      // If no exact match, add as new row
+      const totalPrice =
+        Number(productToBeImported.import_quantity) * Number(productToBeImported.import_price) +
+        Number(productToBeImported.shipping_price)
+
+      setImportList([
+        ...importList,
+        {
+          ...productToBeImported,
+          import_price: Number(productToBeImported.import_price),
+          import_quantity: Number(productToBeImported.import_quantity),
+          shipping_price: Number(productToBeImported.shipping_price),
+          total_price: totalPrice
+        }
+      ])
+    }
     setProductToBeImported({
-        product_name: '',
-        import_price: 0,
-        import_quantity: 0,
-        shipping_price: 0,
-        total_price: 0
+      product_name: '',
+      import_price: 0,
+      import_quantity: 0,
+      shipping_price: 0,
+      total_price: 0
     })
     setSelectedProduct('')
-}
+  }
+  useEffect(() => {
+    console.log(importList)
+  }, [importList])
+
   return (
     <>
       <VStack gap={5}>
@@ -280,12 +289,11 @@ function ImportProductModal() {
                 }
               />
             </InputGroup>
-            <InputGroup >
+            <InputGroup>
               <InputLeftAddon justifyContent="center" minW="35%" maxW="35%">
                 <Text>Shipping Price</Text>
               </InputLeftAddon>
               <Input
-                isInvalid={productToBeImported.shipping_price <= 0 || productToBeImported.shipping_price > productToBeImported.import_price}
                 type="number"
                 placeholder="Enter Shipping Price"
                 onChange={onChange}
@@ -298,14 +306,14 @@ function ImportProductModal() {
           </Grid>
         </Flex>
         <Flex width="100%" justifyContent="flex-end">
-          <Button
-            colorScheme="green"
-            onClick={handleAddToImportList}
-          >
+          <Button colorScheme="green" onClick={handleAddToImportList}>
             Add Product
           </Button>
         </Flex>
         <ImportProductTable importData={getPaddedImportList()} />
+        <Flex justify={'flex-end'} w={'100%'}>
+          <Button colorScheme="green">Submit</Button>
+        </Flex>
       </VStack>
     </>
   )
