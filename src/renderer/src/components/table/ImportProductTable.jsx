@@ -35,7 +35,7 @@ import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-function ImportProductTable({ importData }) {
+function ImportProductTable({ importData, deleteRow }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState([...importData])
@@ -77,15 +77,15 @@ function ImportProductTable({ importData }) {
   }, [importData])
 
   // Handle row deletion
-  const handleDeleteRow = async (row) => {
-    try {
-      setRowSelection(row.original)
-      const updatedData = tableData.filter(
-        (item) => item.product_name !== row.original.product_name
-      )
-      setTableData(updatedData)
-    } catch (error) {}
-  }
+  // const handleDeleteRow = async (row) => {
+  //   try {
+  //     setRowSelection(row.original)
+  //     const updatedData = tableData.filter(
+  //       (item) => item.product_name !== row.original.product_name
+  //     )
+  //     setTableData(updatedData)
+  //   } catch (error) {}
+  // }
 
   // Memoize columns to prevent unnecessary re-renders
   const columns = useMemo(
@@ -164,7 +164,7 @@ function ImportProductTable({ importData }) {
           ) : row.length !== 0 ? (
             <Flex>
               <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
-              <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)} />
+              <DeleteRowButton handleDeleteRow={() => deleteRow(row, setRowSelection)} />
             </Flex>
           ) : (
             ''
@@ -175,7 +175,7 @@ function ImportProductTable({ importData }) {
   )
 
   const table = useReactTable({
-    data: tableData,
+    data: importData,
     columns,
     onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),

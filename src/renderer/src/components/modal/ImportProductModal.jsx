@@ -245,6 +245,15 @@ function ImportProductModal() {
     })
     setSelectedProduct('')
   }
+  const handleDeleteRow = async (row, setRowSelection) => {
+    try {
+      setRowSelection(row.original)
+      const updatedData = importList.filter(
+        (item) => item.product_name !== row.original.product_name
+      )
+      setImportList(updatedData)
+    } catch (error) {}
+  }
   useEffect(() => {
     console.log(importList)
   }, [importList])
@@ -310,7 +319,7 @@ function ImportProductModal() {
             Add Product
           </Button>
         </Flex>
-        <ImportProductTable importData={getPaddedImportList()} />
+        <ImportProductTable importData={getPaddedImportList()} deleteRow={handleDeleteRow} />
         <Flex justify={'flex-end'} w={'100%'}>
           <Button colorScheme="green">Submit</Button>
         </Flex>
