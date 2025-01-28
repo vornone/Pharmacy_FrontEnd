@@ -173,7 +173,6 @@ function ImportProductTable({ importData, deleteRow }) {
     ],
     []
   )
-
   const table = useReactTable({
     data: importData,
     columns,

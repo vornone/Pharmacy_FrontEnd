@@ -26,7 +26,7 @@ function OrderCharge({ data }) {
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const [discount, setDiscount] = useState(0)
-  
+
   const subTotal = data.reduce((acc, cur) => {
     const itemPrice = cur.discount_price ?? cur.product_price
     return acc + parseFloat((itemPrice * cur.orderQuantity).toFixed(2))
@@ -35,7 +35,6 @@ function OrderCharge({ data }) {
   const tax = parseFloat(((subTotal - discountAmount) * 0.1).toFixed(2))
   const total = subTotal - discountAmount + tax
   const toast = useToast()
-
 
   const [orderCalculation, setOrderCalculation] = useState({
     subTotal: subTotal,
@@ -62,7 +61,7 @@ function OrderCharge({ data }) {
       total: total
     })
     console.log(orderCalculation)
-  }, [ subTotal, discountAmount, tax, total])
+  }, [subTotal, discountAmount, tax, total])
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
@@ -76,7 +75,7 @@ function OrderCharge({ data }) {
               alignItems={'center'}
               flexDirection={'column'}
             >
-              <OrderConfirmModal orderData={[...data]}/>
+              <OrderConfirmModal orderData={[...data]} orderCalculation={orderCalculation} />
             </Flex>
           </ModalBody>
           <ModalFooter></ModalFooter>

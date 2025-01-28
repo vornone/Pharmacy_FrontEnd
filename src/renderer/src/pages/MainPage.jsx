@@ -84,7 +84,7 @@ export default function MainPage() {
         lg: 'auto 1fr'
       }}
     >
-      <GridItem area="header" p={'1%'} borderRadius={'10px'}>
+      <GridItem area="header" pb={'1%'} pt={'1%'} borderRadius={'10px'}>
         <Flex flexDirection={'column'} gap={'1%'} width={'100%'} justifyContent={'space-between'}>
           <NavBar />
           <MenuBar orderData={orders} setOrderData={setOrders} />
