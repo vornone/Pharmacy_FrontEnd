@@ -91,7 +91,7 @@ const SearchableSelect = ({ options, placeholder, onSelect, value }) => {
           mt="2"
           w="full"
           maxH="200px"
-          overflowY="auto"
+          overflowY="hidden"
           boxShadow="md"
         >
           <VStack align="start" spacing="1" p="2" overflowY="auto" maxHeight="200px">

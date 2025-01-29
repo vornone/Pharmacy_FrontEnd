@@ -40,6 +40,7 @@ import useUser from '../hooks/useUser'
 import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
 import ImportProductModal from './modal/ImportProductModal'
+import ImportHistory from './table/ImportHistory'
 // Memoized menu items to prevent unnecessary re-renders
 const MENU_LEFT = [
   { name: 'Product', icon: <TbArchiveFilled /> },
@@ -50,7 +51,7 @@ const MENU_LEFT = [
 
 const MENU_RIGHT = [
   { name: 'Orders', icon: <TbShoppingCartFilled /> },
-  { name: 'Report', icon: <TbChartPieFilled /> },
+  { name: 'Sale Report', icon: <TbChartPieFilled /> },
   { name: 'Admin', icon: <TbUserShield /> }
 ]
 
@@ -147,17 +148,8 @@ function MenuBar({ orderData, setOrderData }) {
         return {
           title: 'Import Product',
           modal: mainModal(categoryLoading, categoryError, <ImportProductModal />),
-          tableTitle: 'Import Product',
-          table: mainModal(
-            categoryLoading,
-            categoryError,
-            <ProductTable
-              closeModal={onClose}
-              data={productData}
-              orderData={orderData}
-              setOrderData={setOrderData}
-            />
-          )
+          tableTitle: 'Import History',
+          table: mainModal(categoryLoading, categoryError, <ImportHistory />)
         }
       default:
         return { modal: null, title: '', table: null, tableTitle: '' }

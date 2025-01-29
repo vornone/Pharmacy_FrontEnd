@@ -1,20 +1,33 @@
-// theme.js
+import { extendTheme } from '@chakra-ui/react'
 
-// 1. import `extendTheme` function
-import { extendTheme } from '@chakra-ui/react' // 2. Add your color mode config
-const config = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
+const theme = extendTheme({
   styles: {
-    global: () => ({
-      body: {
-        fontFamily: '"Inter", "Noto", sans-serif"'
-      }
-    })
-  }
-}
+    global: {
+      // Global body styling
 
-// 3. extend the theme
-const theme = extendTheme({ config })
+      // Global scrollbar styling
+      '::-webkit-scrollbar': {
+        width: '8px' // Scrollbar width
+      },
+      '::-webkit-scrollbar-thumb': {
+        background: 'green.500' // Thumb color
+      },
+      '::-webkit-scrollbar-track': {
+        background: 'gray.200' // Track color
+      },
+
+      // Global link styling
+      a: {
+        color: 'green.500', // Link color
+        textDecoration: 'none', // Remove underline
+        _hover: {
+          textDecoration: 'underline' // Underline on hover
+        }
+      }
+
+      // Other global styles...
+    }
+  }
+})
 
 export default theme

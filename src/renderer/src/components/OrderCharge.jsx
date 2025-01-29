@@ -67,10 +67,12 @@ function OrderCharge({ data }) {
       <Modal isOpen={isOpen} onClose={onClose} isCentered size={'xl'}>
         <ModalOverlay />
         <ModalContent>
+          <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody maxHeight={'100%'} height={'100%'}>
             <Flex
               width={'100%'}
+              height={'100%'}
               justifyContent={'center'}
               alignItems={'center'}
               flexDirection={'column'}
@@ -78,7 +80,6 @@ function OrderCharge({ data }) {
               <OrderConfirmModal orderData={[...data]} orderCalculation={orderCalculation} />
             </Flex>
           </ModalBody>
-          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
       <Card width={'100%'}>

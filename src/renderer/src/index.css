@@ -10,4 +10,5 @@
 h1{
     font-family: 'Inter', sans-serif;
 }
-::-webkit-scrollbar {display:none;}
+/* ::-webkit-scrollbar {display:none;} */
+::-webkit-scrollbar{}
