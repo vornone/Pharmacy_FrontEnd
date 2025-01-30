@@ -121,7 +121,7 @@ const SearchableSelect = ({ options, placeholder, onSelect, value }) => {
 }
 
 function ImportProductModal() {
-  const { data, loading, error, getProduct } = useProduct()
+  const { data } = useProduct()
   const [selectedProduct, setSelectedProduct] = useState('')
   const [importList, setImportList] = useState([])
   const toast = useToast()
@@ -132,10 +132,12 @@ function ImportProductModal() {
     shipping_price: 0,
     total_price: 0
   })
+
   const options = data?.map((item) => ({
     value: item.product_id,
     name: item.product_name
   }))
+
   const getPaddedImportList = () => {
     const currentLength = importList.length
     const targetLength = Math.ceil(currentLength / 5) * 5
@@ -170,7 +172,9 @@ function ImportProductModal() {
       toast({
         title: 'Error',
         description: 'Shipping price must be less than import price',
-        variant: 'destructive'
+        status: 'error',
+        duration: 3000,
+        isClosable: true
       })
       return
     }
@@ -182,7 +186,9 @@ function ImportProductModal() {
       toast({
         title: 'Error',
         description: 'Please fill in all fields with valid values',
-        variant: 'destructive'
+        status: 'error',
+        duration: 3000,
+        isClosable: true
       })
       return
     }
@@ -195,16 +201,20 @@ function ImportProductModal() {
       toast({
         title: 'Error',
         description: 'Please fill in all fields',
-        variant: 'destructive'
+        status: 'error',
+        duration: 3000,
+        isClosable: true
       })
       return
     }
+
     const existingProductIndex = importList.findIndex(
       (item) =>
         item.product_name === productToBeImported.product_name &&
         Number(item.import_price) === Number(productToBeImported.import_price) &&
         Number(item.shipping_price) === Number(productToBeImported.shipping_price)
     )
+
     if (existingProductIndex !== -1) {
       const updatedImportList = [...importList]
       const existingProduct = updatedImportList[existingProductIndex]
@@ -212,6 +222,7 @@ function ImportProductModal() {
         Number(existingProduct.import_quantity) + Number(productToBeImported.import_quantity)
       const newTotalPrice =
         newQuantity * Number(existingProduct.import_price) + Number(existingProduct.shipping_price)
+
       updatedImportList[existingProductIndex] = {
         ...existingProduct,
         import_quantity: newQuantity,
@@ -220,22 +231,23 @@ function ImportProductModal() {
 
       setImportList(updatedImportList)
     } else {
-      // If no exact match, add as new row
       const totalPrice =
         Number(productToBeImported.import_quantity) * Number(productToBeImported.import_price) +
         Number(productToBeImported.shipping_price)
 
-      setImportList([
-        ...importList,
-        {
-          ...productToBeImported,
-          import_price: Number(productToBeImported.import_price),
-          import_quantity: Number(productToBeImported.import_quantity),
-          shipping_price: Number(productToBeImported.shipping_price),
-          total_price: totalPrice
-        }
-      ])
+      // Add a unique identifier to each row
+      const newProduct = {
+        id: Date.now(), // Add a unique identifier
+        ...productToBeImported,
+        import_price: Number(productToBeImported.import_price),
+        import_quantity: Number(productToBeImported.import_quantity),
+        shipping_price: Number(productToBeImported.shipping_price),
+        total_price: totalPrice
+      }
+
+      setImportList([...importList, newProduct])
     }
+
     setProductToBeImported({
       product_name: '',
       import_price: 0,
@@ -245,15 +257,78 @@ function ImportProductModal() {
     })
     setSelectedProduct('')
   }
-  const handleDeleteRow = async (row, setRowSelection) => {
+
+  const handleDeleteRow = (row) => {
     try {
-      setRowSelection(row.original)
-      const updatedData = importList.filter(
-        (item) => item.product_name !== row.original.product_name
-      )
-      setImportList(updatedData)
-    } catch (error) {}
+      // Find the exact item to delete using the unique id
+      const itemToDelete = row.original
+
+      // Filter out the item with matching id
+      const updatedList = importList.filter((item) => {
+        // If we have an id, use it for comparison
+        if (item.id && itemToDelete.id) {
+          return item.id !== itemToDelete.id
+        }
+
+        // Fallback to comparing all relevant fields if no id exists
+        return !(
+          item.product_name === itemToDelete.product_name &&
+          Number(item.import_price) === Number(itemToDelete.import_price) &&
+          Number(item.import_quantity) === Number(itemToDelete.import_quantity) &&
+          Number(item.shipping_price) === Number(itemToDelete.shipping_price)
+        )
+      })
+
+      setImportList(updatedList)
+
+      toast({
+        title: 'Success',
+        description: 'Product removed from import list',
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      })
+    } catch (error) {
+      console.error('Error deleting row:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to remove product from import list',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    }
   }
+  const handleUpdateRow = (updatedRow) => {
+    try {
+      const updatedList = importList.map((item) => {
+        if (item.id === updatedRow.id) {
+          return updatedRow
+        }
+        return item
+      })
+
+      setImportList(updatedList)
+
+      toast({
+        title: 'Success',
+        description: 'Product updated successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      })
+    } catch (error) {
+      console.error('Error updating product:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update product',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    }
+  }
+
   useEffect(() => {
     console.log(importList)
   }, [importList])
@@ -319,7 +394,11 @@ function ImportProductModal() {
             Add Product
           </Button>
         </Flex>
-        <ImportProductTable importData={getPaddedImportList()} deleteRow={handleDeleteRow} />
+        <ImportProductTable
+          importData={getPaddedImportList()}
+          deleteRow={handleDeleteRow}
+          updateRow={handleUpdateRow}
+        />
         <Flex justify={'flex-end'} w={'100%'}>
           <Button colorScheme="green">Submit</Button>
         </Flex>

@@ -4,9 +4,6 @@ import {
   Button,
   Text,
   Flex,
-  InputGroup,
-  Input,
-  useColorMode,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,9 +13,8 @@ import {
   ModalFooter,
   Checkbox,
   ButtonGroup,
-  Img,
   useToast,
-  Spinner
+  useColorMode
 } from '@chakra-ui/react'
 import {
   useReactTable,
@@ -35,59 +31,55 @@ import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-function ImportProductTable({ importData, deleteRow }) {
+import EditImportProductRow from '../modal/EditImportProductRow.jsx'
+function ImportProductTable({ importData, deleteRow, updateRow }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
-  const [tableData, setTableData] = useState([...importData])
-  const toast = useToast()
+  const [tableData, setTableData] = useState(importData)
   const [columnFilters, setColumnFilters] = useState([])
+  const toast = useToast()
 
-  // Memoized toast configurations to reduce redundancy
-  const toastConfig = useMemo(
-    () => ({
-      duration: 3000,
-      isClosable: true,
-      position: 'bottom-center'
-    }),
-    []
-  )
+  // Update local table data when importData changes
 
-  // Centralized toast method
-  const showToast = useCallback(
-    (title, description, status) => {
-      toast({
-        title,
-        description,
-        status,
-        ...toastConfig
-      })
+  // Handle row deletion with immediate UI update
+  const handleDeleteRow = useCallback(
+    (row) => {
+      try {
+        // Call parent delete handler
+        deleteRow(row)
+
+        // Update local table data immediately
+        setTableData((prev) =>
+          prev.filter((item) => {
+            if (!row.original.product_name) return true
+            return (
+              item.product_name !== row.original.product_name ||
+              item.import_price !== row.original.import_price ||
+              item.import_quantity !== row.original.import_quantity ||
+              item.shipping_price !== row.original.shipping_price
+            )
+          })
+        )
+      } catch (error) {
+        console.error('Error deleting row:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to delete row',
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      }
     },
-    [toast, toastConfig]
+    [deleteRow, toast]
   )
 
-  // Track selection of rows
   const handleOpenModal = (row) => {
     onOpen()
     setRowSelection(row.original)
   }
 
-  // Update table data when product list changes
-  useEffect(() => {
-    setTableData(importData)
-  }, [importData])
-
-  // Handle row deletion
-  // const handleDeleteRow = async (row) => {
-  //   try {
-  //     setRowSelection(row.original)
-  //     const updatedData = tableData.filter(
-  //       (item) => item.product_name !== row.original.product_name
-  //     )
-  //     setTableData(updatedData)
-  //   } catch (error) {}
-  // }
-
-  // Memoize columns to prevent unnecessary re-renders
+  // Memoized columns definition
   const columns = useMemo(
     () => [
       {
@@ -97,7 +89,7 @@ function ImportProductTable({ importData, deleteRow }) {
             isChecked={table.getIsAllRowsSelected()}
             isIndeterminate={table.getIsSomeRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
-            borderColor={useColorMode().colorMode == 'light' ? 'black' : 'white'}
+            borderColor={useColorMode().colorMode === 'light' ? 'black' : 'white'}
           />
         ),
         cell: ({ row }) =>
@@ -116,19 +108,13 @@ function ImportProductTable({ importData, deleteRow }) {
       {
         accessorKey: 'product_name',
         header: 'name',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return <Text>{value}</Text>
-        },
+        cell: ({ getValue }) => <Text>{getValue()}</Text>,
         enableSorting: false
       },
       {
         accessorKey: 'import_quantity',
         header: 'Qty',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return <Text>{value}</Text>
-        }
+        cell: ({ getValue }) => <Text>{getValue()}</Text>
       },
       {
         accessorKey: 'import_price',
@@ -139,7 +125,6 @@ function ImportProductTable({ importData, deleteRow }) {
         },
         enableColumnFilter: true
       },
-
       {
         accessorKey: 'shipping_price',
         header: 'Shipping',
@@ -161,18 +146,17 @@ function ImportProductTable({ importData, deleteRow }) {
         cell: ({ row }) =>
           !row.getValue('product_name') ? (
             <Flex height={'35px'}></Flex>
-          ) : row.length !== 0 ? (
-            <Flex>
-              <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
-              <DeleteRowButton handleDeleteRow={() => deleteRow(row)} />
-            </Flex>
           ) : (
-            ''
+            <Flex>
+              <EditRowButton handleOpenModal={() => handleOpenModal(row)} />
+              <DeleteRowButton handleDeleteRow={() => handleDeleteRow(row)} />
+            </Flex>
           )
       }
     ],
-    []
+    [handleDeleteRow]
   )
+
   const table = useReactTable({
     data: importData,
     columns,
@@ -181,7 +165,6 @@ function ImportProductTable({ importData, deleteRow }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    autoResetAll: false,
     state: {
       rowSelection,
       columnFilters
@@ -191,31 +174,19 @@ function ImportProductTable({ importData, deleteRow }) {
         pageSize: 5
       }
     },
-    enableRowSelection: true,
-    meta: {
-      updateData: (rowIndex, columnId, value) =>
-        setTableData((prev) =>
-          prev.map((row, index) =>
-            index === rowIndex
-              ? {
-                  ...prev[rowIndex],
-                  [columnId]: value
-                }
-              : row
-          )
-        )
-    }
+    enableRowSelection: true
   })
 
   return (
     <>
-      {/* Rest of the component remains the same */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent maxH={'max-content'} maxW={'max-content'} minW={'lg'}>
-          <ModalHeader>Edit Product</ModalHeader>
+          <ModalHeader>Edit Import</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            <EditImportProductRow rowData={rowSelection} />
+          </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
@@ -251,7 +222,7 @@ function ImportProductTable({ importData, deleteRow }) {
                         mx={3}
                         boxSize={4}
                         variant={'ghost'}
-                      ></IconButton>
+                      />
                     )}
                   </Th>
                 ))}
