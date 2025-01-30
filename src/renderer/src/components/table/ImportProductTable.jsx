@@ -164,7 +164,7 @@ function ImportProductTable({ importData, deleteRow }) {
           ) : row.length !== 0 ? (
             <Flex>
               <EditRowButton handleOpenModal={() => handleOpenModal(row)} />{' '}
-              <DeleteRowButton handleDeleteRow={() => deleteRow(row, setRowSelection)} />
+              <DeleteRowButton handleDeleteRow={() => deleteRow(row)} />
             </Flex>
           ) : (
             ''
