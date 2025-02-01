@@ -20,9 +20,10 @@ const TableFilter = ({ columnFilters, setColumnFilters, placeholder, column }) =
       <InputGroup>
         <InputLeftElement children={<BsSearch />}></InputLeftElement>
         <Input
+          
           placeholder={placeholder}
           width={'400px'}
-          shadow={'sm'}
+          shadow={'lg'}
           onChange={(e) => onFilterChange(column, e.target.value)}
         ></Input>
       </InputGroup>

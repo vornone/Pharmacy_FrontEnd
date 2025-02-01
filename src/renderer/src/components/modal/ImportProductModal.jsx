@@ -166,7 +166,6 @@ function ImportProductModal() {
     const { name, value } = e.target
     setProductToBeImported({ ...productToBeImported, [name]: value })
   }
-
   const handleAddToImportList = () => {
     if (productToBeImported.shipping_price >= productToBeImported.import_price) {
       toast({

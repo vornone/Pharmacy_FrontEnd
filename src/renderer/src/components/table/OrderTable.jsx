@@ -18,7 +18,8 @@ import {
   ButtonGroup,
   Img,
   useToast,
-  Spinner
+  Spinner,
+  Icon
 } from '@chakra-ui/react'
 import {
   useReactTable,
@@ -34,31 +35,63 @@ import { TbChevronDown, TbChevronUp, TbArrowsSort } from 'react-icons/tb'
 import { useDisclosure } from '@chakra-ui/react'
 import EditRowButton from '../table-component/EditRowButton.jsx'
 import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-import { dateFormat } from '../../function/dateFormat.js'
+import { IoIosArrowBack, IoIosArrowForward, IoMdAddCircle } from 'react-icons/io'
+import useCategory from '../../hooks/useCategory.js'
+import UpdateProductModal from './../modal/UpdateProductModal'
+import { serverUrl } from '../../api-clients/api-clients.js'
+import { Badge } from '@chakra-ui/react'
+import { FaCircle } from "react-icons/fa";
+import SwitchStatusButton from '../table-component/SwitchStatusButton.jsx'
 import ShowDetailButton from '../table-component/ShowDetailButton.jsx'
-const importData = [
-  {
-    id: 1,
-    date: `${dateFormat(new Date())}`,
-    shipping: 12.5,
-    import: 200.15,
-    total: 212.65
+
+
+const testData = [
+    {
+    order_id: '#00001',
+    order_date: '2023-08-01',
+    order_customer: 'John Doe',
+    order_item:5,
+    order_status: 'Pending',
+    order_total: 100,
+    order_delivery:'yes',
   },
   {
-    id: 2,
-    date: `${dateFormat(new Date())}`,
-    shipping: 20.13,
-    import: 150.15,
-    total: 170.28
-  }
-]
-function ImportHistory() {
+    order_id: '#00002',
+    order_date: '2024-12-27',
+    order_customer: 'John Doe',
+    order_item:5,
+    order_status: 'Success',
+    order_total: 100,
+    order_delivery:'no',
+  },
+  {
+    order_id: '#00003',
+    order_date: '2025-02-01',
+    order_customer: 'John Doe',
+    order_item:5,
+    order_status: 'Cancelled',
+    order_total: 100,
+    order_delivery:'yes',
+  }]
+
+
+
+function OrderTable({ data, orderData, setOrderData }) {
+  const imgApi = serverUrl + '/images/'
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
-  const [tableData, setTableData] = useState([...importData])
+  const [tableData, setTableData] = useState(testData)
+  const { data: categoryData } = useCategory()
   const toast = useToast()
   const [columnFilters, setColumnFilters] = useState([])
+  const filterTableByValue = (data, value) => {
+    if (value) {
+      return data.filter((row) => row.order_status.includes(value))
+    } else {
+      return data
+  }
+  }
+  
 
   // Memoized toast configurations to reduce redundancy
   const toastConfig = useMemo(
@@ -89,86 +122,94 @@ function ImportHistory() {
     setRowSelection(row.original)
   }
 
-  // Update table data when product list changes
-  useEffect(() => {
-    setTableData(importData)
-  }, [importData])
-
-  // Handle row deletion
-  // const handleDeleteRow = async (row) => {
-  //   try {
-  //     setRowSelection(row.original)
-  //     const updatedData = tableData.filter(
-  //       (item) => item.product_name !== row.original.product_name
-  //     )
-  //     setTableData(updatedData)
-  //   } catch (error) {}
-  // }
-
   // Memoize columns to prevent unnecessary re-renders
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
+        accessorKey: 'order_id',
         header: 'id',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text>{value}</Text>
+          return <Text fontWeight={'bold'}>{value}</Text>
         },
         enableSorting: false
       },
       {
-        accessorKey: 'date',
-        header: 'Date',
+        accessorKey: 'order_date',
+        header: 'date',
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return (
+            <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden">
+              {value}
+            </Text>
+          )
+        },
+        enableColumnFilter: true
+      },
+      {
+        accessorKey: 'order_customer',
+        header: 'Customer',
         cell: ({ getValue }) => {
           const value = getValue()
           return <Text>{value}</Text>
         }
       },
       {
-        accessorKey: 'import',
-        header: 'import',
+        accessorKey: 'order_item',
+        header: 'Item',
         cell: ({ getValue }) => {
           const value = getValue()
-          return value && <Text>${value}</Text>
-        },
-        enableColumnFilter: true
-      },
-
-      {
-        accessorKey: 'shipping',
-        header: 'Shipping',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return value && <Text>${value}</Text>
+          return <Text>{value}</Text>
         }
       },
       {
-        accessorKey: 'total',
-        header: 'total',
+        accessorKey: 'order_total',
+        header: 'Total',
         cell: ({ getValue }) => {
-          const value = getValue()
-          return value && <Text>${value}</Text>
-        }
+            const value = getValue()
+            return <Text>$ {value}</Text>
+          }
+      },
+      {
+        accessorKey: 'order_delivery',
+        header: 'Delivery',
+        cell: ({ getValue }) => {
+            const value = getValue()
+            return <Text>{value}</Text>
+          }
+      },
+      {
+        accessorKey: 'order_status',
+        header: 'Status',        
+        cell: ({ getValue }) => {
+            const value = getValue()
+            return {
+              'Pending': <Badge colorScheme="orange" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Pending</Text></Badge>,
+              'Success': <Badge colorScheme="green" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Success</Text></Badge>,
+              'Cancelled': <Badge colorScheme="red" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Cancelled</Text></Badge>,
+            }[value]
+          }
       },
       {
         header: 'Action',
         cell: ({ row }) =>
-          !row.getValue('id') ? (
-            <Flex height={'35px'}></Flex>
-          ) : row.length !== 0 ? (
+          row.length !== 0 ? (
             <Flex>
+                                <SwitchStatusButton/>
               <ShowDetailButton handleOpenModal={() => handleOpenModal(row)} />
+
             </Flex>
           ) : (
             ''
           )
       }
     ],
-    []
+    [categoryData]
   )
+
   const table = useReactTable({
-    data: importData,
+    data: tableData,
     columns,
     onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
@@ -203,20 +244,9 @@ function ImportHistory() {
 
   return (
     <>
-      {/* Rest of the component remains the same */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent maxH={'max-content'} maxW={'max-content'} minW={'lg'}>
-          <ModalHeader>Edit Product</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody></ModalBody>
-          <ModalFooter></ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
-        <Table variant="simple">
-          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'green.50'}>
+      <TableContainer borderRadius={10}  borderColor={'gray.500'} width={'100%'}>
+        <Table variant={useColorMode().colorMode === 'light' ? 'simple' : 'unstyled'}>
+          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'gray.300'}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -252,15 +282,23 @@ function ImportHistory() {
             ))}
           </Thead>
           <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                ))}
+            {tableData.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <Tr key={row.id} borderTop={'1px'} borderColor={'gray.600'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Td>
+                  ))}
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td textAlign={'center'} colSpan={columns.length} justifyContent={'center'}>
+                  <Text>No data</Text>
+                </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>
@@ -277,4 +315,4 @@ function ImportHistory() {
   )
 }
 
-export default ImportHistory
+export default OrderTable;

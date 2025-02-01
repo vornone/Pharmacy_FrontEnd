@@ -41,6 +41,7 @@ import ProductTable from './table/ProductTable'
 import useProduct from '../hooks/useProduct'
 import ImportProductModal from './modal/ImportProductModal'
 import ImportHistory from './table/ImportHistory'
+import OrderTable from './table/OrderTable'
 // Memoized menu items to prevent unnecessary re-renders
 const MENU_LEFT = [
   { name: 'Product', icon: <TbArchiveFilled /> },
@@ -151,6 +152,21 @@ function MenuBar({ orderData, setOrderData }) {
           tableTitle: 'Import History',
           table: mainModal(categoryLoading, categoryError, <ImportHistory />)
         }
+      case 'Orders':
+        return {
+          title: 'Insert Category',
+          modal: <AddCategoryModal closeModal={onClose} data={categoryData} />,
+          tableTitle: 'Order Table',
+          table: mainModal(
+            categoryLoading,
+            categoryError,
+            <OrderTable
+            closeModal={onClose}
+            data={productData}
+            orderData={orderData}
+            setOrderData={setOrderData}/>
+          )
+        }  
       default:
         return { modal: null, title: '', table: null, tableTitle: '' }
     }
@@ -226,7 +242,7 @@ function MenuBar({ orderData, setOrderData }) {
         <HStack justifyContent="space-between" alignItems="center">
           {MENU_RIGHT.map((item) => (
             <ButtonGroup size="sm" isAttached variant="solid" colorScheme="gray" key={item.name}>
-              <Button leftIcon={item.icon}>{item.name}</Button>
+              <Button leftIcon={item.icon} onClick={() => handleOpenModal(item.name, true)}>{item.name}</Button>
             </ButtonGroup>
           ))}
           <ButtonGroup size="sm" isAttached variant="outline" colorScheme="gray">

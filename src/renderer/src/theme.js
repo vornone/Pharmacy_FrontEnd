@@ -2,7 +2,13 @@ import { extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({
   styles: {
+    fonts: {
+      heading: `'Poppins', sans-serif`,
+      body: `'Poppins', sans-serif`,
+  
+    },
     global: {
+
       // Global body styling
 
       // Global scrollbar styling

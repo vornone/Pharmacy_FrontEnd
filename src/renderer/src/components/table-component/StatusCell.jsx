@@ -1,5 +1,6 @@
 import { Box, Flex, Menu, MenuButton, MenuItem, MenuList,HStack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useColorMode } from "@chakra-ui/react";
 // import { STATUSES } from "../data";
 
 const status =[
@@ -7,19 +8,19 @@ const status =[
     id: 1,
     name: "expired",
     color: "orange.400",
-    bg: "orange.900",
+    bg: "orange",
   },
   {
     id: 2,
     name: "good",
     color: "green.400",
-    bg: "green.900",
+    bg: "green",
   }
   ,{
     id: 3,
     name: "low stock",
     color: "red.400",
-    bg: "red.900",
+    bg: "red",
   }
 ]
 export const ColorIcon = ({ color, ...props }) => (
@@ -50,7 +51,7 @@ const StatusCell = () => {
         p={1.5}
         bg={color ? colorBg : "transparent"}
       >
-        <HStack >  <ColorIcon color={color}  /> <Text fontSize={"sm"}>{name}</Text></HStack>
+        <HStack >  <ColorIcon color={color}  /> <Text fontSize={"sm"} color={'white'} >{name}</Text></HStack>
 
 
       </MenuButton>
@@ -64,7 +65,7 @@ const StatusCell = () => {
             }}
           >
             <ColorIcon color={status.color} mr={3} />
-            {status.name}
+            <Text>{status.name}</Text>
           </MenuItem>
         ))}
       </MenuList>

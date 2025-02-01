@@ -200,7 +200,7 @@ function ProductTable({ data, orderData, setOrderData }) {
             isChecked={table.getIsAllRowsSelected()}
             isIndeterminate={table.getIsSomeRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
-            borderColor={useColorMode().colorMode == 'light' ? 'black' : 'white'}
+            borderColor={useColorMode().colorMode == 'light' ? 'gray.500' : 'white'}
           />
         ),
         cell: ({ row }) => (
@@ -208,7 +208,7 @@ function ProductTable({ data, orderData, setOrderData }) {
             isChecked={row.getIsSelected()}
             isIndeterminate={row.getIsSomeSelected()}
             onChange={row.getToggleSelectedHandler()}
-            borderColor={'gray.600'}
+            borderColor={'gray.500'}
           />
         ),
         enableSorting: false,
@@ -238,7 +238,7 @@ function ProductTable({ data, orderData, setOrderData }) {
         cell: ({ getValue }) => {
           const value = getValue()
           return (
-            <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden">
+            <Text whiteSpace="normal" wordBreak="break-word" maxWidth="200px" overflow="hidden" fontWeight={600}>
               {value}
             </Text>
           )
@@ -349,8 +349,9 @@ function ProductTable({ data, orderData, setOrderData }) {
 
   return (
     <>
-      <Flex justifyContent={'space-between'} alignItems={'center'} width={'100%'} mb={2}>
+      <Flex justifyContent={'space-between'} alignItems={'center'} width={'100%'} mb={3} >
         <TableFilter
+
           setColumnFilters={setColumnFilters}
           placeholder={'Product Name'}
           column={'product_name'}
@@ -365,6 +366,7 @@ function ProductTable({ data, orderData, setOrderData }) {
             min={0}
             placeholder="%"
             size={'sm'}
+            borderRadius={5}	
           />
           <Button
             colorScheme={'green'}
@@ -401,18 +403,18 @@ function ProductTable({ data, orderData, setOrderData }) {
         </ModalContent>
       </Modal>
 
-      <TableContainer borderRadius={10} border={'2px'} borderColor={'gray.600'} width={'100%'}>
+      <TableContainer borderRadius={10} borderColor={'gray.500'} width={'100%'}>
         <Table variant="simple">
-          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'green.50'}>
+          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'gray.300'}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <Th
+                  
                     key={header.id}
                     borderColor={'gray.600'}
                     textColor={useColorMode().colorMode === 'dark' ? 'white' : 'gray.800'}
                     fontWeight={'bold'}
-                    fontFamily={'Inter'}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getCanSort() && (
@@ -442,7 +444,7 @@ function ProductTable({ data, orderData, setOrderData }) {
           <Tbody>
             {tableData.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <Tr key={row.id} borderTop={'2px'} borderColor={'gray.600'}>
+                <Tr key={row.id} borderTop={'1px'} borderColor={'gray.600'}>
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

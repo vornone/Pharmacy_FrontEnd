@@ -1,14 +1,25 @@
-@font-face {
+/* @font-face {
     font-family: 'satoshi';
     src: url('./assets/fonts/Satoshi-Variable.ttf');
 }
 
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('./assets/fonts/Poppins/Poppins-Bold.woff2') format('woff2'),
+         url('./assets/fonts/Poppins/Poppins-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
 *{
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 h1{
-    font-family: 'Inter', sans-serif;
-}
+    font-family: 'satoshi', sans-serif;
+} */
+
+
+
 /* ::-webkit-scrollbar {display:none;} */
 ::-webkit-scrollbar{}
