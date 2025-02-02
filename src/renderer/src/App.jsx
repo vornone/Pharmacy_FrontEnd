@@ -4,17 +4,22 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import LoginForm from './pages/UserManagement/Login/LoginForm.jsx'
 import MainPage from './pages/MainPage.jsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { serverUrl } from './api-clients/api-clients.js'
-
+import LoadingScreen from './components/loadingscreen/LoadingScreen.jsx'
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const toast = useToast()
   const [isServerRunning, setIsServerRunning] = useState('loading')
   const [initialLoad, setInitialLoad] = useState(true) // Track initial loading state
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => sessionStorage.getItem('token') !== null // Check for a token in localStorage on app load
   )
-
+  useEffect(() => {
+    // Simulating a delay (you can replace this with actual loading logic)
+    const timeout = setTimeout(() => setIsLoading(false), 2000)
+    return () => clearTimeout(timeout)
+  }, [])
   useEffect(() => {
     const checkServerStatus = async () => {
       try {
@@ -59,34 +64,49 @@ const App = () => {
     navigate('/') // Navigate to home page after login
   }
   return (
-    <Flex
-      width={'100dvw'}
-      height={'100dvh'}
-      justifyContent={'center'}
-      alignItems={'center'}
-      flexDirection={'column'}
-    >
-      {initialLoad ? (
-        <>
-          <Toast title="Server is loading" status="loading" duration={3000} />
-        </>
-      ) : isServerRunning === 'offline' ? (
-        <Toast title="Server is offline" status="error" duration={3000} />
+    <>
+      {isLoading ? (
+        <LoadingScreen />
       ) : (
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={isAuthenticated ? <MainPage /> : <Navigate to="/login" />} />
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/" /> : <LoginForm onLogin={handleLoginSuccess} />
-              }
-            />
-          </Routes>
-        </HashRouter>
+        <Suspense fallback={<LoadingScreen />}>
+          <Flex
+            width={'100dvw'}
+            height={'100dvh'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            flexDirection={'column'}
+          >
+            {initialLoad ? (
+              <>
+                <Toast title="Server is loading" status="loading" duration={3000} />
+              </>
+            ) : isServerRunning === 'offline' ? (
+              <Toast title="Server is offline" status="error" duration={3000} />
+            ) : (
+              <HashRouter>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={isAuthenticated ? <MainPage /> : <Navigate to="/login" />}
+                  />
+                  <Route
+                    path="/login"
+                    element={
+                      isAuthenticated ? (
+                        <Navigate to="/" />
+                      ) : (
+                        <LoginForm onLogin={handleLoginSuccess} />
+                      )
+                    }
+                  />
+                </Routes>
+              </HashRouter>
+            )}
+            <ToastContainer />
+          </Flex>
+        </Suspense>
       )}
-      <ToastContainer />
-    </Flex>
+    </>
   )
 }
 

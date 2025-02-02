@@ -40,41 +40,39 @@ import useCategory from '../../hooks/useCategory.js'
 import UpdateProductModal from './../modal/UpdateProductModal'
 import { serverUrl } from '../../api-clients/api-clients.js'
 import { Badge } from '@chakra-ui/react'
-import { FaCircle } from "react-icons/fa";
+import { FaCircle } from 'react-icons/fa'
 import SwitchStatusButton from '../table-component/SwitchStatusButton.jsx'
 import ShowDetailButton from '../table-component/ShowDetailButton.jsx'
 
-
 const testData = [
-    {
+  {
     order_id: '#00001',
     order_date: '2023-08-01',
     order_customer: 'John Doe',
-    order_item:5,
+    order_item: 5,
     order_status: 'Pending',
     order_total: 100,
-    order_delivery:'yes',
+    order_delivery: 'yes'
   },
   {
     order_id: '#00002',
     order_date: '2024-12-27',
     order_customer: 'John Doe',
-    order_item:5,
+    order_item: 5,
     order_status: 'Success',
     order_total: 100,
-    order_delivery:'no',
+    order_delivery: 'no'
   },
   {
     order_id: '#00003',
     order_date: '2025-02-01',
     order_customer: 'John Doe',
-    order_item:5,
+    order_item: 5,
     order_status: 'Cancelled',
     order_total: 100,
-    order_delivery:'yes',
-  }]
-
-
+    order_delivery: 'yes'
+  }
+]
 
 function OrderTable({ data, orderData, setOrderData }) {
   const imgApi = serverUrl + '/images/'
@@ -89,9 +87,8 @@ function OrderTable({ data, orderData, setOrderData }) {
       return data.filter((row) => row.order_status.includes(value))
     } else {
       return data
+    }
   }
-  }
-  
 
   // Memoized toast configurations to reduce redundancy
   const toastConfig = useMemo(
@@ -130,7 +127,7 @@ function OrderTable({ data, orderData, setOrderData }) {
         header: 'id',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text fontWeight={'bold'}>{value}</Text>
+          return <Text fontWeight={600}>{value}</Text>
         },
         enableSorting: false
       },
@@ -167,38 +164,55 @@ function OrderTable({ data, orderData, setOrderData }) {
         accessorKey: 'order_total',
         header: 'Total',
         cell: ({ getValue }) => {
-            const value = getValue()
-            return <Text>$ {value}</Text>
-          }
+          const value = getValue()
+          return <Text>$ {value}</Text>
+        }
       },
       {
         accessorKey: 'order_delivery',
         header: 'Delivery',
         cell: ({ getValue }) => {
-            const value = getValue()
-            return <Text>{value}</Text>
-          }
+          const value = getValue()
+          return <Text>{value}</Text>
+        }
       },
       {
         accessorKey: 'order_status',
-        header: 'Status',        
+        header: 'Status',
         cell: ({ getValue }) => {
-            const value = getValue()
-            return {
-              'Pending': <Badge colorScheme="orange" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Pending</Text></Badge>,
-              'Success': <Badge colorScheme="green" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Success</Text></Badge>,
-              'Cancelled': <Badge colorScheme="red" borderRadius={'full'}><Text m={1}><Icon as={FaCircle} fontSize={7}></Icon> Cancelled</Text></Badge>,
-            }[value]
-          }
+          const value = getValue()
+          return {
+            Pending: (
+              <Badge colorScheme="orange" borderRadius={'full'}>
+                <Text m={1}>
+                  <Icon as={FaCircle} fontSize={7}></Icon> Pending
+                </Text>
+              </Badge>
+            ),
+            Success: (
+              <Badge colorScheme="green" borderRadius={'full'}>
+                <Text m={1}>
+                  <Icon as={FaCircle} fontSize={7}></Icon> Success
+                </Text>
+              </Badge>
+            ),
+            Cancelled: (
+              <Badge colorScheme="red" borderRadius={'full'}>
+                <Text m={1}>
+                  <Icon as={FaCircle} fontSize={7}></Icon> Cancelled
+                </Text>
+              </Badge>
+            )
+          }[value]
+        }
       },
       {
         header: 'Action',
         cell: ({ row }) =>
           row.length !== 0 ? (
             <Flex>
-                                <SwitchStatusButton/>
               <ShowDetailButton handleOpenModal={() => handleOpenModal(row)} />
-
+              <SwitchStatusButton />
             </Flex>
           ) : (
             ''
@@ -244,15 +258,15 @@ function OrderTable({ data, orderData, setOrderData }) {
 
   return (
     <>
-      <TableContainer borderRadius={10}  borderColor={'gray.500'} width={'100%'}>
+      <TableContainer borderRadius={10} borderColor={'gray.500'} width={'100%'}>
         <Table variant={useColorMode().colorMode === 'light' ? 'simple' : 'unstyled'}>
-          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'gray.300'}>
+          <Thead bgColor={useColorMode().colorMode === 'dark' ? 'gray.600' : 'gray.200'}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <Th
                     key={header.id}
-                    borderColor={'gray.600'}
+                    borderColor={'gray.300'}
                     textColor={useColorMode().colorMode === 'dark' ? 'white' : 'gray.800'}
                     fontWeight={'bold'}
                   >
@@ -284,7 +298,7 @@ function OrderTable({ data, orderData, setOrderData }) {
           <Tbody>
             {tableData.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <Tr key={row.id} borderTop={'1px'} borderColor={'gray.600'}>
+                <Tr key={row.id} borderTop={'1px'} borderColor={'gray.300'}>
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id} border={'0px'} borderColor={'gray.600'}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -315,4 +329,4 @@ function OrderTable({ data, orderData, setOrderData }) {
   )
 }
 
-export default OrderTable;
+export default OrderTable
