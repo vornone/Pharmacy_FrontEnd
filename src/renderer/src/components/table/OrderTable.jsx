@@ -52,7 +52,7 @@ const testData = [
     order_item: 5,
     order_status: 'Pending',
     order_total: 100,
-    order_delivery: 'yes'
+    order_deposit: 0
   },
   {
     order_id: '#00002',
@@ -61,16 +61,16 @@ const testData = [
     order_item: 5,
     order_status: 'Success',
     order_total: 100,
-    order_delivery: 'no'
+    order_deposit: 25
   },
   {
     order_id: '#00003',
     order_date: '2025-02-01',
     order_customer: 'John Doe',
-    order_item: 5,
+    order_item: 19,
     order_status: 'Cancelled',
-    order_total: 100,
-    order_delivery: 'yes'
+    order_total: 174,
+    order_deposit: 46
   }
 ]
 
@@ -169,11 +169,27 @@ function OrderTable({ data, orderData, setOrderData }) {
         }
       },
       {
-        accessorKey: 'order_delivery',
-        header: 'Delivery',
+        accessorKey: 'order_deposit',
+        header: 'Deposit',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text>{value}</Text>
+          return value === 0 ? (
+            <Text>none</Text>
+          ) : (
+            <Text
+              color={useColorMode().colorMode === 'dark' ? 'red.300' : 'red.500'}
+              fontWeight={600}
+            >
+              -$ {value}
+            </Text>
+          )
+        }
+      },
+      {
+        header: 'Payment',
+        cell: ({ row }) => {
+          const value = row.original.order_total - row.original.order_deposit
+          return <Text fontWeight={'bold'}>$ {value}</Text>
         }
       },
       {

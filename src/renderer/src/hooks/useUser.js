@@ -13,16 +13,17 @@ const useUser = () => {
   const deleteUser = (body) => {
     dispatch(queryData('deleteReducer', 'user/delete', 'POST', body))
   }
-  useEffect(() => {
-    data
-  }, [dispatch])
 
+  const addUser = (body) => {
+    dispatch(queryData(apiSource, 'user/register', 'POST', body))
+  }
   return {
     data: data?.data.user,
     loading,
     error,
     getUser,
-    deleteUser
+    deleteUser,
+    addUser
   }
 }
 export default useUser

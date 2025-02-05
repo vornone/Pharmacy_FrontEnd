@@ -99,7 +99,6 @@ function OrderConfirmModal({ orderData, orderCalculation, orderInfo }) {
             <Text fontWeight="bold">Total</Text>
             <Text fontWeight="bold">${orderCalculation.total.toFixed(2)}</Text>
           </HStack>
-
           {/* Footer */}
           <Text fontSize="sm" color="gray.500" textAlign="center" w="full">
             Thank you for your purchase!

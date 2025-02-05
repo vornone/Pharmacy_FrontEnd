@@ -26,7 +26,7 @@ function OrderCharge({ data }) {
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const [discount, setDiscount] = useState(0)
-
+  const [deposit, setDeposit] = useState(0)
   const subTotal = data.reduce((acc, cur) => {
     const itemPrice = cur.discount_price ?? cur.product_price
     return acc + parseFloat((itemPrice * cur.orderQuantity).toFixed(2))
@@ -40,7 +40,8 @@ function OrderCharge({ data }) {
     subTotal: subTotal,
     discountAmount: discountAmount,
     tax: tax,
-    total: total
+    total: total,
+    deposit: deposit
   })
   const handleValidation = () => {
     if (discount > 100 || discount < 0) {
@@ -109,6 +110,17 @@ function OrderCharge({ data }) {
             </HStack>
             <HStack justifyContent={'space-between'} width={'100%'}>
               <InputGroup colorScheme="white">
+                <InputLeftElement>$</InputLeftElement>
+                <Input
+                  type="number"
+                  isInvalid={deposit < 0 || deposit > total}
+                  placeholder="Deposit"
+                  width={'100%'}
+                  shadow={'sm'}
+                  onChange={(e) => setDeposit(e.target.value)}
+                ></Input>
+              </InputGroup>
+              <InputGroup colorScheme="white">
                 <InputLeftElement children={<RiDiscountPercentFill />}></InputLeftElement>
                 <Input
                   type="number"
@@ -119,15 +131,15 @@ function OrderCharge({ data }) {
                   onChange={(e) => setDiscount(e.target.value)}
                 ></Input>
               </InputGroup>
-              <Button
-                colorScheme="green"
-                width={'100%'}
-                onClick={handleValidation}
-                isDisabled={discount > 100 || discount < 0}
-              >
-                Place Order
-              </Button>
             </HStack>
+            <Button
+              colorScheme="green"
+              width={'100%'}
+              onClick={handleValidation}
+              isDisabled={discount > 100 || discount < 0 || deposit < 0 || deposit > total}
+            >
+              Place Order
+            </Button>
           </VStack>
         </HStack>
       </Card>

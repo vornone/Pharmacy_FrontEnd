@@ -32,8 +32,6 @@ import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
 import { TbChevronDown, TbChevronUp, TbArrowsSort } from 'react-icons/tb'
 import { useDisclosure } from '@chakra-ui/react'
-import EditRowButton from '../table-component/EditRowButton.jsx'
-import DeleteRowButton from '../table-component/DeleteRowButton.jsx'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import { dateFormat } from '../../function/dateFormat.js'
 import ShowDetailButton from '../table-component/ShowDetailButton.jsx'
@@ -41,23 +39,21 @@ const importData = [
   {
     id: 1,
     date: `${dateFormat(new Date())}`,
-    shipping: 12.5,
-    import: 200.15,
-    total: 212.65,
-    product: 3,
-    qty: 50
+    orders: 20,
+    total: 100.15,
+    profit: 50.15,
+    sold: 50
   },
   {
     id: 2,
     date: `${dateFormat(new Date())}`,
-    shipping: 20.13,
-    import: 150.15,
-    total: 170.28,
-    product: 4,
-    qty: 25
+    orders: 27,
+    total: 250.15,
+    profit: 70.15,
+    sold: 57
   }
 ]
-function ImportHistory() {
+function SaleReportTable() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rowSelection, setRowSelection] = useState({})
   const [tableData, setTableData] = useState([...importData])
@@ -130,45 +126,45 @@ function ImportHistory() {
         }
       },
       {
-        accessorKey: 'product',
-        header: 'Product',
+        accessorKey: 'orders',
+        header: 'Order',
         cell: ({ getValue }) => {
           const value = getValue()
           return <Text>{value}</Text>
         }
       },
       {
-        accessorKey: 'qty',
-        header: 'Qty',
+        accessorKey: 'sold',
+        header: 'sold',
         cell: ({ getValue }) => {
           const value = getValue()
-          return <Text>{value} items</Text>
+          return <Text>{value} sold</Text>
         }
-      },
-      {
-        accessorKey: 'import',
-        header: 'import',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return value && <Text>${value}</Text>
-        },
-        enableColumnFilter: true
       },
 
-      {
-        accessorKey: 'shipping',
-        header: 'Shipping',
-        cell: ({ getValue }) => {
-          const value = getValue()
-          return value && <Text>${value}</Text>
-        }
-      },
       {
         accessorKey: 'total',
         header: 'total',
         cell: ({ getValue }) => {
           const value = getValue()
           return value && <Text>${value}</Text>
+        }
+      },
+      {
+        accessorKey: 'profit',
+        header: 'profit',
+        cell: ({ getValue }) => {
+          const value = getValue()
+          return (
+            value && (
+              <Text
+                color={useColorMode.colorMode === 'dark' ? 'green.300' : 'green.500'}
+                fontWeight={'bold'}
+              >
+                ${value}
+              </Text>
+            )
+          )
         }
       },
       {
@@ -297,4 +293,4 @@ function ImportHistory() {
   )
 }
 
-export default ImportHistory
+export default SaleReportTable

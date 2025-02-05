@@ -20,15 +20,17 @@ const AddUserModal = ({ closeModal, data }) => {
   const allCheckedItem = [false, false, false]
   const [checkedItems, setCheckedItems] = useState(allCheckedItem)
   const allChecked = checkedItems.every(Boolean)
-
-  const [platform, setPlatform] = useState(data[0].role_name)
+  const { data: addUserData, loading, error, addUser } = useUser()
+  const [platform, setPlatform] = useState(data[0])
   const platformSelectorEvent = (e) => {
-    setPlatform(e.role_name)
+    setPlatform(e)
+    console.log(platform)
   }
 
   const [user, setUser] = useState({
     username: '',
-    user_role: ''
+    role_id: platform.role_id,
+    user_password: ''
   })
 
   const handleOnChange = (e) => {
@@ -37,14 +39,16 @@ const AddUserModal = ({ closeModal, data }) => {
       ...prevState,
       [name]: value
     }))
-    console.log(user)
+    console.log(platform.role_id)
   }
 
   const handleInsert = () => {
-    insertUser({
+    addUser({
+      role_id: platform.role_id,
       username: user.username,
-      user_role: platform
+      password: user.user_password
     })
+    console.log(user)
   }
   return (
     <VStack gap={5} width={'100%'} justifyContent={'flex-start'}>
@@ -55,6 +59,13 @@ const AddUserModal = ({ closeModal, data }) => {
         onChange={handleOnChange}
         name="username"
       />
+      <Input
+        type="text"
+        placeholder="New Password"
+        focusBorderColor="green.300"
+        onChange={handleOnChange}
+        name="user_password"
+      />
       <Menu autoSelect={false}>
         <MenuButton
           as={Button}
@@ -63,8 +74,9 @@ const AddUserModal = ({ closeModal, data }) => {
           width={'100%'}
           size={'md'}
           textAlign={'left'}
+          defaultValue={platform.role_name}
         >
-          <Text fontWeight={'regular'}>{platform}</Text>
+          <Text fontWeight={'regular'}>{platform.role_name}</Text>
         </MenuButton>
         <MenuList>
           {data.map((data) => (
@@ -74,7 +86,7 @@ const AddUserModal = ({ closeModal, data }) => {
           ))}
         </MenuList>
       </Menu>
-      <VStack width={'100%'} justifyContent={'flex-start'}>
+      {/* <VStack width={'100%'} justifyContent={'flex-start'}>
         <Checkbox
           width={'100%'}
           isChecked={allChecked}
@@ -110,13 +122,13 @@ const AddUserModal = ({ closeModal, data }) => {
             </Checkbox>
           </CheckboxGroup>
         </VStack>
-      </VStack>
+      </VStack> */}
       <HStack width={'100%'} justifyContent={'right'}>
         <ButtonGroup>
           <Button colorScheme="red" variant="outline" size={'sm'} onClick={closeModal}>
             Cancel
           </Button>
-          <Button colorScheme="green" variant="solid" size={'sm'}>
+          <Button colorScheme="green" variant="solid" size={'sm'} onClick={() => handleInsert()}>
             ADD
           </Button>
         </ButtonGroup>
