@@ -5,11 +5,6 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@': path.resolve('src') // Ensure this points correctly
-    }
-  },
   plugins: [react(), tsconfigPaths()],
   optimizeDeps: {
     exclude: ['js-big-decimal']
@@ -33,6 +28,11 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, 'electron/main/index.js')
       }
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
+      }
     }
   },
   preload: {
@@ -43,6 +43,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'electron/preload/index.js')
+      }
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
       }
     }
   },
@@ -57,6 +62,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
+        '@': path.resolve(__dirname, './src'),
         '@renderer': resolve('src/renderer/src')
       }
     },

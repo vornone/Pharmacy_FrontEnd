@@ -1,46 +1,33 @@
 import { Button, Fieldset, Input, Stack } from "@chakra-ui/react"
-import { Field } from "../../../../../components/ui/field"
-import {
-  NativeSelectField,
-  NativeSelectRoot,
-} from "../../../../../components/ui/native-select"
-import { PasswordInput } from './../../../../../components/ui/password-input';
+import { Field } from "@/components/ui/field"
+import {Card } from "@chakra-ui/react"
+import { PasswordInput } from '@/components/ui/password-input';
+import { ColorModeButton } from "@/components/ui/color-mode"
 
  const NewLoginForm = () => {
   return (
-    <Fieldset.Root size="lg" maxW="md">
+    <Card.Root p={10}>
+    <Fieldset.Root size="lg" maxW="md"  >
       <Stack>
-        <Fieldset.Legend>Contact details</Fieldset.Legend>
+        <Fieldset.Legend fontSize="2xl">Welcome Back</Fieldset.Legend>
         <Fieldset.HelperText>
-          Please provide your contact details below.
+          Enter your details to log in to your account
         </Fieldset.HelperText>
       </Stack>
-
       <Fieldset.Content>
         <Field label="Name">
           <Input name="name" />
         </Field>
-        <Field label="Email address">
+        <Field label="Password">
           <PasswordInput name="password" />
         </Field>
-        <Field label="Country">
-          <NativeSelectRoot>
-            <NativeSelectField
-              name="country"
-              items={[
-                "United Kingdom (UK)",
-                "Canada (CA)",
-                "United States (US)",
-              ]}
-            />
-          </NativeSelectRoot>
-        </Field>
       </Fieldset.Content>
-
-      <Button type="submit" alignSelf="flex-start">
-        Submit
+      <Button type="submit" alignSelf="flex-end" colorPalette={'blue'}>
+        Log In
       </Button>
+      <ColorModeButton />
     </Fieldset.Root>
+    </Card.Root>
   )
 }
 export default NewLoginForm

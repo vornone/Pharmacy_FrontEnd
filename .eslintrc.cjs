@@ -1,4 +1,12 @@
 module.exports = {
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [['@', './src']],
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
+    }
+  },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
