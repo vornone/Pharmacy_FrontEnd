@@ -14,10 +14,10 @@
     "preview": "electron-vite dev"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^3.7.0",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
-    "@emotion/react": "^11.13.3",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.5",
@@ -33,12 +33,13 @@
     "express-async-handler": "^1.2.0",
     "framer-motion": "^11.3.29",
     "multer": "^1.4.5-lts.1",
+    "next-themes": "^0.4.4",
     "path": "^0.12.7",
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
-    "react-icons": "^5.3.0",
+    "react-icons": "^5.4.0",
     "react-number-format": "^5.3.1",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.18.0",
@@ -64,7 +65,8 @@
     "prettier": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite": "^5.0.12"
+    "vite": "^5.0.12",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "build": {
     "extends": null

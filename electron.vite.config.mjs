@@ -1,9 +1,16 @@
 import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve('src') // Ensure this points correctly
+    }
+  },
+  plugins: [react(), tsconfigPaths()],
   optimizeDeps: {
     exclude: ['js-big-decimal']
   },
