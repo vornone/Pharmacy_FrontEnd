@@ -3,7 +3,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { HashRouter } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import AdminPage from './../components/admin/AdminPage';
+import Layout from './pages/mainpage/Layout'
+import './index.css'
 const App = () => {
   return (
     <>
@@ -16,7 +17,7 @@ const App = () => {
       >
         <HashRouter>
           <Routes>
-            <Route path="/" element={<AdminPage />}></Route>
+            <Route path="/" element={<Layout />}></Route>
           </Routes>
         </HashRouter>
         <ToastContainer />
