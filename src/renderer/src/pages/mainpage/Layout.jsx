@@ -1,33 +1,44 @@
 import React from 'react'
-import { Grid, GridItem, Text, Flex } from '@chakra-ui/react'
+import { Grid, GridItem, VStack } from '@chakra-ui/react'
 import Header from './Header'
 import MainPage from './MainPage'
+import Sidebar from './SideBar'
+
 function Layout() {
   return (
-  <>
-    <Grid
-
-    boxSizing={'border-box'}  
-    gap={5}
-    p={5}
-      h={'100%'}
-      w={'100%'} 
-      templateAreas={{
-        base: `"header" "main"`,
-        lg: `"header header" "main main"`
-      }}
-      templateColumns={{
-        base: '1fr',
-        lg: 'auto 1fr'
-      }}
-      templateRows={{
-        base: 'auto 1fr',
-        lg: 'auto 1fr'
-      }}>
-        {/* <GridItem as={'header'} area={'header'} h={'25%'}><Header /></GridItem> */}
-        <GridItem area={'main'} h={'100%'} w={'100%'}><MainPage /></GridItem>
-    </Grid>
-    </>
+    <VStack height="100vh" width="100vw">
+      <Header w="100%" />
+      <Grid
+        width="100%"
+        boxSizing="border-box"
+        overflow="hidden"
+        margin={0}
+        templateColumns={{
+          base: '1fr',
+          lg: '5% 1fr'
+        }}
+        templateRows={{
+          base: 'auto 1fr',
+          lg: 'auto 1fr'
+        }}
+        templateAreas={{
+          base: `"header"
+               "nav"
+               "main"`,
+          lg: `"header header"
+             "nav main"`
+        }}
+        borderTop={'1px solid'}
+        borderTopColor={'gray.700'}
+      >
+        <GridItem area="nav" minH={{ base: 'auto', lg: '100%' }} zIndex={2}>
+          <Sidebar />
+        </GridItem>
+        <GridItem area="main" minH={{ base: 'auto', lg: '100%' }} w="100%" overflow="auto" p={5}>
+          <MainPage />
+        </GridItem>
+      </Grid>
+    </VStack>
   )
 }
 
