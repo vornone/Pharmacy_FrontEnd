@@ -60,6 +60,7 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator }) => {
         </Flex>
         {hasSeparator && (
           <Separator
+            m={0}
             orientation="horizontal"
             h="1px"
             w="full"
@@ -93,6 +94,7 @@ const Sidebar = () => {
   }
   return (
     <Box
+      p={2}
       pos="fixed"
       as="nav"
       h="100%"
@@ -102,12 +104,12 @@ const Sidebar = () => {
       bg={bgColor}
       borderRight="1px solid white"
       borderRightColor={borderColor}
-      w={isCollapsed ? '50px' : '200px'} // Use template literals
+      w={isCollapsed ? '55px' : '200px'} // Use template literals
       transition="width 0.2s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <VStack spacing="0" align="stretch" p={1}>
+      <VStack spacing="0" align="stretch">
         {navItems.map((item) => (
           <Box key={item.name}>
             {!isCollapsed ? (

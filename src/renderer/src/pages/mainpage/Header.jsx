@@ -25,6 +25,7 @@ const Header = () => {
       w={'full'}
       justifyContent={'space-between'}
       pt={'2'}
+      px={'2'}
       borderBottom={'1px solid gray.700'}
       alignItems={'center'}
     >

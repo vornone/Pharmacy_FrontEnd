@@ -39,6 +39,7 @@ function ProductGrid() {
         count={count}
         pageSize={pageSize}
         onPageChange={(e) => setPage(e.page)}
+        variant="solid"
       >
         <HStack>
           <PaginationPrevTrigger />
