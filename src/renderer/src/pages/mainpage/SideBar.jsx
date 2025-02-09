@@ -11,7 +11,13 @@ import {
   Tooltip,
   Stack
 } from '@chakra-ui/react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { TbCashRegister } from 'react-icons/tb'
+import { LuUserCog } from 'react-icons/lu'
+
 import {
+  FiArchive,
+  FiBox,
   FiDatabase,
   FiTable,
   FiUsers,
@@ -29,7 +35,7 @@ import {
   useColorMode,
   useColorModeValue
 } from '@/components/ui/color-mode'
-const NavItem = ({ icon, children, isActive, onClick, hasSeparator }) => {
+const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
   const inactiveColor = useColorModeValue('gray.500', 'gray.400')
   const activeBg = useColorModeValue('gray.100', 'gray.700')
@@ -37,61 +43,67 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator }) => {
 
   return (
     <>
-      <Stack>
-        <Flex
-          align="center"
-          px="3"
-          py="3"
-          cursor="pointer"
-          role="group"
-          fontWeight="semibold"
-          transition=".15s ease"
-          color={isActive ? activeColor : inactiveColor}
-          bg={isActive ? activeBg : 'transparent'}
-          borderRadius={'lg'}
-          _hover={{
-            bg: hoverBg,
-            color: activeColor
-          }}
-          onClick={onClick}
-        >
-          <Icon mr="4" boxSize="4" as={icon} />
-          <Text fontSize={'xs'}>{children}</Text>
-        </Flex>
-        {hasSeparator && (
-          <Separator
-            m={0}
-            orientation="horizontal"
-            h="1px"
-            w="full"
-            borderColor={useColorModeValue('gray.200', 'gray.700')}
-          />
-        )}
-      </Stack>
+      <Link to={to}>
+        <Stack>
+          <Flex
+            align="center"
+            px="3"
+            py="3"
+            cursor="pointer"
+            role="group"
+            fontWeight="regular"
+            transition=".15s ease"
+            color={isActive ? activeColor : inactiveColor}
+            bg={isActive ? activeBg : 'transparent'}
+            borderRadius={'lg'}
+            _hover={{
+              bg: hoverBg,
+              color: activeColor
+            }}
+            onClick={onClick}
+          >
+            <Icon mr="4" boxSize="4" as={icon} />
+            {children && <Text fontSize={'xs'}>{children}</Text>}
+          </Flex>
+          {hasSeparator && (
+            <Separator
+              m={0}
+              orientation="horizontal"
+              h="1px"
+              w="full"
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+            />
+          )}
+        </Stack>
+      </Link>
     </>
   )
 }
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true)
-  const [activeItem, setActiveItem] = useState('Database')
+  const [activeItem, setActiveItem] = useState('Home')
+  const navigate = useNavigate() // Use the useNavigate hook
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const bgColor = useColorModeValue('white', 'gray.950')
 
   const navItems = [
-    { name: 'Home', icon: FiHome, hasSeparator: true },
-    { name: 'Database', icon: FiDatabase },
-    { name: 'Tables', icon: FiTable },
-    { name: 'Authentication', icon: FiUsers },
-    { name: 'Settings', icon: FiSettings }
+    { name: 'Home', icon: FiHome, hasSeparator: true, to: '/' },
+    { name: 'Products', icon: FiDatabase, to: '/product' },
+    { name: 'Tables', icon: FiTable, to: '/tables' },
+    { name: 'Authentication', icon: FiUsers, to: '/authentication' },
+    { name: 'POS', icon: TbCashRegister, to: '/pos' },
+    { name: 'Import', icon: TbPackageImport, hasSeparator: true, to: '/import' },
+    { name: 'Settings', icon: FiSettings, to: '/settings' },
+    { name: 'Admin', icon: LuUserCog, to: '/admin' }
   ]
-  useEffect(() => {
-    console.log(isCollapsed)
-  }, [isCollapsed])
-  const handleToggleCollapse = () => {
-    setIsCollapsed((prev) => !prev)
+
+  const handleItemClick = (item) => {
+    setActiveItem(item.name) // Set the active item
+    navigate(item.to) // Navigate to the specified route
   }
+
   return (
     <Box
       p={2}
@@ -102,9 +114,9 @@ const Sidebar = () => {
       overflowX="hidden"
       overflowY="auto"
       bg={bgColor}
-      borderRight="1px solid white"
+      borderRight="1px solid"
       borderRightColor={borderColor}
-      w={isCollapsed ? '55px' : '200px'} // Use template literals
+      w={isCollapsed ? '55px' : '200px'}
       transition="width 0.2s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
@@ -112,25 +124,15 @@ const Sidebar = () => {
       <VStack spacing="0" align="stretch">
         {navItems.map((item) => (
           <Box key={item.name}>
-            {!isCollapsed ? (
-              <NavItem
-                icon={item.icon}
-                isActive={item.name === activeItem}
-                onClick={() => setActiveItem(item.name)}
-                hasSeparator={item.hasSeparator}
-              >
-                {item.name}
-              </NavItem>
-            ) : (
-              <NavItem
-                icon={item.icon}
-                isActive={item.name === activeItem}
-                onClick={() => setActiveItem(item.name)}
-                hasSeparator={item.hasSeparator}
-              >
-                {!isCollapsed && item.name}
-              </NavItem>
-            )}
+            <NavItem
+              icon={item.icon}
+              isActive={item.name === activeItem}
+              onClick={() => handleItemClick(item)}
+              hasSeparator={item.hasSeparator}
+              to={item.to}
+            >
+              {!isCollapsed && item.name}
+            </NavItem>
           </Box>
         ))}
       </VStack>

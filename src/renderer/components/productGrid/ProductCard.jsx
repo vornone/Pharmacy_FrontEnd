@@ -1,26 +1,18 @@
-import { Button, Card, Image, Text } from '@chakra-ui/react'
+import { Button, Card, Flex, HStack, Image, Text } from '@chakra-ui/react'
 
 const ProductCard = () => {
   return (
-    <Card.Root overflow="hidden" maxH={'xs'} shadow={'lg'} borderRadius={0}>
+    <Card.Root maxH={'xs'} shadow={'lg'} borderRadius={0} p={2} gap={4}>
       <Image
+        borderRadius={'sm'}
         src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
         alt="Green double couch with wooden legs"
-        h={'50%'}
+        h={'70%'}
       />
-      <Card.Body gap="2" h={'30%'}>
-        <Text textStyle="lg" fontWeight="medium" letterSpacing="tight" mt="2">
-          $450
-        </Text>
+      <Card.Body h={'30%'} w={'100%'} p={0}>
+        <Card.Title fontSize={'sm'}>Nue Camp</Card.Title>
+        <Card.Description fontSize={'xs'}>Price : 100$</Card.Description>
       </Card.Body>
-      <Card.Footer gap="2" h={'20%'}>
-        <Button variant="solid" size={'2xs'}>
-          Buy now
-        </Button>
-        <Button variant="ghost" size={'2xs'}>
-          Add to cart
-        </Button>
-      </Card.Footer>
     </Card.Root>
   )
 }

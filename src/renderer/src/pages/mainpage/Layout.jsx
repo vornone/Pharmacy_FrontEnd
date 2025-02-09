@@ -3,7 +3,7 @@ import { Grid, GridItem, VStack } from '@chakra-ui/react'
 import Header from './Header'
 import MainPage from './MainPage'
 import Sidebar from './SideBar'
-
+import { ColorModeProvider, useColorMode, useColorModeValue } from '@/components/ui/color-mode'
 function Layout() {
   return (
     <VStack height="100vh" width="100vw">
@@ -15,7 +15,7 @@ function Layout() {
         margin={0}
         templateColumns={{
           base: '1fr',
-          lg: '5% 1fr'
+          lg: '60px 1fr'
         }}
         templateRows={{
           base: 'auto 1fr',
@@ -29,7 +29,7 @@ function Layout() {
              "nav main"`
         }}
         borderTop={'1px solid'}
-        borderTopColor={'gray.700'}
+        borderTopColor={useColorModeValue('gray.200', 'gray.700')}
       >
         <GridItem area="nav" minH={{ base: 'auto', lg: '100%' }} zIndex={2}>
           <Sidebar />

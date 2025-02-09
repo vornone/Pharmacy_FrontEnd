@@ -1,82 +1,65 @@
-// import { defineStyle, defineStyleConfig } from '@chakra-ui/react'
+import {
+  createSystem,
+  defaultBaseConfig,
+  defineConfig,
+  mergeConfigs,
+  defaultConfig
+} from '@chakra-ui/react'
 
-// // Define individual component styles
-// const Button = defineStyleConfig({
-//   baseStyle: {
-//     fontWeight: 'bold',
-//     borderRadius: 'md'
-//   },
-//   variants: {
-//     primary: defineStyle({
-//       bg: 'blue.500',
-//       color: 'white',
-//       _hover: { bg: 'blue.600' }
-//     }),
-//     secondary: defineStyle({
-//       bg: 'gray.200',
-//       color: 'gray.800',
-//       _hover: { bg: 'gray.300' }
-//     })
-//   },
-//   defaultProps: {
-//     variant: 'primary',
-//     size: 'md'
-//   }
-// })
+// Step 1: Define your custom theme
+const customConfig = defineConfig({
+  theme: {
+    textStyles: {
+      h1: {
+        fontSize: '3xl',
+        color: 'red'
+      },
+      h2: {
+        fontSize: '2xl'
+      },
+      h3: {
+        fontSize: 'xl'
+      }
+    },
+    breakpoints: {
+      sm: '320px',
+      md: '768px',
+      lg: '960px',
+      xl: '1200px'
+    },
+    tokens: {
+      colors: {
+        gray: {
+          200: '#E2E8F0', // Light gray
+          700: '#2D3748' // Dark gray
+        },
+        red: '#EE0F0F'
+      }
+    },
+    semanticTokens: {
+      colors: {
+        danger: { value: '{colors.red}' }
+      },
+      fonts: {
+        body: { value: '{Inter, sans-serif}' },
+        heading: { value: '{fonts.heading}' }
+      },
+      borders: {
+        light: { value: '{colors.gray.200}' }, // Correct reference
+        dark: { value: '{colors.gray.700}' } // Correct reference
+      }
+    },
+    keyframes: {
+      spin: {
+        from: { transform: 'rotate(0deg)' },
+        to: { transform: 'rotate(360deg)' }
+      }
+    }
+  }
+})
 
-// // Define the theme
-// export const theme = {
-//   // Custom colors
-//   colors: {
-//     brand: {
-//       50: '#f0f9ff',
-//       100: '#e0f2fe',
-//       200: '#bae6fd',
-//       300: '#7dd3fc',
-//       400: '#38bdf8',
-//       500: '#0ea5e9',
-//       600: '#0284c7',
-//       700: '#0369a1',
-//       800: '#075985',
-//       900: '#0c4a6e'
-//     }
-//   },
+// Step 2: Merge with the default configuration
+const mergedConfig = mergeConfigs(defaultConfig, customConfig)
 
-//   // Custom fonts
-//   fonts: {
-//     body: 'Inter, system-ui, sans-serif',
-//     heading: 'Poppins, sans-serif'
-//   },
-
-//   // Component styles
-//   components: {
-//     Button,
-//     Card: defineStyleConfig({
-//       baseStyle: {
-//         padding: '4',
-//         borderRadius: 'lg',
-//         bg: 'white',
-//         boxShadow: 'md'
-//       }
-//     }),
-//     Text: defineStyleConfig({
-//       variants: {
-//         heading: defineStyle({
-//           fontWeight: 'bold',
-//           fontSize: 'xl',
-//           color: 'gray.800'
-//         })
-//       }
-//     })
-//   },
-
-//   // Global styles
-//   styles: {
-//     global: {
-//       body: {
-//         bg: 'gray.50',
-//         color: 'gray.900'
-//       }
-//     }
-//   }
-// }
+// Step 3: Create the system
+export const system = createSystem(mergedConfig)

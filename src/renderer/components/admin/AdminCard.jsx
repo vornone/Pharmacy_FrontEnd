@@ -6,7 +6,7 @@ import { ColorModeButton } from '@/components/ui/color-mode'
 import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input'
 import { InputGroup } from '@/components/ui/input-group'
 import React, { useState } from 'react'
-const AdminPage = () => {
+const AdminCard = () => {
   const [isEditable, setIsEditable] = useState(false)
   return (
     <Card.Root p={10} borderRadius={20} shadow={'md'}>
@@ -51,4 +51,4 @@ const AdminPage = () => {
     </Card.Root>
   )
 }
-export default AdminPage
+export default AdminCard

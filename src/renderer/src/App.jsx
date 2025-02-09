@@ -16,9 +16,7 @@ const App = () => {
         flexDirection={'column'}
       >
         <HashRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}></Route>
-          </Routes>
+          <Layout />
         </HashRouter>
         <ToastContainer />
       </Flex>
