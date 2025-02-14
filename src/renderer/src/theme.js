@@ -28,12 +28,10 @@ const customConfig = defineConfig({
       xl: '1200px'
     },
     tokens: {
-      colors: {
-        gray: {
-          200: '#E2E8F0', // Light gray
-          700: '#2D3748' // Dark gray
-        },
-        red: '#EE0F0F'
+      bgColor: { value: '{colors.gray.200}' },
+      borders: {
+        light: { value: '{colors.gray.200}' }, // Correct reference
+        dark: { value: '{colors.gray.700}' } // Correct reference
       }
     },
     semanticTokens: {
@@ -45,8 +43,8 @@ const customConfig = defineConfig({
         heading: { value: '{fonts.heading}' }
       },
       borders: {
-        light: { value: '{colors.gray.200}' }, // Correct reference
-        dark: { value: '{colors.gray.700}' } // Correct reference
+        light: { value: '{colors.gray.200}' },
+        dark: { value: '{colors.gray.700}' }
       }
     },
     keyframes: {

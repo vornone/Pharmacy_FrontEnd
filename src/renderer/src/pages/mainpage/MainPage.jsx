@@ -5,7 +5,7 @@ import { Flex, Box, HStack } from '@chakra-ui/react'
 import AppRoutes from '../../AppRoutes'
 const MainPage = () => {
   return (
-    <HStack w={'100%'} h={'full'}>
+    <HStack w={'100%'} h={'100%'}>
       <AppRoutes />
     </HStack>
   )

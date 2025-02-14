@@ -51,7 +51,7 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
             py="3"
             cursor="pointer"
             role="group"
-            fontWeight="regular"
+            fontWeight="semibold"
             transition=".15s ease"
             color={isActive ? activeColor : inactiveColor}
             bg={isActive ? activeBg : 'transparent'}

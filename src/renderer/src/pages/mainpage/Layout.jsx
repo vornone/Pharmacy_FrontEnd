@@ -6,16 +6,17 @@ import Sidebar from './SideBar'
 import { ColorModeProvider, useColorMode, useColorModeValue } from '@/components/ui/color-mode'
 function Layout() {
   return (
-    <VStack height="100vh" width="100vw">
-      <Header w="100%" />
+    <VStack height="100dvh" width="100dvw">
+      <Header />
       <Grid
         width="100%"
+        height="100%"
         boxSizing="border-box"
         overflow="hidden"
         margin={0}
         templateColumns={{
           base: '1fr',
-          lg: '60px 1fr'
+          lg: '55px 1fr'
         }}
         templateRows={{
           base: 'auto 1fr',
@@ -34,7 +35,7 @@ function Layout() {
         <GridItem area="nav" minH={{ base: 'auto', lg: '100%' }} zIndex={2}>
           <Sidebar />
         </GridItem>
-        <GridItem area="main" minH={{ base: 'auto', lg: '100%' }} w="100%" overflow="auto" p={5}>
+        <GridItem area="main" minH={{ base: 'auto', lg: '100%' }} w="100%" overflow="auto">
           <MainPage />
         </GridItem>
       </Grid>

@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 const AdminPage = () => {
   const [isEditable, setIsEditable] = useState(false)
   return (
-    <Fieldset.Root size="lg" maxW="md">
+    <Fieldset.Root size="lg" maxW="md" p={5}>
       <Stack>
         <Fieldset.Legend fontSize="2xl">Admin Page</Fieldset.Legend>
         <Fieldset.HelperText>Edit your essential data</Fieldset.HelperText>
