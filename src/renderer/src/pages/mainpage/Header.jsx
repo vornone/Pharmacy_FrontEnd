@@ -1,6 +1,6 @@
 import React from 'react'
 import { ColorModeButton } from '@/components/ui/color-mode'
-import { HStack, Icon, Flex, Text } from '@chakra-ui/react'
+import { HStack, Icon, Flex, Text, Heading } from '@chakra-ui/react'
 import { VscTerminalBash } from 'react-icons/vsc'
 import { createListCollection } from '@chakra-ui/react'
 import {
@@ -29,18 +29,7 @@ const Header = () => {
       borderBottom={'1px solid gray.700'}
       alignItems={'center'}
     >
-      <SelectRoot collection={collection} size="xs" w={'325px'} defaultValue={platform}>
-        <SelectTrigger>
-          <SelectValueText placeholder={platform} />
-        </SelectTrigger>
-        <SelectContent value={platform}>
-          {collection.items.map((item) => (
-            <SelectItem item={item} key={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </SelectRoot>
+      <Heading>Clothing Shop</Heading>
       <ColorModeButton />
     </HStack>
   )

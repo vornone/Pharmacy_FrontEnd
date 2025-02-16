@@ -91,7 +91,7 @@ const Sidebar = () => {
   const navItems = [
     { name: 'Home', icon: FiHome, hasSeparator: true, to: '/' },
     { name: 'Products', icon: FiDatabase, to: '/product' },
-    { name: 'Tables', icon: FiTable, to: '/tables' },
+    { name: 'Category', icon: FiTable, to: '/category' },
     { name: 'Authentication', icon: FiUsers, to: '/authentication' },
     { name: 'POS', icon: TbCashRegister, to: '/pos' },
     { name: 'Import', icon: TbPackageImport, hasSeparator: true, to: '/import' },

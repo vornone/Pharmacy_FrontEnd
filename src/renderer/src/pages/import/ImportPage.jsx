@@ -57,28 +57,6 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
 function ImportPage() {
   return (
     <Flex w={'100%'} h={'100%'}>
-      <Flex
-        borderRight={'1px solid'}
-        borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-        w={'20%'}
-        h={'100%'}
-      >
-        <Flex
-          borderBottom={'1px solid'}
-          borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-          w={'100%'}
-          p={5}
-        >
-          <Heading size={'lg'}>Import Page</Heading>
-        </Flex>
-
-        <VStack h={'100%'} w={'100%'} p={5} align={'flex-start'}>
-          <Text fontSize={'sm'} color={'gray.500'}>
-            Import Page
-          </Text>
-          <Text fontSize={'sm'}>Import Page</Text>
-        </VStack>
-      </Flex>
       <VStack w={'80%'} h={'100%'} p={10}>
         <Flex w="full" justify="space-between" gap={5}>
           {' '}
@@ -88,7 +66,7 @@ function ImportPage() {
           <IconButton variant={'outline'} size={'xs'}>
             <LuSlidersHorizontal />
           </IconButton>
-          <ButtonGroup variant={'surface'} colorPalette={'purple'} size={'xs'}>
+          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New Import</Button>
           </ButtonGroup>
         </Flex>{' '}

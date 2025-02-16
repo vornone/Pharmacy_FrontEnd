@@ -1,6 +1,7 @@
 'use client'
+import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 
-import { Button, Kbd, Table } from '@chakra-ui/react'
+import { Button, Kbd, Table, IconButton } from '@chakra-ui/react'
 import {
   ActionBarContent,
   ActionBarRoot,
@@ -10,8 +11,10 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 
-const DataTable = () => {
+const CategoryTable = () => {
   const [selection, setSelection] = useState([])
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' })
+
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -20,7 +23,39 @@ const DataTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = items.map((item) => (
+  const sortedItems = [...items].sort((a, b) => {
+    if (sortConfig.key) {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1
+      }
+    }
+    return 0
+  })
+
+  const requestSort = (key) => {
+    let direction = 'ascending'
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending'
+    }
+    setSortConfig({ key, direction })
+  }
+
+  // Handle edit action
+  const handleEdit = (item) => {
+    console.log('Edit item:', item)
+    // Add your edit logic here
+  }
+
+  // Handle delete action
+  const handleDelete = (item) => {
+    console.log('Delete item:', item)
+    // Add your delete logic here
+  }
+
+  const rows = sortedItems.map((item) => (
     <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
@@ -38,6 +73,21 @@ const DataTable = () => {
       {headers.map((header) => (
         <Table.Cell key={header}>{item[header]}</Table.Cell>
       ))}
+      {/* Add Edit and Delete buttons */}
+      <Table.Cell>
+        <IconButton aria-label="Edit" size="sm" variant="ghost" onClick={() => handleEdit(item)}>
+          <MdEditDocument />
+        </IconButton>
+        <IconButton
+          aria-label="Delete"
+          size="sm"
+          variant="ghost"
+          colorScheme="red"
+          onClick={() => handleDelete(item)}
+        >
+          <MdDeleteForever />
+        </IconButton>
+      </Table.Cell>
     </Table.Row>
   ))
 
@@ -56,8 +106,15 @@ const DataTable = () => {
               />
             </Table.ColumnHeader>
             {headers.map((header) => (
-              <Table.ColumnHeader key={header}>{header}</Table.ColumnHeader>
+              <Table.ColumnHeader key={header} onClick={() => requestSort(header)}>
+                {header}
+                {sortConfig.key === header && (
+                  <span>{sortConfig.direction === 'ascending' ? ' ▲' : ' ▼'}</span>
+                )}
+              </Table.ColumnHeader>
             ))}
+            {/* Add a header for actions */}
+            <Table.ColumnHeader>Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body fontSize="sm" color={'gray.500'}>
@@ -80,12 +137,13 @@ const DataTable = () => {
     </>
   )
 }
-const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
+
+const headers = ['id', 'Name']
 const items = [
-  { id: 1, Item: 5, Qty: 17, Subtotal: 560, Total: 700, Others: 10, Date: '2022-01-01' },
-  { id: 2, Item: 15, Qty: 21, Subtotal: 210, Total: 300, Others: 7, Date: '2022-01-01' },
-  { id: 3, Item: 21, Qty: 5, Subtotal: 100, Total: 150, Others: 11, Date: '2022-01-01' },
-  { id: 4, Item: 10, Qty: 7, Subtotal: 500, Total: 614, Others: 5, Date: '2022-01-01' }
+  { id: 1, Name: 'hello' },
+  { id: 2, Name: 'world' },
+  { id: 3, Name: 'foo' },
+  { id: 4, Name: 'bar' }
 ]
 
-export default DataTable
+export default CategoryTable
