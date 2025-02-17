@@ -14,18 +14,8 @@ import { SegmentedControl } from '@/components/ui/segmented-control'
 import React, { useRef, forwardRef, useState } from 'react'
 import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
-import SearchSelection from '@/renderer/components/searchSelection/SearchSelection'
+import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 
-const mainOption = [
-  { label: 'POS System', value: 'POS System' },
-  { label: 'Inventory', value: 'Inventory' },
-  { label: 'Sales', value: 'Sales' },
-  { label: 'Customer Management', value: 'Customer Management' },
-  { label: 'HR Management', value: 'HR Management' },
-  { label: 'Finance', value: 'Finance' },
-  { label: 'Marketing', value: 'Marketing' },
-  { label: 'Support', value: 'Support' }
-]
 
 const AddProductDialog = ({ children }) => {
   const [imagePreview, setImagePreview] = useState(
@@ -85,6 +75,13 @@ const AddProductDialog = ({ children }) => {
     }
     console.log(product)
   }
+  const countries = [
+    "pant",
+    "skirt",
+    "jeans",
+    "shirt",
+    "t-shirt",
+  ];
 
   return (
     <>
@@ -122,7 +119,7 @@ const AddProductDialog = ({ children }) => {
                 <Input name="product_color" size="xs" onChange={handleOnChange} />
               </Field>
               <Field label="category">
-                <SearchSelection />
+                  <SearchSelection collection={countries}  />
               </Field>
             </VStack>
           </DialogBody>

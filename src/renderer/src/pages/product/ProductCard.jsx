@@ -11,11 +11,10 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { SegmentedControl } from '@/components/ui/segmented-control'
-
 import React, { useRef, forwardRef, useState } from 'react'
 import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
-import SearchSelection from '@/renderer/components/searchSelection/SearchSelection'
+import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 const product_detail = [
   {
     product_name: 'Nue Camp',
@@ -51,6 +50,13 @@ const ProductCard = ({ product }) => {
       toast.error('Please select an image file.')
     }
   }
+      const countries = [
+        "pant",
+        "skirt",
+        "jeans",
+        "shirt",
+        "t-shirt",
+      ];
   return (
     <>
       <Input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile} />
@@ -109,7 +115,7 @@ const ProductCard = ({ product }) => {
                 />
               </Field>
               <Field label="category">
-                <SearchSelection disabled={!isEditable} />
+                <SearchSelection collection={countries} disabled={!isEditable}/>
               </Field>
             </VStack>
           </DialogBody>
