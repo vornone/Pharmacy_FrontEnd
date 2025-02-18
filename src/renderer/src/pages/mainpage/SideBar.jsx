@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   VStack,
@@ -7,14 +6,11 @@ import {
   Text,
   Flex,
   Separator,
-  IconButton,
-  Tooltip,
   Stack
-} from '@chakra-ui/react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { TbCashRegister } from 'react-icons/tb'
-import { LuUserCog } from 'react-icons/lu'
-
+} from '@chakra-ui/react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { TbCashRegister } from 'react-icons/tb';
+import { LuUserCog } from 'react-icons/lu';
 import {
   FiArchive,
   FiBox,
@@ -25,21 +21,15 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiHome
-} from 'react-icons/fi'
-import { TbPackageImport } from 'react-icons/tb'
+} from 'react-icons/fi';
+import { TbPackageImport } from 'react-icons/tb';
+import { useColorModeValue } from '@/components/ui/color-mode';
 
-import {
-  ColorModeButton,
-  DarkMode,
-  LightMode,
-  useColorMode,
-  useColorModeValue
-} from '@/components/ui/color-mode'
 const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
-  const activeColor = useColorModeValue('gray.700', 'white')
-  const inactiveColor = useColorModeValue('gray.500', 'gray.400')
-  const activeBg = useColorModeValue('gray.100', 'gray.700')
-  const hoverBg = useColorModeValue('gray.100', 'gray.700')
+  const activeColor = useColorModeValue('gray.700', 'white');
+  const inactiveColor = useColorModeValue('gray.500', 'gray.400');
+  const activeBg = useColorModeValue('gray.100', 'gray.700');
+  const hoverBg = useColorModeValue('gray.100', 'gray.700');
 
   return (
     <>
@@ -77,32 +67,41 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
         </Stack>
       </Link>
     </>
-  )
-}
+  );
+};
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true)
-  const [activeItem, setActiveItem] = useState('Home')
-  const navigate = useNavigate() // Use the useNavigate hook
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [activeItem, setActiveItem] = useState('Home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
-  const bgColor = useColorModeValue('white', 'gray.950')
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const bgColor = useColorModeValue('white', 'gray.950');
 
   const navItems = [
     { name: 'Home', icon: FiHome, hasSeparator: true, to: '/' },
     { name: 'Products', icon: FiDatabase, to: '/product' },
     { name: 'Category', icon: FiTable, to: '/category' },
-    { name: 'Authentication', icon: FiUsers, to: '/authentication' },
+    { name: 'User Management', icon: FiUsers, to: '/usermanagement' },
     { name: 'POS', icon: TbCashRegister, to: '/pos' },
     { name: 'Import', icon: TbPackageImport, hasSeparator: true, to: '/import' },
     { name: 'Settings', icon: FiSettings, to: '/settings' },
     { name: 'Admin', icon: LuUserCog, to: '/admin' }
-  ]
+  ];
+
+  useEffect(() => {
+    // Find the active item based on the current path
+    const active = navItems.find(item => item.to === location.pathname);
+    if (active) {
+      setActiveItem(active.name);
+    }
+  }, [location.pathname]);
 
   const handleItemClick = (item) => {
-    setActiveItem(item.name) // Set the active item
-    navigate(item.to) // Navigate to the specified route
-  }
+    setActiveItem(item.name); // Set the active item
+    navigate(item.to); // Navigate to the specified route
+  };
 
   return (
     <Box
@@ -137,7 +136,7 @@ const Sidebar = () => {
         ))}
       </VStack>
     </Box>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

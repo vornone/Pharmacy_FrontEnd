@@ -46,7 +46,6 @@ function ProductGrid() {
           <LuSlidersHorizontal />
         </IconButton>
       </Flex>
-
       <SimpleGrid
         templateColumns="repeat(5, 1fr)"
         templateRows="repeat(3, 1fr)"
@@ -58,7 +57,6 @@ function ProductGrid() {
       >
         {visibleItems}
       </SimpleGrid>
-
       <PaginationRoot
         page={page}
         count={count}

@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
-
+import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
+import { IconButton } from '@chakra-ui/react'
 const DataTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
@@ -38,6 +39,20 @@ const DataTable = () => {
       {headers.map((header) => (
         <Table.Cell key={header}>{item[header]}</Table.Cell>
       ))}
+      <Table.Cell>
+              <IconButton aria-label="Edit" size="sm" variant="ghost" onClick={() => handleEdit(item)}>
+                <MdEditDocument />
+              </IconButton>
+              <IconButton
+                aria-label="Delete"
+                size="sm"
+                variant="ghost"
+                colorScheme="red"
+                onClick={() => handleDelete(item)}
+              >
+                <MdDeleteForever />
+              </IconButton>
+            </Table.Cell>
     </Table.Row>
   ))
 
@@ -58,6 +73,7 @@ const DataTable = () => {
             {headers.map((header) => (
               <Table.ColumnHeader key={header}>{header}</Table.ColumnHeader>
             ))}
+            <Table.ColumnHeader>Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body fontSize="sm" color={'gray.500'}>
@@ -80,7 +96,7 @@ const DataTable = () => {
     </>
   )
 }
-const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
+const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date', ]
 const items = [
   { id: 1, Item: 5, Qty: 17, Subtotal: 560, Total: 700, Others: 10, Date: '2022-01-01' },
   { id: 2, Item: 15, Qty: 21, Subtotal: 210, Total: 300, Others: 7, Date: '2022-01-01' },

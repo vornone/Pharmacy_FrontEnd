@@ -5,10 +5,10 @@ import { Flex, Box, HStack } from '@chakra-ui/react'
 function POSPage() {
   return (
     <HStack justifyContent={'center'} alignItems={'center'} w={'100%'} h={'100%'} gap={5} p={5}>
-      <Box w={'60%'} h={'100%'}>
+      <Box w={'70%'} h={'100%'}>
         <ProductGrid />
       </Box>
-      <Box w={'40%'} h={'100%'} bg={'gray.100'}>
+      <Box w={'30%'} h={'100%'}>
         <OrderPage />
       </Box>
     </HStack>
