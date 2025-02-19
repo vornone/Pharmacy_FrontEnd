@@ -11,7 +11,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
-const DataTable = () => {
+import { Badge } from '@chakra-ui/react'
+import { HiDotsVertical } from 'react-icons/hi'
+
+const SaleTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -20,7 +23,12 @@ const DataTable = () => {
   })
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
-
+  const handleEdit = (item) => {
+    console.log(item)
+  }
+  const handleShowDetails = (item) => {
+    console.log(item)
+  }
   const rows = items.map((item) => (
     <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
@@ -36,27 +44,36 @@ const DataTable = () => {
           }}
         />
       </Table.Cell>
-      {headers.map((header) => (
-        <Table.Cell key={header}>{item[header]}</Table.Cell>
-      ))}
+      <Table.Cell>{item.id}</Table.Cell>
+      <Table.Cell>{item.customer}</Table.Cell>
+      <Table.Cell>${item.Subtotal}</Table.Cell>
+      <Table.Cell>${item.Total}</Table.Cell>
+      <Table.Cell>${item.Remaining}</Table.Cell>
+      <Table.Cell>{item.Date}</Table.Cell>
+      <Table.Cell>
+        {item.Remaining === 0 ? (
+          <Badge colorPalette="green">success</Badge>
+        ) : (
+          <Badge colorPalette="yellow">pending</Badge>
+        )}
+      </Table.Cell>
       <Table.Cell>
         <IconButton
           aria-label="Edit"
           size="sm"
           variant="ghost"
-          colorPalette="blue"
-          onClick={() => handleEdit(item)}
+          onClick={() => handleShowDetails(item)}
         >
           <MdEditDocument />
         </IconButton>
         <IconButton
-          aria-label="Delete"
+          aria-label="edit"
           size="sm"
           variant="ghost"
-          colorPalette="red"
-          onClick={() => handleDelete(item)}
+          colorPalette="blue"
+          onClick={() => handleEdit(item)}
         >
-          <MdDeleteForever />
+          <HiDotsVertical />
         </IconButton>
       </Table.Cell>
     </Table.Row>
@@ -102,12 +119,35 @@ const DataTable = () => {
     </>
   )
 }
-const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
+const headers = ['id', 'Customer', 'Subtotal', 'Total', 'Remaining', 'Date', 'Status']
 const items = [
-  { id: 1, Item: 5, Qty: 17, Subtotal: 560, Total: 700, Others: 10, Date: '2022-01-01' },
-  { id: 2, Item: 15, Qty: 21, Subtotal: 210, Total: 300, Others: 7, Date: '2022-01-01' },
-  { id: 3, Item: 21, Qty: 5, Subtotal: 100, Total: 150, Others: 11, Date: '2022-01-01' },
-  { id: 4, Item: 10, Qty: 7, Subtotal: 500, Total: 614, Others: 5, Date: '2022-01-01' }
+  {
+    id: 1,
+    customer: 'John Doe',
+    subtotal: 500,
+    Total: 700,
+    Others: 10,
+    Remaining: 500,
+    Date: '2022-01-01'
+  },
+  {
+    id: 2,
+    customer: 'Sokly',
+    subtotal: 300,
+    Total: 310,
+    Others: 10,
+    Remaining: 500,
+    Date: '2022-01-01'
+  },
+  {
+    id: 3,
+    customer: 'Rath',
+    subtotal: 500,
+    Total: 600,
+    Others: 10,
+    Remaining: 0,
+    Date: '2022-01-01'
+  }
 ]
 
-export default DataTable
+export default SaleTable

@@ -75,14 +75,20 @@ const CategoryTable = () => {
       ))}
       {/* Add Edit and Delete buttons */}
       <Table.Cell>
-        <IconButton aria-label="Edit" size="sm" variant="ghost" onClick={() => handleEdit(item)}>
+        <IconButton
+          aria-label="Edit"
+          size="sm"
+          variant="ghost"
+          onClick={() => handleEdit(item)}
+          colorPalette={'blue'}
+        >
           <MdEditDocument />
         </IconButton>
         <IconButton
           aria-label="Delete"
           size="sm"
           variant="ghost"
-          colorScheme="red"
+          colorPalette="red"
           onClick={() => handleDelete(item)}
         >
           <MdDeleteForever />
@@ -93,7 +99,7 @@ const CategoryTable = () => {
 
   return (
     <>
-      <Table.Root variant={'outline'} striped={false} h="50%" size={'sm'} borderRadius={'md'}>
+      <Table.Root variant={'outline'} striped={false} size={'md'} borderRadius={'md'}>
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader h="5">
