@@ -21,14 +21,11 @@ function SalePage() {
         <Flex w="full" justify="space-between" gap={5}>
           {' '}
           <InputGroup flex="1" startElement={<LuSearch />}>
-            <Input placeholder="Search Import" w="50%" size={'xs'} />
+            <Input placeholder="Search Sale Record" w="50%" size={'xs'} />
           </InputGroup>
           <IconButton variant={'outline'} size={'xs'}>
             <LuSlidersHorizontal />
           </IconButton>
-          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Import</Button>
-          </ButtonGroup>
         </Flex>{' '}
         <SaleTable />
       </VStack>

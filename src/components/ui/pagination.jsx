@@ -6,135 +6,115 @@ import {
   IconButton,
   Text,
   createContext,
-  usePaginationContext,
+  usePaginationContext
 } from '@chakra-ui/react'
 import * as React from 'react'
-import {
-  HiChevronLeft,
-  HiChevronRight,
-  HiMiniEllipsisHorizontal,
-} from 'react-icons/hi2'
+import { HiChevronLeft, HiChevronRight, HiMiniEllipsisHorizontal } from 'react-icons/hi2'
 import { LinkButton } from './link-button'
 
 const [RootPropsProvider, useRootProps] = createContext({
-  name: 'RootPropsProvider',
+  name: 'RootPropsProvider'
 })
 
 const variantMap = {
   outline: { default: 'ghost', ellipsis: 'plain', current: 'outline' },
   solid: { default: 'outline', ellipsis: 'outline', current: 'solid' },
-  subtle: { default: 'ghost', ellipsis: 'plain', current: 'subtle' },
+  subtle: { default: 'ghost', ellipsis: 'plain', current: 'subtle' }
 }
 
-export const PaginationRoot = React.forwardRef(
-  function PaginationRoot(props, ref) {
-    const { size = 'sm', variant = 'outline', getHref, ...rest } = props
+export const PaginationRoot = React.forwardRef(function PaginationRoot(props, ref) {
+  const { size = 'sm', variant = 'outline', getHref, ...rest } = props
+  return (
+    <RootPropsProvider value={{ size, variantMap: variantMap[variant], getHref }}>
+      <ChakraPagination.Root ref={ref} type={getHref ? 'link' : 'button'} {...rest} />
+    </RootPropsProvider>
+  )
+})
+
+export const PaginationEllipsis = React.forwardRef(function PaginationEllipsis(props, ref) {
+  const { size, variantMap } = useRootProps()
+  return (
+    <ChakraPagination.Ellipsis ref={ref} {...props} asChild>
+      <Button as="span" variant={variantMap.ellipsis} size={size}>
+        <HiMiniEllipsisHorizontal />
+      </Button>
+    </ChakraPagination.Ellipsis>
+  )
+})
+
+export const PaginationItem = React.forwardRef(function PaginationItem(props, ref) {
+  const { page } = usePaginationContext()
+  const { size, variantMap, getHref } = useRootProps()
+
+  const current = page === props.value
+  const variant = current ? variantMap.current : variantMap.default
+
+  if (getHref) {
     return (
-      <RootPropsProvider
-        value={{ size, variantMap: variantMap[variant], getHref }}
+      <LinkButton href={getHref(props.value)} variant={variant} size={size}>
+        {props.value}
+      </LinkButton>
+    )
+  }
+
+  return (
+    <ChakraPagination.Item ref={ref} {...props} asChild>
+      <Button variant={variant} size={size}>
+        {props.value}
+      </Button>
+    </ChakraPagination.Item>
+  )
+})
+
+export const PaginationPrevTrigger = React.forwardRef(function PaginationPrevTrigger(props, ref) {
+  const { size, variantMap, getHref } = useRootProps()
+  const { previousPage } = usePaginationContext()
+
+  if (getHref) {
+    return (
+      <LinkButton
+        href={previousPage != null ? getHref(previousPage) : undefined}
+        variant={variantMap.default}
+        size={size}
       >
-        <ChakraPagination.Root
-          ref={ref}
-          type={getHref ? 'link' : 'button'}
-          {...rest}
-        />
-      </RootPropsProvider>
+        <HiChevronLeft />
+      </LinkButton>
     )
-  },
-)
+  }
 
-export const PaginationEllipsis = React.forwardRef(
-  function PaginationEllipsis(props, ref) {
-    const { size, variantMap } = useRootProps()
+  return (
+    <ChakraPagination.PrevTrigger ref={ref} asChild {...props}>
+      <IconButton variant={variantMap.default} size={size}>
+        <HiChevronLeft />
+      </IconButton>
+    </ChakraPagination.PrevTrigger>
+  )
+})
+
+export const PaginationNextTrigger = React.forwardRef(function PaginationNextTrigger(props, ref) {
+  const { size, variantMap, getHref } = useRootProps()
+  const { nextPage } = usePaginationContext()
+
+  if (getHref) {
     return (
-      <ChakraPagination.Ellipsis ref={ref} {...props} asChild>
-        <Button as='span' variant={variantMap.ellipsis} size={size}>
-          <HiMiniEllipsisHorizontal />
-        </Button>
-      </ChakraPagination.Ellipsis>
+      <LinkButton
+        href={nextPage != null ? getHref(nextPage) : undefined}
+        variant={variantMap.default}
+        size={size}
+      >
+        <HiChevronRight />
+      </LinkButton>
     )
-  },
-)
+  }
 
-export const PaginationItem = React.forwardRef(
-  function PaginationItem(props, ref) {
-    const { page } = usePaginationContext()
-    const { size, variantMap, getHref } = useRootProps()
-
-    const current = page === props.value
-    const variant = current ? variantMap.current : variantMap.default
-
-    if (getHref) {
-      return (
-        <LinkButton href={getHref(props.value)} variant={variant} size={size}>
-          {props.value}
-        </LinkButton>
-      )
-    }
-
-    return (
-      <ChakraPagination.Item ref={ref} {...props} asChild>
-        <Button variant={variant} size={size}>
-          {props.value}
-        </Button>
-      </ChakraPagination.Item>
-    )
-  },
-)
-
-export const PaginationPrevTrigger = React.forwardRef(
-  function PaginationPrevTrigger(props, ref) {
-    const { size, variantMap, getHref } = useRootProps()
-    const { previousPage } = usePaginationContext()
-
-    if (getHref) {
-      return (
-        <LinkButton
-          href={previousPage != null ? getHref(previousPage) : undefined}
-          variant={variantMap.default}
-          size={size}
-        >
-          <HiChevronLeft />
-        </LinkButton>
-      )
-    }
-
-    return (
-      <ChakraPagination.PrevTrigger ref={ref} asChild {...props}>
-        <IconButton variant={variantMap.default} size={size}>
-          <HiChevronLeft />
-        </IconButton>
-      </ChakraPagination.PrevTrigger>
-    )
-  },
-)
-
-export const PaginationNextTrigger = React.forwardRef(
-  function PaginationNextTrigger(props, ref) {
-    const { size, variantMap, getHref } = useRootProps()
-    const { nextPage } = usePaginationContext()
-
-    if (getHref) {
-      return (
-        <LinkButton
-          href={nextPage != null ? getHref(nextPage) : undefined}
-          variant={variantMap.default}
-          size={size}
-        >
-          <HiChevronRight />
-        </LinkButton>
-      )
-    }
-
-    return (
-      <ChakraPagination.NextTrigger ref={ref} asChild {...props}>
-        <IconButton variant={variantMap.default} size={size}>
-          <HiChevronRight />
-        </IconButton>
-      </ChakraPagination.NextTrigger>
-    )
-  },
-)
+  return (
+    <ChakraPagination.NextTrigger ref={ref} asChild {...props}>
+      <IconButton variant={variantMap.default} size={size}>
+        <HiChevronRight />
+      </IconButton>
+    </ChakraPagination.NextTrigger>
+  )
+})
 
 export const PaginationItems = (props) => {
   return (
@@ -144,12 +124,7 @@ export const PaginationItems = (props) => {
           return page.type === 'ellipsis' ? (
             <PaginationEllipsis key={index} index={index} {...props} />
           ) : (
-            <PaginationItem
-              key={index}
-              type='page'
-              value={page.value}
-              {...props}
-            />
+            <PaginationItem key={index} type="page" value={page.value} {...props} />
           )
         })
       }
@@ -157,20 +132,18 @@ export const PaginationItems = (props) => {
   )
 }
 
-export const PaginationPageText = React.forwardRef(
-  function PaginationPageText(props, ref) {
-    const { format = 'compact', ...rest } = props
-    const { page, totalPages, pageRange, count } = usePaginationContext()
-    const content = React.useMemo(() => {
-      if (format === 'short') return `${page} / ${totalPages}`
-      if (format === 'compact') return `${page} of ${totalPages}`
-      return `${pageRange.start + 1} - ${Math.min(pageRange.end, count)} of ${count}`
-    }, [format, page, totalPages, pageRange, count])
+export const PaginationPageText = React.forwardRef(function PaginationPageText(props, ref) {
+  const { format = 'compact', ...rest } = props
+  const { page, totalPages, pageRange, count } = usePaginationContext()
+  const content = React.useMemo(() => {
+    if (format === 'short') return `${page} / ${totalPages}`
+    if (format === 'compact') return `${page} of ${totalPages}`
+    return `${pageRange.start + 1} - ${Math.min(pageRange.end, count)} of ${count}`
+  }, [format, page, totalPages, pageRange, count])
 
-    return (
-      <Text fontWeight='medium' ref={ref} {...rest}>
-        {content}
-      </Text>
-    )
-  },
-)
+  return (
+    <Text fontWeight="medium" ref={ref} {...rest}>
+      {content}
+    </Text>
+  )
+})

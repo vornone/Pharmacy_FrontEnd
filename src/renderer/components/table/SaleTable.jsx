@@ -13,6 +13,7 @@ import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
 import { Badge } from '@chakra-ui/react'
 import { HiDotsVertical } from 'react-icons/hi'
+import { CgNotes } from 'react-icons/cg'
 
 const SaleTable = () => {
   const [selection, setSelection] = useState([])
@@ -63,14 +64,15 @@ const SaleTable = () => {
           size="sm"
           variant="ghost"
           onClick={() => handleShowDetails(item)}
+          colorPalette="blue"
         >
-          <MdEditDocument />
+          <CgNotes />
         </IconButton>
         <IconButton
           aria-label="edit"
           size="sm"
           variant="ghost"
-          colorPalette="blue"
+          colorPalette="green"
           onClick={() => handleEdit(item)}
         >
           <HiDotsVertical />

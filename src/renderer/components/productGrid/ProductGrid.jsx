@@ -40,23 +40,24 @@ function ProductGrid() {
       <Flex w="full" justify="space-between">
         {' '}
         <InputGroup flex="1" startElement={<LuSearch />}>
-          <Input placeholder="Search Product" w="50%" />
+          <Input placeholder="Search Product" w="50%" size={'xs'} />
         </InputGroup>
-        <IconButton variant={'outline'}>
+        <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
       </Flex>
       <SimpleGrid
-        templateColumns="repeat(5, 1fr)"
-        templateRows="repeat(3, 1fr)"
+        templateColumns="repeat(6, 1fr)"
+        templateRows="repeat(5, 1fr)"
         gap={2}
         w="100%"
-        h="90%"
+        h="100%"
         minH="0"
         flex="1"
       >
         {visibleItems}
       </SimpleGrid>
+
       <PaginationRoot
         page={page}
         count={count}
