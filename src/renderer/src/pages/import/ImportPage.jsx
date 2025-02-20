@@ -14,12 +14,11 @@ import { InputGroup } from '@/components/ui/input-group'
 function ImportPage() {
   return (
     <Flex w={'100%'} h={'100%'}>
-      
       <VStack w={'80%'} h={'100%'} p={5}>
-                <Flex w="full" justify="space-between">
-                  {' '}
-                  <Heading>Import Page</Heading>
-                </Flex>
+        <Flex w="full" justify="space-between">
+          {' '}
+          <Heading>Import Page</Heading>
+        </Flex>
         <Flex w="full" justify="space-between" gap={5}>
           {' '}
           <InputGroup flex="1" startElement={<LuSearch />}>

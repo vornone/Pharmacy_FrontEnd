@@ -21,8 +21,8 @@ import { IoList } from 'react-icons/io5'
 const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
   const inactiveColor = useColorModeValue('gray.500', 'gray.400')
-  const activeBg = useColorModeValue('gray.100', 'gray.700')
-  const hoverBg = useColorModeValue('gray.100', 'gray.700')
+  const activeBg = useColorModeValue('gray.200', 'gray.700')
+  const hoverBg = useColorModeValue('gray.200', 'gray.700')
 
   return (
     <>
