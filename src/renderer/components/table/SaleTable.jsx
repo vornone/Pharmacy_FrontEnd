@@ -47,7 +47,7 @@ const SaleTable = () => {
       </Table.Cell>
       <Table.Cell>{item.id}</Table.Cell>
       <Table.Cell>{item.customer}</Table.Cell>
-      <Table.Cell>${item.Subtotal}</Table.Cell>
+      <Table.Cell>${item.subtotal}</Table.Cell>
       <Table.Cell>${item.Total}</Table.Cell>
       <Table.Cell>${item.Remaining}</Table.Cell>
       <Table.Cell>{item.Date}</Table.Cell>

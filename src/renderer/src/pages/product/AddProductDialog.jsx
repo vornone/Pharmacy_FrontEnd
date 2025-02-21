@@ -16,7 +16,6 @@ import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
 import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 
-
 const AddProductDialog = ({ children }) => {
   const [imagePreview, setImagePreview] = useState(
     'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -67,21 +66,8 @@ const AddProductDialog = ({ children }) => {
   }
 
   const handleSubmit = () => {
-    if (uploadedImage) {
-      setProduct((prevProduct) => ({
-        ...prevProduct,
-        product_image: URL.createObjectURL(uploadedImage)
-      }))
-    }
     console.log(product)
   }
-  const countries = [
-    "pant",
-    "skirt",
-    "jeans",
-    "shirt",
-    "t-shirt",
-  ];
 
   return (
     <>
@@ -119,7 +105,10 @@ const AddProductDialog = ({ children }) => {
                 <Input name="product_color" size="xs" onChange={handleOnChange} />
               </Field>
               <Field label="category">
-                  <SearchSelection collection={countries}  />
+                <SearchSelection
+                  collection={['Shoes', 'Clothing', 'Accessories']}
+                  onChange={handleOnChange}
+                />
               </Field>
             </VStack>
           </DialogBody>
