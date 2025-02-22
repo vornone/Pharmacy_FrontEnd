@@ -1,7 +1,7 @@
 import { Field } from '@/components/ui/field'
 import { Button, Flex, Heading, Input, Separator, Stack, Text } from '@chakra-ui/react'
 import React from 'react'
-
+import OrderGrid from './OrderGrid'
 const OrderPage = () => {
   return (
     <Stack w={'100%'} h={'100%'} justify={'space-between'}>
@@ -21,7 +21,9 @@ const OrderPage = () => {
           </Text>
         </Heading>
       </Flex>
-      <Flex w="full" justify="space-between" gap={5} p={5}></Flex>
+   
+        <OrderGrid />
+
       <Stack
         w="full"
         justify="space-between"
@@ -61,7 +63,7 @@ const OrderPage = () => {
             $4450
           </Text>
         </Flex>
-        <Button colorPalette={'green'} size={'lg'} variant={'solid'}>
+        <Button colorPalette={'green'} size={'lg'} variant={'surface'} fontWeight={'bold'}>
           {' '}
           Place Order
         </Button>
