@@ -11,7 +11,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
-const DataTable = () => {
+import { ButtonGroup } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
+import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
+import { InputGroup } from '@/components/ui/input-group'
+
+const SupplierTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -36,9 +42,11 @@ const DataTable = () => {
           }}
         />
       </Table.Cell>
-      {headers.map((header) => (
-        <Table.Cell key={header}>{item[header]}</Table.Cell>
-      ))}
+      <Table.Cell>{item.supplier_id}</Table.Cell>
+      <Table.Cell>{item.supplier_name}</Table.Cell>
+      <Table.Cell>{item.supplier_address}</Table.Cell>
+      <Table.Cell>{item.supplier_contact1}</Table.Cell>
+      <Table.Cell>{item.supplier_contact2}</Table.Cell>
       <Table.Cell>
         <IconButton
           aria-label="Edit"
@@ -64,6 +72,17 @@ const DataTable = () => {
 
   return (
     <>
+      <Flex w="full" justify="space-between" gap={5}>
+        <InputGroup flex="1" startElement={<LuSearch />}>
+          <Input placeholder="Search Supplier" w="50%" size={'xs'} />
+        </InputGroup>
+        <IconButton variant={'outline'} size={'xs'}>
+          <LuSlidersHorizontal />
+        </IconButton>
+        <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
+          <Button>New Supplier</Button>
+        </ButtonGroup>
+      </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>
           <Table.Row>
@@ -102,12 +121,22 @@ const DataTable = () => {
     </>
   )
 }
-const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
+const headers = ['Id', 'Name', 'Address', 'Contact1', 'Contact2']
 const items = [
-  { id: 1, Item: 5, Qty: 17, Subtotal: 560, Total: 700, Others: 10, Date: '2022-01-01' },
-  { id: 2, Item: 15, Qty: 21, Subtotal: 210, Total: 300, Others: 7, Date: '2022-01-01' },
-  { id: 3, Item: 21, Qty: 5, Subtotal: 100, Total: 150, Others: 11, Date: '2022-01-01' },
-  { id: 4, Item: 10, Qty: 7, Subtotal: 500, Total: 614, Others: 5, Date: '2022-01-01' }
+  {
+    supplier_id: 1,
+    supplier_name: 'hello',
+    supplier_address: 'world',
+    supplier_contact1: 'foo',
+    supplier_contact2: 'bar'
+  },
+  {
+    supplier_id: 2,
+    supplier_name: 'hello',
+    supplier_address: 'world',
+    supplier_contact1: 'foo',
+    supplier_contact2: 'bar'
+  }
 ]
 
-export default DataTable
+export default SupplierTable

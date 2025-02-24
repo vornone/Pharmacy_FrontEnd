@@ -16,8 +16,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-
-const UserRoleTable = () => {
+const ImportTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -42,8 +41,13 @@ const UserRoleTable = () => {
           }}
         />
       </Table.Cell>
-      <Table.Cell>{item.user_role_id}</Table.Cell>
-      <Table.Cell>{item.user_role_name}</Table.Cell>
+      <Table.Cell>{item.import_id}</Table.Cell>
+      <Table.Cell>{item.import_total_item}</Table.Cell>
+      <Table.Cell>{item.import_total_qty}</Table.Cell>
+      <Table.Cell>${item.import_subtotal_price}</Table.Cell>
+      <Table.Cell>${item.import_total_price}</Table.Cell>
+      <Table.Cell>${item.import_total_oth_price}</Table.Cell>
+      <Table.Cell>{item.import_date}</Table.Cell>
       <Table.Cell>
         <IconButton
           aria-label="Edit"
@@ -71,13 +75,13 @@ const UserRoleTable = () => {
     <>
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
-          <Input placeholder="Search Role" w="50%" size={'xs'} />
+          <Input placeholder="Search Import" w="50%" size={'xs'} />
         </InputGroup>
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
         <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-          <Button>New Role</Button>
+          <Button>New Import</Button>
         </ButtonGroup>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
@@ -118,11 +122,44 @@ const UserRoleTable = () => {
     </>
   )
 }
-const headers = ['id', 'Role']
+const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
 const items = [
-  { user_role_id: 1, user_role_name: 'Admin' },
-  { user_role_id: 2, user_role_name: 'User' },
-  { user_role_id: 3, user_role_name: 'Cashier' }
+  {
+    import_id: 1,
+    import_total_item: 5,
+    import_total_qty: 17,
+    import_subtotal_price: 560,
+    import_total_price: 700,
+    import_total_oth_price: 10,
+    import_date: '2022-01-01'
+  },
+  {
+    import_id: 2,
+    import_total_item: 15,
+    import_total_qty: 21,
+    import_subtotal_price: 210,
+    import_total_price: 300,
+    import_total_oth_price: 7,
+    import_date: '2022-01-01'
+  },
+  {
+    import_id: 3,
+    import_total_item: 21,
+    import_total_qty: 5,
+    import_subtotal_price: 100,
+    import_total_price: 150,
+    import_total_oth_price: 11,
+    import_date: '2022-01-01'
+  },
+  {
+    import_id: 4,
+    import_total_item: 10,
+    import_total_qty: 7,
+    import_subtotal_price: 500,
+    import_total_price: 614,
+    import_total_oth_price: 5,
+    import_date: '2022-01-01'
+  }
 ]
 
-export default UserRoleTable
+export default ImportTable

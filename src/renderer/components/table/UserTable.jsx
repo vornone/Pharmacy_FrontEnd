@@ -42,9 +42,9 @@ const UserTable = () => {
           }}
         />
       </Table.Cell>
-      {headers.map((header) => (
-        <Table.Cell key={('row', header)}>{item[header]}</Table.Cell>
-      ))}
+      <Table.Cell>{item.user_id}</Table.Cell>
+      <Table.Cell>{item.username}</Table.Cell>
+      <Table.Cell>{item.user_role}</Table.Cell>
       <Table.Cell>
         <IconButton
           aria-label="Edit"
@@ -121,9 +121,9 @@ const UserTable = () => {
 }
 const headers = ['id', 'Name', 'Role']
 const items = [
-  { id: 1, Name: 'John Doe', Role: 'Admin' },
-  { id: 2, Name: 'Sokly', Role: 'Admin' },
-  { id: 3, Name: 'Rath', Role: 'Admin' }
+  { user_id: 1, username: 'John Doe', user_role: 'Admin' },
+  { user_id: 2, username: 'Sokly', user_role: 'Admin' },
+  { user_id: 3, username: 'Rath', user_role: 'Admin' }
 ]
 
 export default UserTable

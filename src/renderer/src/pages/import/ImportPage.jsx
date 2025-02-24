@@ -1,40 +1,64 @@
 import { HStack, VStack, Text, Heading, Box, Flex } from '@chakra-ui/react'
-import React from 'react'
-import { useColorMode, useColorModeValue, ColorModeButton } from '@/components/ui/color-mode'
-import { Link } from 'react-router-dom'
-import DataTable from '@/renderer/components/table/DataTable'
-import { Button, ButtonGroup } from '@chakra-ui/react'
-import { Icon, IconButton } from '@chakra-ui/react'
-import { Stack } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
-import { Separator } from '@chakra-ui/react'
-import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
-import { InputGroup } from '@/components/ui/input-group'
+import React, { useState } from 'react'
+import { Button } from '@chakra-ui/react'
+import ImportTable from '@/renderer/components/table/ImportTable'
+import SupplierTable from '@/renderer/components/table/SupplierTable'
+const menuItem = ({ name }) => {
+  return <Button>{name}</Button>
+}
 
-function ImportPage() {
+function UserPage() {
+  const [activeItem, setActiveItem] = useState('ImportTable')
+
   return (
     <Flex w={'100%'} h={'100%'}>
-      <VStack w={'80%'} h={'100%'} p={5}>
-        <Flex w="full" justify="space-between">
-          {' '}
+      <VStack
+        w={'15%'}
+        h={'100%'}
+        align={'start'}
+        borderRight={'1px solid '}
+        borderRightColor={'gray.200'}
+        _dark={{ borderRightColor: 'gray.600' }}
+      >
+        <Flex
+          borderBottom={'1px solid'}
+          width="100%"
+          borderBottomColor={'gray.200'}
+          _dark={{ borderBottomColor: 'gray.600' }}
+          p={5}
+        >
           <Heading>Import Page</Heading>
         </Flex>
-        <Flex w="full" justify="space-between" gap={5}>
-          {' '}
-          <InputGroup flex="1" startElement={<LuSearch />}>
-            <Input placeholder="Search Import" w="50%" size={'xs'} />
-          </InputGroup>
-          <IconButton variant={'outline'} size={'xs'}>
-            <LuSlidersHorizontal />
-          </IconButton>
-          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Import</Button>
-          </ButtonGroup>
-        </Flex>{' '}
-        <DataTable />
+        <VStack p={5} w={'100%'}>
+          <Button
+            justifyContent={'start'}
+            w={'full'}
+            size={'xs'}
+            variant={'ghost'}
+            onClick={() => setActiveItem('ImportTable')}
+            bg={activeItem === 'ImportTable' ? 'gray.200' : 'transparent'}
+            _dark={{ bg: activeItem === 'ImportTable' ? 'gray.800' : 'transparent' }}
+          >
+            Import Table
+          </Button>
+          <Button
+            justifyContent={'start'}
+            w={'full'}
+            size={'xs'}
+            variant={'ghost'}
+            onClick={() => setActiveItem('UserRole')}
+            bg={activeItem === 'UserRole' ? 'gray.200' : 'transparent'}
+            _dark={{ bg: activeItem === 'UserRole' ? 'gray.800' : 'transparent' }}
+          >
+            Supplier Table
+          </Button>
+        </VStack>
+      </VStack>
+      <VStack w={'80%'} h={'100%'} p={5}>
+        {activeItem === 'ImportTable' ? <ImportTable /> : <SupplierTable />}
       </VStack>
     </Flex>
   )
 }
 
-export default ImportPage
+export default UserPage
