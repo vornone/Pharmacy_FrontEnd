@@ -11,7 +11,7 @@ const ProductCard = () => {
       />
       <Card.Body h={'30%'} w={'100%'} p={0}>
         <Card.Title fontSize={'sm'}>Nue Camp</Card.Title>
-        <Card.Description fontSize={'xs'}>Price : 100$</Card.Description>
+        <Card.Description fontSize={'xs'}>100$</Card.Description>
       </Card.Body>
     </Card.Root>
   )

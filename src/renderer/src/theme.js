@@ -9,18 +9,7 @@ import {
 // Step 1: Define your custom theme
 const customConfig = defineConfig({
   theme: {
-    textStyles: {
-      h1: {
-        fontSize: '3xl',
-        color: 'red'
-      },
-      h2: {
-        fontSize: '2xl'
-      },
-      h3: {
-        fontSize: 'xl'
-      }
-    },
+
     breakpoints: {
       sm: '320px',
       md: '768px',
@@ -35,6 +24,10 @@ const customConfig = defineConfig({
       }
     },
     semanticTokens: {
+      fonts: {
+        body: { value: 'Montserrat' },
+        heading: { value: 'Inter' }
+      },
       colors: {
         danger: { value: '{colors.red}' }
       },
