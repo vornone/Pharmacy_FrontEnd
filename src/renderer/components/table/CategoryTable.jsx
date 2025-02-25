@@ -10,7 +10,12 @@ import {
 } from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
-
+import { ButtonGroup } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
+import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
+import { InputGroup } from '@/components/ui/input-group'
+import AddCategoryDialog from '@/renderer/components/dialog/AddCategoryDialog'
 const CategoryTable = () => {
   const [selection, setSelection] = useState([])
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' })
@@ -99,6 +104,19 @@ const CategoryTable = () => {
 
   return (
     <>
+      <Flex w="full" justify="space-between" gap={5}>
+        <InputGroup flex="1" startElement={<LuSearch />}>
+          <Input placeholder="Search Role" w="50%" size={'xs'} />
+        </InputGroup>
+        <IconButton variant={'outline'} size={'xs'}>
+          <LuSlidersHorizontal />
+        </IconButton>
+        <AddCategoryDialog>
+          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
+            <Button>New Category</Button>
+          </ButtonGroup>
+        </AddCategoryDialog>
+      </Flex>
       <Table.Root variant={'outline'} striped={false} size={'md'} borderRadius={'md'}>
         <Table.Header>
           <Table.Row>

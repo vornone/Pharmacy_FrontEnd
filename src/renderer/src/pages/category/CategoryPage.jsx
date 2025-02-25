@@ -17,18 +17,6 @@ function CategoryPage() {
         <Flex w="full" justify="space-between">
           {' '}
           <Heading>Category Page</Heading>
-        </Flex>
-        <Flex w="full" justify="space-between" gap={5}>
-          {' '}
-          <InputGroup flex="1" startElement={<LuSearch />}>
-            <Input placeholder="Search Category" w="50%" size={'xs'} />
-          </InputGroup>
-          <IconButton variant={'outline'} size={'xs'}>
-            <LuSlidersHorizontal />
-          </IconButton>
-          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Category</Button>
-          </ButtonGroup>
         </Flex>{' '}
         <CategoryTable />
       </VStack>

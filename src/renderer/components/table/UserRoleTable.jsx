@@ -16,7 +16,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-
+import AddUserRoleDialog from '@/renderer/components/dialog/AddUserRoleDialog'
 const UserRoleTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
@@ -76,9 +76,11 @@ const UserRoleTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-          <Button>New Role</Button>
-        </ButtonGroup>
+        <AddUserRoleDialog>
+          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
+            <Button>New Role</Button>
+          </ButtonGroup>
+        </AddUserRoleDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>

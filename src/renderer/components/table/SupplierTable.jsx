@@ -16,7 +16,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-
+import AddSupplierDiaglog from '@/renderer/components/dialog/AddSupplierDiaglog'
 const SupplierTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
@@ -79,9 +79,11 @@ const SupplierTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-          <Button>New Supplier</Button>
-        </ButtonGroup>
+        <AddSupplierDiaglog>
+          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
+            <Button>New Supplier</Button>
+          </ButtonGroup>
+        </AddSupplierDiaglog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>
@@ -110,6 +112,7 @@ const SupplierTable = () => {
         <ActionBarContent>
           <ActionBarSelectionTrigger>{selection.length} selected</ActionBarSelectionTrigger>
           <ActionBarSeparator />
+
           <Button variant="outline" size="sm">
             Delete <Kbd>⌫</Kbd>
           </Button>

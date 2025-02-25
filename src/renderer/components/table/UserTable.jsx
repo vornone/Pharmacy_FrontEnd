@@ -16,7 +16,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-
+import AddUserDialog from '../dialog/AddUserDialog'
 const UserTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
@@ -77,9 +77,11 @@ const UserTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-          <Button>New User</Button>
-        </ButtonGroup>
+        <AddUserDialog>
+          <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
+            <Button>New User</Button>
+          </ButtonGroup>
+        </AddUserDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>
