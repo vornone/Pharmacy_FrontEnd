@@ -16,7 +16,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import AddUserRoleDialog from '@/renderer/components/dialog/AddUserRoleDialog'
+import EditUserRoleDialog from '@/renderer/components/dialog/EditUserRoleDialog'
 const UserRoleTable = () => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
@@ -45,15 +45,11 @@ const UserRoleTable = () => {
       <Table.Cell>{item.user_role_id}</Table.Cell>
       <Table.Cell>{item.user_role_name}</Table.Cell>
       <Table.Cell>
-        <IconButton
-          aria-label="Edit"
-          size="sm"
-          variant="ghost"
-          colorPalette="blue"
-          onClick={() => handleEdit(item)}
-        >
-          <MdEditDocument />
-        </IconButton>
+        <EditUserRoleDialog title="Edit Role" data={item.user_role_name}>
+          <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
+            <MdEditDocument />
+          </IconButton>
+        </EditUserRoleDialog>
         <IconButton
           aria-label="Delete"
           size="sm"
@@ -76,11 +72,11 @@ const UserRoleTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <AddUserRoleDialog>
+        <EditUserRoleDialog title="Add New Role">
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New Role</Button>
           </ButtonGroup>
-        </AddUserRoleDialog>
+        </EditUserRoleDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>

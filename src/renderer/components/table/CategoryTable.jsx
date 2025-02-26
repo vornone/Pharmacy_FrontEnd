@@ -15,7 +15,7 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import AddCategoryDialog from '@/renderer/components/dialog/AddCategoryDialog'
+import EditCategoryDialog from '@/renderer/components/dialog/EditCategoryDialog'
 const CategoryTable = () => {
   const [selection, setSelection] = useState([])
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' })
@@ -75,20 +75,20 @@ const CategoryTable = () => {
           }}
         />
       </Table.Cell>
-      {headers.map((header) => (
-        <Table.Cell key={header}>{item[header]}</Table.Cell>
-      ))}
-      {/* Add Edit and Delete buttons */}
+      <Table.Cell>{item.category_id}</Table.Cell>
+      <Table.Cell>{item.category_name}</Table.Cell>
       <Table.Cell>
-        <IconButton
-          aria-label="Edit"
-          size="sm"
-          variant="ghost"
-          onClick={() => handleEdit(item)}
-          colorPalette={'blue'}
-        >
-          <MdEditDocument />
-        </IconButton>
+        <EditCategoryDialog data={item.category_name} title={'Edit Category'}>
+          <IconButton
+            aria-label="Edit"
+            size="sm"
+            variant="ghost"
+            onClick={() => handleEdit(item)}
+            colorPalette={'blue'}
+          >
+            <MdEditDocument />
+          </IconButton>
+        </EditCategoryDialog>
         <IconButton
           aria-label="Delete"
           size="sm"
@@ -111,11 +111,11 @@ const CategoryTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <AddCategoryDialog>
+        <EditCategoryDialog title={'New Category'}>
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New Category</Button>
           </ButtonGroup>
-        </AddCategoryDialog>
+        </EditCategoryDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'md'} borderRadius={'md'}>
         <Table.Header>
@@ -164,10 +164,10 @@ const CategoryTable = () => {
 
 const headers = ['id', 'Name']
 const items = [
-  { id: 1, Name: 'hello' },
-  { id: 2, Name: 'world' },
-  { id: 3, Name: 'foo' },
-  { id: 4, Name: 'bar' }
+  { category_id: 1, category_name: 'hello' },
+  { category_id: 2, category_name: 'world' },
+  { category_id: 3, category_name: 'foo' },
+  { category_id: 4, category_name: 'bar' }
 ]
 
 export default CategoryTable

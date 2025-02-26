@@ -16,15 +16,15 @@ import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
 import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 
-const AddCategoryDialog = ({ children }) => {
-  const [category, setCategory] = useState({
-    category_name: ''
+const EditUserRoleDialog = ({ children, title, data }) => {
+  const [role, setRole] = useState({
+    user_role_name: data
   })
 
   const handleOnChange = (event) => {
     const { name, value } = event.target
-    setCategory((prevCategory) => ({
-      ...prevCategory,
+    setRole((prevRole) => ({
+      ...prevRole,
       [name]: value
     }))
   }
@@ -39,12 +39,17 @@ const AddCategoryDialog = ({ children }) => {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Category</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <VStack w={'100%'} h={'100%'} align={'flex-start'}>
-              <Field label="Category Name">
-                <Input name="category_name" size="xs" onChange={handleOnChange} />
+              <Field label="Role Name">
+                <Input
+                  name="user_role_name"
+                  size="xs"
+                  value={role.user_role_name}
+                  onChange={handleOnChange}
+                />
               </Field>
             </VStack>
           </DialogBody>
@@ -55,7 +60,7 @@ const AddCategoryDialog = ({ children }) => {
               </Button>
             </DialogActionTrigger>
             <Button size={'xs'} variant={'solid'} colorPalette={'green'} onClick={handleSubmit}>
-              Add New Category
+              Submit
             </Button>
           </DialogFooter>
           <DialogCloseTrigger />
@@ -65,4 +70,4 @@ const AddCategoryDialog = ({ children }) => {
   )
 }
 
-export default AddCategoryDialog
+export default EditUserRoleDialog
