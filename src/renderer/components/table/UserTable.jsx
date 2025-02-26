@@ -16,9 +16,17 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import AddUserDialog from '../dialog/AddUserDialog'
+import EditUserDialog from '../dialog/EditUserDialog'
+
+const headers = ['ID', 'Name', 'Role']
+const initialItems = [
+  { user_id: 1, username: 'John Doe', user_role: 'Admin', user_password: 'password' },
+  { user_id: 2, username: 'Sokly', user_role: 'Admin', user_password: 'password' },
+  { user_id: 3, username: 'Rath', user_role: 'Admin', user_password: 'password' }
+]
 const UserTable = () => {
   const [selection, setSelection] = useState([])
+  const [items, setItems] = useState(initialItems)
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -28,7 +36,7 @@ const UserTable = () => {
   const indeterminate = hasSelection && selection.length < items.length
 
   const rows = items.map((item) => (
-    <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
+    <Table.Row key={item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
@@ -46,15 +54,11 @@ const UserTable = () => {
       <Table.Cell>{item.username}</Table.Cell>
       <Table.Cell>{item.user_role}</Table.Cell>
       <Table.Cell>
-        <IconButton
-          aria-label="Edit"
-          size="sm"
-          variant="ghost"
-          colorPalette="blue"
-          onClick={() => handleEdit(item)}
-        >
-          <MdEditDocument />
-        </IconButton>
+        <EditUserDialog title="Edit User" data={item}>
+          <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
+            <MdEditDocument />
+          </IconButton>
+        </EditUserDialog>
         <IconButton
           aria-label="Delete"
           size="sm"
@@ -77,11 +81,11 @@ const UserTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <AddUserDialog>
+        <EditUserDialog title="New User">
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New User</Button>
           </ButtonGroup>
-        </AddUserDialog>
+        </EditUserDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>
@@ -121,11 +125,5 @@ const UserTable = () => {
     </>
   )
 }
-const headers = ['id', 'Name', 'Role']
-const items = [
-  { user_id: 1, username: 'John Doe', user_role: 'Admin' },
-  { user_id: 2, username: 'Sokly', user_role: 'Admin' },
-  { user_id: 3, username: 'Rath', user_role: 'Admin' }
-]
 
 export default UserTable

@@ -9,7 +9,7 @@ import {
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import { InputGroup } from '@/components/ui/input-group'
 
-function SearchSelection({ collection, onChange, disabled }) {
+function SearchSelection({ collection, onChange, disabled, selectedValue }) {
   return (
     <>
       <AutoComplete
@@ -23,7 +23,12 @@ function SearchSelection({ collection, onChange, disabled }) {
         {({ isOpen }) => (
           <>
             <InputGroup endElement={<Icon>{isOpen ? <FiChevronRight /> : <FiChevronDown />}</Icon>}>
-              <AutoCompleteInput variant="subtle" placeholder="Search..." disabled={disabled} />
+              <AutoCompleteInput
+                variant="subtle"
+                placeholder="Search..."
+                disabled={disabled}
+                value={selectedValue}
+              />
             </InputGroup>
             <AutoCompleteList>
               {collection.map((item, index) => (
