@@ -49,7 +49,7 @@ const SaleTable = () => {
       <Table.Cell color="white.500"s _dark={{ color: 'white' }} fontWeight={600}>{item.customer}</Table.Cell>
       <Table.Cell>${item.subtotal}</Table.Cell>
       <Table.Cell>${item.Total}</Table.Cell>
-      <Table.Cell color={item.Remaining === 0 ? 'green.500' : 'red.500'} >${item.Remaining}</Table.Cell>
+      <Table.Cell color={item.Remaining === 0 ? 'green.500' : 'red.500'} fontWeight={400}>${item.Remaining}</Table.Cell>
       <Table.Cell>{item.Date}</Table.Cell>
       <Table.Cell>
         {item.Remaining === 0 ? (
