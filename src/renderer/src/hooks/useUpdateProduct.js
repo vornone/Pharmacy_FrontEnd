@@ -28,5 +28,4 @@ const useUpdateProduct = (selectedFile, productData) => {
     addDiscount
   }
 }
-
 export default useUpdateProduct

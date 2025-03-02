@@ -2,7 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from '@reduxjs/toolkit'
 import { thunk } from 'redux-thunk'
-import userReducer from './reducers/userReducer'
+import userReducer from './reducers/UserReducer'
 import categoryReducer from './reducers/CategoryReducer'
 import userRoleReducer from './reducers/UserRoleReducer'
 import productReducer from './reducers/ProductReducers'

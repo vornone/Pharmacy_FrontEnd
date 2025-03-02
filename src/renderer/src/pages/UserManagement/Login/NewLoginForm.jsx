@@ -2,13 +2,12 @@ import { Button, Fieldset, Input, Stack } from "@chakra-ui/react"
 import { Field } from "@/components/ui/field"
 import {Card } from "@chakra-ui/react"
 import { PasswordInput } from '@/components/ui/password-input';
-import { ColorModeButton } from "@/components/ui/color-mode"
-import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input"
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../../actions/AuthActions";
+import { Toaster, toaster } from "@/components/ui/toaster"
  const NewLoginForm = ({ onLogin }) => {
-  const [show, setShow] = useState(false)
   const [input, setInput] = useState({ username: '', password: '' })
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -18,10 +17,8 @@ import { useNavigate } from "react-router-dom";
   const handleInputChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value })
     setIsError(false)
+    console.log(input)
   }
-
-  const handleShow = () => setShow(!show)
-
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault()
@@ -29,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 
     if (!input.username || !input.password) {
       setIsError(true)
+      
       return
     }
 
@@ -36,12 +34,21 @@ import { useNavigate } from "react-router-dom";
     try {
       const isError = await dispatch(login(input))
       if (!isError) {
+        toaster.create({
+          title: "Login Success",
+          description: "Login Success",
+          type: "success"
+        })
         onLogin()
-        navigate('/')
       } else {
         setIsError(true)
       }
     } catch (error) {
+      toaster.create({
+        title: "Toast Title",
+        description: "Toast Description",
+        type: "error"
+      })
       console.error('Login error:', error)
       setIsError(true)
     } finally {
@@ -50,18 +57,20 @@ import { useNavigate } from "react-router-dom";
   }
 
   useEffect(() => {
-    const previousUser = localStorage.getItem('user')
+    const previousUser = localStorage.getItem('username')
     if (previousUser) {
       try {
         const parsedUser = JSON.parse(previousUser)
         setInput((prev) => ({ ...prev, username: parsedUser.username }))
       } catch (error) {
         console.error('Error parsing stored user:', error)
-        localStorage.removeItem('user')
+        localStorage.removeItem('username')
       }
     }
   }, [])
   return (
+    <>
+    <Toaster />
     <Card.Root p={10}>
     <Fieldset.Root size="lg" maxW="md"  >
       <Stack>
@@ -72,17 +81,18 @@ import { useNavigate } from "react-router-dom";
       </Stack>
       <Fieldset.Content>
         <Field label="Name">
-          <Input name="name" value={input.name} onChange={handleInputChange}/>
+          <Input name="username" onChange={handleInputChange}/>
         </Field>
         <Field label="Password">
-          <PasswordInput name="password" value={input.password} onChange={handleInputChange} />
+          <PasswordInput name="password"  onChange={handleInputChange} />
         </Field>
       </Fieldset.Content>
-      <Button type="submit" alignSelf="flex-end" colorPalette={'blue'} onClick={handleSubmit}>
+      <Button type="submit" alignSelf="flex-end" colorPalette={'blue'} onClick={handleSubmit} variant={'surface'}>
         Log In
       </Button>
     </Fieldset.Root>
     </Card.Root>
+    </>
   )
 }
 export default NewLoginForm

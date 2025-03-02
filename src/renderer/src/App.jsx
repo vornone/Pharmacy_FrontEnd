@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import Layout from './pages/mainpage/Layout'
+import { useNavigate } from 'react-router-dom'
 import NewLoginForm from './pages/UserManagement/Login/NewLoginForm'
 import { useState } from 'react'
 import './index.css'
@@ -11,9 +12,10 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => sessionStorage.getItem('token') !== null 
   )
+  
+
   const handleLoginSuccess = () => {
     setIsAuthenticated(true)
-    navigate('/') // Navigate to home page after login
   }
   return (
     <>
@@ -25,7 +27,10 @@ const App = () => {
         flexDirection={'column'}
       >
         <HashRouter>
-          <Layout></Layout>
+          <Routes>
+            <Route path="/" element={<NewLoginForm onLogin={handleLoginSuccess}/>} />
+            
+          </Routes>
         </HashRouter>
         <ToastContainer />
       </Flex>

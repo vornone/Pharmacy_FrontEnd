@@ -5,14 +5,15 @@ import { toast } from 'react-toastify'
 
 export const login = (inputData) => async (dispatch) => {
   try {
-    const { data } = await post(url.loginUrl, inputData, '', false)
-
+    const { data } = await post(url.loginUrl, inputData, ''	, true)
+    console.log(data)
     // Dispatch success action
     await dispatch({ type: actions.LOGIN_SUCCESS, payload: { data } })
 
     // Store user data and token
-    localStorage.setItem('user', JSON.stringify(data.user))
-    sessionStorage.setItem('token', data.token)
+    localStorage.setItem('username', JSON.stringify(data.username))
+    sessionStorage.setItem('token', data.jwtToken)
+    sessionStorage.setItem('username', JSON.stringify(data.username))
 
     // Show success message
 
@@ -21,7 +22,7 @@ export const login = (inputData) => async (dispatch) => {
   } catch (error) {
     // Dispatch error action
     await dispatch({
-      type: actions.LOGIN_FAILURE, // Changed from LOGIN_SUCCESS for error case
+      type: actions.LOGIN_FAIL, // Changed from LOGIN_SUCCESS for error case
       payload: {
         message: error.response?.data?.message || error.message
       }

@@ -50,7 +50,7 @@ function post(url, data, token, isRequiredAuth) {
   const axiosInstance = createAxiosInstance(token, isRequiredAuth)
   return axiosInstance
     .post(url, data)
-    .then((response) => response.data)
+    .then((response) => response)
     .catch((error) => {
       console.error(`Error making POST request to ${url}:`, error)
       throw error
