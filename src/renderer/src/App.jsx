@@ -10,9 +10,8 @@ import { useState } from 'react'
 import './index.css'
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    () => sessionStorage.getItem('token') !== null 
+    () => sessionStorage.getItem('token') !== null
   )
-  
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true)
@@ -28,8 +27,8 @@ const App = () => {
       >
         <HashRouter>
           <Routes>
-            <Route path="/" element={<NewLoginForm onLogin={handleLoginSuccess}/>} />
-            
+            <Route path="/*" element={<Layout />} />
+            <Route path="/login" element={<NewLoginForm onLoginSuccess={handleLoginSuccess} />} />
           </Routes>
         </HashRouter>
         <ToastContainer />

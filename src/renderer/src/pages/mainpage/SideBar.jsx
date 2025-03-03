@@ -73,7 +73,7 @@ const Sidebar = () => {
   const bgColor = useColorModeValue('white', 'gray.950')
 
   const navItems = [
-    { name: 'Home', icon: FiHome, hasSeparator: true, to: '/' },
+    { name: 'Home', icon: FiHome, hasSeparator: true, to: '/home' },
     { name: 'Products', icon: FiDatabase, to: '/product' },
     { name: 'Category', icon: FiTable, to: '/category' },
     { name: 'User Management', icon: FiUsers, to: '/usermanagement' },
