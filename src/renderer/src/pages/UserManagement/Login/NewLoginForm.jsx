@@ -40,6 +40,7 @@ const NewLoginForm = ({ onLogin }) => {
           type: 'success'
         })
         onLogin()
+        navigate('/*')
       } else {
         setIsError(true)
       }

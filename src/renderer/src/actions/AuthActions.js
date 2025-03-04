@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 export const login = (inputData) => async (dispatch) => {
   try {
-    const { data } = await post(url.loginUrl, inputData, ''	, true)
+    const { data } = await post(url.loginUrl, inputData, '', true)
     console.log(data)
     // Dispatch success action
     await dispatch({ type: actions.LOGIN_SUCCESS, payload: { data } })

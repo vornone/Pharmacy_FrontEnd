@@ -21,7 +21,7 @@ const EditUserDialog = ({ children, title, data = {} }) => {
   const [user, setUser] = useState({
     username: data?.username || '', // Use optional chaining and default value
     user_role: data?.user_role || '', // Use optional chaining and default value
-    user_password: data?.user_password || '', // Use optional chaining and default value
+    user_password: data?.password || '', // Use optional chaining and default value
     contact: data?.contact || '' // Use optional chaining and default value
   })
 

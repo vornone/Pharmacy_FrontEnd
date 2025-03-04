@@ -24,9 +24,9 @@ const initialItems = [
   { user_id: 2, username: 'Sokly', user_role: 'Admin', user_password: 'password' },
   { user_id: 3, username: 'Rath', user_role: 'Admin', user_password: 'password' }
 ]
-const UserTable = () => {
+const UserTable = ({userData}) => {
   const [selection, setSelection] = useState([])
-  const [items, setItems] = useState(initialItems)
+  const [items, setItems] = useState([...userData])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -35,7 +35,7 @@ const UserTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = items.map((item) => (
+  const rows = items.map((item, index) => (
     <Table.Row key={item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
@@ -50,9 +50,9 @@ const UserTable = () => {
           }}
         />
       </Table.Cell>
-      <Table.Cell>{item.user_id}</Table.Cell>
+      <Table.Cell>{index+1}</Table.Cell>
       <Table.Cell>{item.username}</Table.Cell>
-      <Table.Cell>{item.user_role}</Table.Cell>
+      <Table.Cell>{item.roleName}</Table.Cell>
       <Table.Cell>
         <EditUserDialog title="Edit User" data={item}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">

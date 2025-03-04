@@ -1,15 +1,40 @@
 import { HStack, VStack, Text, Heading, Box, Flex } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import UserTable from '@/renderer/components/table/UserTable'
 import UserRoleTable from '@/renderer/components/table/UserRoleTable'
+import testUseUser from '@/renderer/src/hooks/testUseUser'
 
 const menuItem = ({ name }) => {
   return <Button>{name}</Button>
 }
 
 function UserPage() {
+  const { data, loading, error, getUser } = testUseUser()
   const [activeItem, setActiveItem] = useState('UserTable')
+
+  // Trigger data loading immediately when the component mounts
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  // Show loading state while data is being fetched
+  if (loading) {
+    return (
+      <Flex w={'100%'} h={'100%'} justify="center" align="center">
+        <Text>Loading user data...</Text>
+      </Flex>
+    )
+  }
+
+  // Show error message if data fetching failed
+  if (error) {
+    return (
+      <Flex w={'100%'} h={'100%'} justify="center" align="center">
+        <Text color="red.500">Error loading user data: {error.message}</Text>
+      </Flex>
+    )
+  }
 
   return (
     <Flex w={'100%'} h={'100%'}>
@@ -56,7 +81,7 @@ function UserPage() {
         </VStack>
       </VStack>
       <VStack w={'80%'} h={'100%'} p={5}>
-        {activeItem === 'UserTable' ? <UserTable /> : <UserRoleTable />}
+        {activeItem === 'UserTable' ? <UserTable userData={data || []} /> : <UserRoleTable />}
       </VStack>
     </Flex>
   )
