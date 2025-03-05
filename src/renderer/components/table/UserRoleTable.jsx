@@ -17,7 +17,7 @@ import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import EditUserRoleDialog from '@/renderer/components/dialog/EditUserRoleDialog'
-const UserRoleTable = () => {
+const UserRoleTable = ({roleData} => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -27,7 +27,7 @@ const UserRoleTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = items.map((item) => (
+  const rows = items.map((item, index) => (
     <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
@@ -42,8 +42,8 @@ const UserRoleTable = () => {
           }}
         />
       </Table.Cell>
-      <Table.Cell>{item.user_role_id}</Table.Cell>
-      <Table.Cell>{item.user_role_name}</Table.Cell>
+      <Table.Cell>{index + 1}</Table.Cell>
+      <Table.Cell>{item.roleName}</Table.Cell>
       <Table.Cell>
         <EditUserRoleDialog title="Edit Role" data={item.user_role_name}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
