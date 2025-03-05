@@ -18,13 +18,13 @@ import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import EditUserDialog from '../dialog/EditUserDialog'
 
-const headers = ['ID', 'Name', 'Role']
+const headers = ['ID', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
 const initialItems = [
   { user_id: 1, username: 'John Doe', user_role: 'Admin', user_password: 'password' },
   { user_id: 2, username: 'Sokly', user_role: 'Admin', user_password: 'password' },
   { user_id: 3, username: 'Rath', user_role: 'Admin', user_password: 'password' }
 ]
-const UserTable = ({userData}) => {
+const UserTable = ({ userData, roleData }) => {
   const [selection, setSelection] = useState([])
   const [items, setItems] = useState([...userData])
   const date = new Date().toLocaleDateString('en-US', {
@@ -50,11 +50,14 @@ const UserTable = ({userData}) => {
           }}
         />
       </Table.Cell>
-      <Table.Cell>{index+1}</Table.Cell>
+      <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell>{item.username}</Table.Cell>
       <Table.Cell>{item.roleName}</Table.Cell>
+      <Table.Cell>{item.firstName}</Table.Cell>
+      <Table.Cell>{item.lastName}</Table.Cell>
+      <Table.Cell>{item.contact}</Table.Cell>
       <Table.Cell>
-        <EditUserDialog title="Edit User" data={item}>
+        <EditUserDialog title="Edit User" data={item} roleData={roleData}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
             <MdEditDocument />
           </IconButton>
@@ -81,7 +84,7 @@ const UserTable = ({userData}) => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <EditUserDialog title="New User">
+        <EditUserDialog title="New User" roleData={roleData}>
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New User</Button>
           </ButtonGroup>

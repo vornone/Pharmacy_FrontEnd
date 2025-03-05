@@ -16,11 +16,13 @@ import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 import { PasswordInput } from '@/components/ui/password-input'
 import React, { useState } from 'react'
 
-const EditUserDialog = ({ children, title, data = {} }) => {
+const EditUserDialog = ({ children, title, data, roleData }) => {
   const roles = ['Admin', 'Cashier', 'Manager']
+  const roleNames = roleData.map((item) => item.roleName)
+
   const [user, setUser] = useState({
     username: data?.username || '', // Use optional chaining and default value
-    user_role: data?.user_role || '', // Use optional chaining and default value
+    user_role: data?.roleName || '', // Use optional chaining and default value
     user_password: data?.password || '', // Use optional chaining and default value
     contact: data?.contact || '' // Use optional chaining and default value
   })
@@ -66,7 +68,7 @@ const EditUserDialog = ({ children, title, data = {} }) => {
             </Field>
             <Field label="Role">
               <SearchSelection
-                collection={roles}
+                collection={roleNames}
                 selectedValue={user.user_role}
                 onChange={handleRoleChange}
               />
@@ -87,16 +89,6 @@ const EditUserDialog = ({ children, title, data = {} }) => {
       </DialogContent>
     </DialogRoot>
   )
-}
-
-// Add default props for `data`
-EditUserDialog.defaultProps = {
-  data: {
-    username: '',
-    user_role: '',
-    user_password: '',
-    contact: ''
-  }
 }
 
 export default EditUserDialog
