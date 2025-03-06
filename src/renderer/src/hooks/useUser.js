@@ -1,29 +1,16 @@
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { queryData } from '../actions/ActionsType'
-import { useEffect } from 'react'
+import ApiService from '../common/apiService'
 
 const useUser = () => {
-  const apiSource = 'userReducer'
-  const dispatch = useDispatch()
-  const { data, loading, error } = useSelector((state) => state.userReducer)
-  const getUser = () => {
-    dispatch(queryData(apiSource, 'user/getAll', 'POST'))
-  }
-  const deleteUser = (body) => {
-    dispatch(queryData('deleteReducer', 'user/delete', 'POST', body))
-  }
+  const userService = new ApiService('userReducer')
 
-  const addUser = (body) => {
-    dispatch(queryData(apiSource, 'user/register', 'POST', body))
-  }
+  const { data, loading, error, requestData: getUser } = userService.useApi('api/USR0011', 'GET')
+
   return {
-    data: data?.data.user,
+    data,
     loading,
     error,
-    getUser,
-    deleteUser,
-    addUser
+    getUser
   }
 }
+
 export default useUser

@@ -1,7 +1,6 @@
 'use client'
-import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 
-import { Button, Kbd, Table, IconButton } from '@chakra-ui/react'
+import { Button, Kbd, Table } from '@chakra-ui/react'
 import {
   ActionBarContent,
   ActionBarRoot,
@@ -10,16 +9,16 @@ import {
 } from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
+import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
+import { IconButton } from '@chakra-ui/react'
 import { ButtonGroup } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import EditCategoryDialog from '@/renderer/components/dialog/EditCategoryDialog'
-const CategoryTable = () => {
+import EditUserRoleDialog from '@/renderer/components/dialog/EditUserRoleDialog'
+const CategoryTable = ({ categoryData }) => {
   const [selection, setSelection] = useState([])
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' })
-
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -28,40 +27,11 @@ const CategoryTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const sortedItems = [...items].sort((a, b) => {
-    if (sortConfig.key) {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1
-      }
-    }
-    return 0
-  })
-
-  const requestSort = (key) => {
-    let direction = 'ascending'
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending'
-    }
-    setSortConfig({ key, direction })
-  }
-
-  // Handle edit action
-  const handleEdit = (item) => {
-    console.log('Edit item:', item)
-    // Add your edit logic here
-  }
-
-  // Handle delete action
-  const handleDelete = (item) => {
-    console.log('Delete item:', item)
-    // Add your delete logic here
-  }
-
-  const rows = sortedItems.map((item) => (
-    <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
+  const rows = categoryData.map((item, index) => (
+    <Table.Row
+      key={item.categoryName}
+      data-selected={selection.includes(item.name) ? '' : undefined}
+    >
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
@@ -75,20 +45,14 @@ const CategoryTable = () => {
           }}
         />
       </Table.Cell>
-      <Table.Cell>{item.category_id}</Table.Cell>
-      <Table.Cell>{item.category_name}</Table.Cell>
+      <Table.Cell>{index + 1}</Table.Cell>
+      <Table.Cell>{item.categoryName}</Table.Cell>
       <Table.Cell>
-        <EditCategoryDialog data={item.category_name} title={'Edit Category'}>
-          <IconButton
-            aria-label="Edit"
-            size="sm"
-            variant="ghost"
-            onClick={() => handleEdit(item)}
-            colorPalette={'blue'}
-          >
+        <EditUserRoleDialog title="Edit Role" data={item.categoryName}>
+          <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
             <MdEditDocument />
           </IconButton>
-        </EditCategoryDialog>
+        </EditUserRoleDialog>
         <IconButton
           aria-label="Delete"
           size="sm"
@@ -111,13 +75,13 @@ const CategoryTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <EditCategoryDialog title={'New Category'}>
+        <EditUserRoleDialog title="Add New Role">
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Category</Button>
+            <Button>New Role</Button>
           </ButtonGroup>
-        </EditCategoryDialog>
+        </EditUserRoleDialog>
       </Flex>
-      <Table.Root variant={'outline'} striped={false} size={'md'} borderRadius={'md'}>
+      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader h="5">
@@ -130,14 +94,8 @@ const CategoryTable = () => {
               />
             </Table.ColumnHeader>
             {headers.map((header) => (
-              <Table.ColumnHeader key={header} onClick={() => requestSort(header)}>
-                {header}
-                {sortConfig.key === header && (
-                  <span>{sortConfig.direction === 'ascending' ? ' ▲' : ' ▼'}</span>
-                )}
-              </Table.ColumnHeader>
+              <Table.ColumnHeader key={header}>{header}</Table.ColumnHeader>
             ))}
-            {/* Add a header for actions */}
             <Table.ColumnHeader>Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
@@ -161,13 +119,11 @@ const CategoryTable = () => {
     </>
   )
 }
-
-const headers = ['id', 'Name']
+const headers = ['id', 'Role']
 const items = [
-  { category_id: 1, category_name: 'hello' },
-  { category_id: 2, category_name: 'world' },
-  { category_id: 3, category_name: 'foo' },
-  { category_id: 4, category_name: 'bar' }
+  { user_role_id: 1, user_role_name: 'Admin' },
+  { user_role_id: 2, user_role_name: 'User' },
+  { user_role_id: 3, user_role_name: 'Cashier' }
 ]
 
 export default CategoryTable

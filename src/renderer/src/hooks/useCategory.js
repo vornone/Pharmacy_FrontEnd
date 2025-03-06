@@ -1,35 +1,22 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { queryData } from '../actions/ActionsType'
-import { useEffect } from 'react'
+import ApiService from '../common/apiService'
 
-const useCategory = () => {
-  const apiSource = 'categoryReducer'
-  const dispatch = useDispatch()
-  const { data, loading, error } = useSelector((state) => state.categoryReducer)
-  const getCategory = () => {
-    dispatch(queryData(apiSource, 'category', 'POST'))
-  }
-  const updateCategory = (body) => {
-    dispatch(queryData('apiSource', 'category/update', 'POST', body))
-  }
-  const deleteCategory = (body) => {
-    dispatch(queryData('', 'category/delete', 'POST', body))
-  }
-  const insertCategory = (body) => {
-    dispatch(queryData(apiSource, 'category/insert', 'POST', body))
-  }
-  useEffect(() => {
-    data
-  }, [dispatch])
+const useCategory = ({ limit, offset }) => {
+  const category = new ApiService('categoryReducer')
+  const queryParams = new URLSearchParams({ limit, offset }).toString()
 
-  return {
-    data: data?.data.category,
+  const {
+    data,
     loading,
     error,
-    getCategory,
-    updateCategory,
-    deleteCategory,
-    insertCategory
+    requestData: getCategory
+  } = category.useApi(`api/CAT0011?${queryParams}`, 'GET')
+
+  return {
+    data,
+    loading,
+    error,
+    getCategory
   }
 }
+
 export default useCategory

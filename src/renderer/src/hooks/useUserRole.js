@@ -1,6 +1,6 @@
 import ApiService from '../common/apiService'
 
-const testUserRole = () => {
+const useUserRole = () => {
   const userRoleService = new ApiService('userRoleReducer')
 
   const {
@@ -18,4 +18,4 @@ const testUserRole = () => {
   }
 }
 
-export default testUserRole
+export default useUserRole

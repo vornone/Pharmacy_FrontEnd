@@ -3,20 +3,20 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import UserTable from '@/renderer/components/table/UserTable'
 import UserRoleTable from '@/renderer/components/table/UserRoleTable'
-import testUseUser from '@/renderer/src/hooks/testUseUser'
-import testUseUserRole from '@/renderer/src/hooks/testUserRole'
+import useUser from '@/renderer/src/hooks/useUser'
+import useUserRole from '@/renderer/src/hooks/useUserRole'
 const menuItem = ({ name }) => {
   return <Button>{name}</Button>
 }
 
 function UserPage() {
-  const { data, loading, error, getUser } = testUseUser()
+  const { data, loading, error, getUser } = useUser()
   const {
     data: userRoleData,
     loading: userRoleLoading,
     error: userRoleError,
     getUserRole
-  } = testUseUserRole()
+  } = useUserRole()
   const [activeItem, setActiveItem] = useState('UserTable')
 
   // Trigger data loading immediately when the component mounts
@@ -91,7 +91,7 @@ function UserPage() {
         {activeItem === 'UserTable' ? (
           <UserTable userData={data || []} roleData={userRoleData || []} />
         ) : (
-          <UserRoleTable />
+          <UserRoleTable roleData={userRoleData || []} />
         )}
       </VStack>
     </Flex>
