@@ -43,7 +43,7 @@ const UserRoleTable = ({ roleData }) => {
         />
       </Table.Cell>
       <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell>{item.roleName}</Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.roleName}</Table.Cell>
       <Table.Cell>
         <EditUserRoleDialog title="Edit Role" data={item.roleName}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
@@ -78,7 +78,7 @@ const UserRoleTable = ({ roleData }) => {
           </ButtonGroup>
         </EditUserRoleDialog>
       </Flex>
-      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
+      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} >
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader h="5">
@@ -116,7 +116,7 @@ const UserRoleTable = ({ roleData }) => {
     </>
   )
 }
-const headers = ['id', 'Role']
+const headers = ['Id', 'Role']
 const items = [
   { user_role_id: 1, user_role_name: 'Admin' },
   { user_role_id: 2, user_role_name: 'User' },

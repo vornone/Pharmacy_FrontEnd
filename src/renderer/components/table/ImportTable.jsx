@@ -26,8 +26,8 @@ const ImportTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = items.map((item) => (
-    <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
+  const rows = items.map((item, index ) => (
+    <Table.Row key={'import' + index} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
@@ -45,8 +45,8 @@ const ImportTable = () => {
       <Table.Cell>{item.import_total_item}</Table.Cell>
       <Table.Cell>{item.import_total_qty}</Table.Cell>
       <Table.Cell>${item.import_subtotal_price}</Table.Cell>
-      <Table.Cell>${item.import_total_price}</Table.Cell>
       <Table.Cell>${item.import_total_oth_price}</Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>${item.import_total_price}</Table.Cell>
       <Table.Cell>{item.import_date}</Table.Cell>
       <Table.Cell>
         <IconButton
@@ -122,7 +122,7 @@ const ImportTable = () => {
     </>
   )
 }
-const headers = ['id', 'Item', 'Qty', 'Subtotal', 'Total', 'Others', 'Date']
+const headers = ['Id', 'Item', 'Qty', 'Subtotal','Others', 'Total',  'Date']
 const items = [
   {
     import_id: 1,

@@ -46,9 +46,9 @@ const SaleTable = () => {
         />
       </Table.Cell>
       <Table.Cell >{item.id}</Table.Cell>
-      <Table.Cell color="white.500"s _dark={{ color: 'white' }} fontWeight={600}>{item.customer}</Table.Cell>
+      <Table.Cell color="white.500" _dark={{ color: 'white' }} fontWeight={600}>{item.customer}</Table.Cell>
       <Table.Cell>${item.subtotal}</Table.Cell>
-      <Table.Cell>${item.Total}</Table.Cell>
+      <Table.Cell  fontWeight={600} color={'black'} _dark={{ color: 'white' }}>${item.Total}</Table.Cell>
       <Table.Cell color={item.Remaining === 0 ? 'green.500' : 'red.500'} fontWeight={400}>${item.Remaining}</Table.Cell>
       <Table.Cell>{item.Date}</Table.Cell>
       <Table.Cell>
@@ -121,7 +121,7 @@ const SaleTable = () => {
     </>
   )
 }
-const headers = ['id', 'Customer', 'Subtotal', 'Total', 'Remaining', 'Date', 'Status']
+const headers = ['Id', 'Customer', 'Subtotal', 'Total', 'Remaining', 'Date', 'Status']
 const items = [
   {
     id: 1,

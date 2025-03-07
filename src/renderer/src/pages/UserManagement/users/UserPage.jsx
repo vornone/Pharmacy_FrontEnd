@@ -5,6 +5,7 @@ import UserTable from '@/renderer/components/table/UserTable'
 import UserRoleTable from '@/renderer/components/table/UserRoleTable'
 import useUser from '@/renderer/src/hooks/useUser'
 import useUserRole from '@/renderer/src/hooks/useUserRole'
+import LoadingScreen from '@/renderer/components/loadingscreen/LoadingScreen'
 const menuItem = ({ name }) => {
   return <Button>{name}</Button>
 }
@@ -25,25 +26,10 @@ function UserPage() {
     getUserRole()
   }, [])
 
-  // Show loading state while data is being fetched
-  if (loading || userRoleLoading) {
-    return (
-      <Flex w={'100%'} h={'100%'} justify="center" align="center">
-        <Text>Loading user data...</Text>
-      </Flex>
-    )
-  }
 
-  // Show error message if data fetching failed
-  if (error || userRoleError) {
-    return (
-      <Flex w={'100%'} h={'100%'} justify="center" align="center">
-        <Text color="red.500">Error loading user data: {error.message}</Text>
-      </Flex>
-    )
-  }
 
   return (
+    <LoadingScreen error={error} isLoading={loading}>
     <Flex w={'100%'} h={'100%'}>
       <VStack
         w={'15%'}
@@ -58,7 +44,8 @@ function UserPage() {
           width="100%"
           borderBottomColor={'gray.200'}
           _dark={{ borderBottomColor: 'gray.600' }}
-          p={5}
+          px={5}
+          py={3.5}
         >
           <Heading>User Page</Heading>
         </Flex>
@@ -95,6 +82,7 @@ function UserPage() {
         )}
       </VStack>
     </Flex>
+    </LoadingScreen>
   )
 }
 

@@ -46,7 +46,7 @@ const CategoryTable = ({ categoryData }) => {
         />
       </Table.Cell>
       <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell>{item.categoryName}</Table.Cell>
+      <Table.Cell  fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.categoryName}</Table.Cell>
       <Table.Cell>
         <EditUserRoleDialog title="Edit Role" data={item.categoryName}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
@@ -77,7 +77,7 @@ const CategoryTable = ({ categoryData }) => {
         </IconButton>
         <EditUserRoleDialog title="Add New Role">
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Role</Button>
+            <Button>New Cateogory</Button>
           </ButtonGroup>
         </EditUserRoleDialog>
       </Flex>
@@ -119,7 +119,7 @@ const CategoryTable = ({ categoryData }) => {
     </>
   )
 }
-const headers = ['id', 'Role']
+const headers = ['Id', 'Category']
 const items = [
   { user_role_id: 1, user_role_name: 'Admin' },
   { user_role_id: 2, user_role_name: 'User' },

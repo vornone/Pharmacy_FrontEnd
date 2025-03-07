@@ -1,16 +1,24 @@
 import { HStack, VStack, Text, Heading, Box, Flex } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import ImportTable from '@/renderer/components/table/ImportTable'
 import SupplierTable from '@/renderer/components/table/SupplierTable'
-const menuItem = ({ name }) => {
-  return <Button>{name}</Button>
-}
+import useSupplier from '../../hooks/useSupplier'
+import LoadingScreen from '@/renderer/components/loadingscreen/LoadingScreen'
 
-function UserPage() {
+function ImportPage() {
+  const { data, loading, error, getSupplier } = useSupplier()
   const [activeItem, setActiveItem] = useState('ImportTable')
+  const [pagination, setPagination] = useState({pageSize: 4, pageNumber: 1})
 
+  useEffect(() => {
+    console.log(pagination)
+    getSupplier({
+      pageSize: pagination.pageSize,
+      pageNumber: pagination.pageNumber})
+  },[])
   return (
+    <LoadingScreen error={error} isLoading={loading} >
     <Flex w={'100%'} h={'100%'}>
       <VStack
         w={'15%'}
@@ -25,7 +33,8 @@ function UserPage() {
           width="100%"
           borderBottomColor={'gray.200'}
           _dark={{ borderBottomColor: 'gray.600' }}
-          p={5}
+          px={5}
+          py={3.5}
         >
           <Heading>Import Page</Heading>
         </Flex>
@@ -46,19 +55,20 @@ function UserPage() {
             w={'full'}
             size={'xs'}
             variant={'ghost'}
-            onClick={() => setActiveItem('UserRole')}
-            bg={activeItem === 'UserRole' ? 'gray.200' : 'transparent'}
-            _dark={{ bg: activeItem === 'UserRole' ? 'gray.800' : 'transparent' }}
+            onClick={() => setActiveItem('SupplierTable')}
+            bg={activeItem === 'SupplierTable' ? 'gray.200' : 'transparent'}
+            _dark={{ bg: activeItem === 'SupplierTable' ? 'gray.800' : 'transparent' }}
           >
             Supplier Table
           </Button>
         </VStack>
       </VStack>
       <VStack w={'80%'} h={'100%'} p={5}>
-        {activeItem === 'ImportTable' ? <ImportTable /> : <SupplierTable />}
+        {activeItem === 'ImportTable' ? <ImportTable /> : <SupplierTable supplierData={data || []} />}
       </VStack>
     </Flex>
+    </LoadingScreen>
   )
 }
 
-export default UserPage
+export default ImportPage

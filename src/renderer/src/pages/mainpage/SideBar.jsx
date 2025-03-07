@@ -14,9 +14,12 @@ import {
   FiChevronRight,
   FiHome
 } from 'react-icons/fi'
+import { LuUser } from "react-icons/lu";
+
 import { TbPackageImport } from 'react-icons/tb'
 import { useColorModeValue } from '@/components/ui/color-mode'
 import { IoList } from 'react-icons/io5'
+import { TbLogout2 } from "react-icons/tb";
 
 const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
@@ -104,7 +107,6 @@ const Sidebar = () => {
       as="nav"
       h="100%"
       pb="10"
-      overflowX="hidden"
       overflowY="auto"
       bg={bgColor}
       borderRight="1px solid"
@@ -114,7 +116,8 @@ const Sidebar = () => {
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <VStack spacing="0" align="stretch">
+      <Stack justify={'space-between'} h={'97%'} align="space-between" >
+      <VStack spacing="0" align="stretch" >
         {navItems.map((item) => (
           <Box key={item.name}>
             <NavItem
@@ -128,7 +131,20 @@ const Sidebar = () => {
             </NavItem>
           </Box>
         ))}
-      </VStack>
+              </VStack>
+
+         <VStack spacing="0" align="stretch" >
+         <Separator
+              m={0}
+              orientation="horizontal"
+              h="1px"
+              w="full"
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+            />        <NavItem icon={TbLogout2} >{!isCollapsed && 'Logout'}</NavItem>
+        <NavItem icon={LuUser} >{!isCollapsed && 'Profile'}</NavItem></VStack>
+
+
+      </Stack>
     </Box>
   )
 }

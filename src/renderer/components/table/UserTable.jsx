@@ -18,7 +18,7 @@ import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import EditUserDialog from '../dialog/EditUserDialog'
 
-const headers = ['ID', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
+const headers = ['Id', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
 const initialItems = [
   { user_id: 1, username: 'John Doe', user_role: 'Admin', user_password: 'password' },
   { user_id: 2, username: 'Sokly', user_role: 'Admin', user_password: 'password' },
@@ -51,7 +51,7 @@ const UserTable = ({ userData, roleData }) => {
         />
       </Table.Cell>
       <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell>{item.username}</Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.username}</Table.Cell>
       <Table.Cell>{item.roleName}</Table.Cell>
       <Table.Cell>{item.firstName}</Table.Cell>
       <Table.Cell>{item.lastName}</Table.Cell>

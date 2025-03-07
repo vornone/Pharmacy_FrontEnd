@@ -29,7 +29,7 @@ const Header = () => {
       borderBottom={'1px solid gray.700'}
       alignItems={'center'}
     >
-      <Heading>Clothing Shop</Heading>
+      <Heading>System</Heading>
       <ColorModeButton />
     </HStack>
   )

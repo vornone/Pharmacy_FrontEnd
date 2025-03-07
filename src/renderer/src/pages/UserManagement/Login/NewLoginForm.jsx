@@ -72,10 +72,10 @@ const NewLoginForm = ({ onLogin }) => {
   return (
     <>
       <Toaster />
-      <Card.Root p={10}>
+      <Card.Root p={10} shadow={'lg'} borderRadius={'lg'} >
         <Fieldset.Root size="lg" maxW="md">
           <Stack>
-            <Fieldset.Legend fontSize="2xl">Welcome Back</Fieldset.Legend>
+            <Fieldset.Legend fontSize="2xl" fontWeight="bold">Welcome Back</Fieldset.Legend>
             <Fieldset.HelperText>Enter your details to log in to your account</Fieldset.HelperText>
           </Stack>
           <Fieldset.Content>

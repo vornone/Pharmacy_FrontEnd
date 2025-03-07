@@ -1,5 +1,5 @@
 import { Field } from '@/components/ui/field'
-import { Button, Flex, Heading, Input, Separator, Stack, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Input, Separator, Stack, Text, VStack } from '@chakra-ui/react'
 import React from 'react'
 import OrderGrid from './OrderGrid'
 const OrderPage = () => {
@@ -21,7 +21,7 @@ const OrderPage = () => {
           </Text>
         </Heading>
       </Flex>
-   
+
         <OrderGrid />
 
       <Stack
@@ -33,6 +33,14 @@ const OrderPage = () => {
         boxShadow={'md'}
         _dark={{ bg: 'gray.950' }}
       >
+                <Flex gap={3} py={5}>
+                  <Field label={'Discount'}>
+          <Input placeholder="Discount..." size={'sm'} _dark={{ border: '1px solid gray' }} />
+        </Field>
+        <Field label={'Deposit'}>
+          <Input placeholder="Deposit..." size={'sm'} _dark={{ border: '1px solid gray' }} />
+        </Field>
+        </Flex>
         <Flex justify={'space-between'}>
           <Text fontSize={'sm'} color={'gray.400'}>
             SubTotal:
@@ -51,10 +59,7 @@ const OrderPage = () => {
           </Text>
           <Text>$450</Text>
         </Flex>
-        <Flex gap={5}>
-          <Input placeholder="Discount..." size={'sm'} _dark={{ border: '1px solid gray' }} />
-          <Input placeholder="Deposit..." size={'sm'} _dark={{ border: '1px solid gray' }} />
-        </Flex>
+
         <Flex justify={'space-between'} py={5}>
           <Text fontSize={'lg'} fontWeight={'bold'}>
             Total:

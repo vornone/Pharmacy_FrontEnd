@@ -17,7 +17,7 @@ import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import AddSupplierDiaglog from '@/renderer/components/dialog/AddSupplierDiaglog'
-const SupplierTable = () => {
+const SupplierTable = ({supplierData}) => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -27,26 +27,26 @@ const SupplierTable = () => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = items.map((item) => (
-    <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
+  const rows = supplierData.map((item,index) => (
+    <Table.Row key={'supplier'+item.supplierName} data-selected={selection.includes(item.supplierName) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
-          checked={selection.includes(item.name)}
+          checked={selection.includes(item.supplierName)}
           onCheckedChange={(changes) => {
             setSelection((prev) =>
               changes.checked
-                ? [...prev, item.name]
+                ? [...prev, item.supplierName]
                 : selection.filter((name) => name !== item.name)
             )
           }}
         />
       </Table.Cell>
-      <Table.Cell>{item.supplier_id}</Table.Cell>
-      <Table.Cell>{item.supplier_name}</Table.Cell>
-      <Table.Cell>{item.supplier_address}</Table.Cell>
-      <Table.Cell>{item.supplier_contact1}</Table.Cell>
-      <Table.Cell>{item.supplier_contact2}</Table.Cell>
+      <Table.Cell>{index + 1}</Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.supplierName}</Table.Cell>
+      <Table.Cell>{item.supplierAddress}</Table.Cell>
+      <Table.Cell>{item.supplierContact1}</Table.Cell>
+      <Table.Cell>{item.supplierContact2? item.supplierContact2:'none'}</Table.Cell>
       <Table.Cell>
         <IconButton
           aria-label="Edit"
@@ -124,7 +124,7 @@ const SupplierTable = () => {
     </>
   )
 }
-const headers = ['Id', 'Name', 'Address', 'Contact1', 'Contact2']
+const headers = ['Id', 'Name', 'Address', 'Contact 1', 'Contact 2']
 const items = [
   {
     supplier_id: 1,

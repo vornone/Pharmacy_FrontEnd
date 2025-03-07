@@ -6,7 +6,7 @@ import Sidebar from './SideBar'
 import { ColorModeProvider, useColorMode, useColorModeValue } from '@/components/ui/color-mode'
 function Layout() {
   return (
-    <VStack height="100dvh" width="100dvw">
+    <VStack height="full" width="full">
       <Header />
       <Grid
         width="100%"
