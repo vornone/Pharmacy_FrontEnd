@@ -8,7 +8,7 @@ import {
   ActionBarSeparator
 } from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
 import { ButtonGroup } from '@chakra-ui/react'
@@ -17,18 +17,40 @@ import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import EditUserRoleDialog from '@/renderer/components/dialog/EditUserRoleDialog'
+import AddUserRoleDialog from '../dialog/AddUserRoleDialog'
+import useUserRole from '@/renderer/src/hooks/useUserRole'
+import LoadingScreen from '../loadingscreen/LoadingScreen'
+import useInsertData from '@/renderer/src/hooks/useInsertData'
 const UserRoleTable = ({ roleData }) => {
   const [selection, setSelection] = useState([])
-  const date = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  const {data: userRoleData, loading: userRoleLoading, error: userRoleError, getUserRole} = useUserRole()
+  const { data: insertRoleData, loading: insertRoleLoading, error: insertRoleError, insertData } = useInsertData()
+  const [items, setItems] = useState([])
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = roleData.map((item, index) => (
-    <Table.Row key={item.name} data-selected={selection.includes(item.name) ? '' : undefined}>
+  useEffect(() => {
+    if (userRoleData) {
+      setItems(userRoleData)
+    }
+  }, [userRoleData])
+
+
+  
+  const handleAddUserRole = async (item) => {
+    try {
+      await insertData('api/ROLE0021', item)
+      // Only update items if the insertion was successful
+      setItems((prev) => [...prev, item])
+      getUserRole()
+    } catch (error) {
+      console.error("Error adding user role:", error)
+      // Handle error (show message, etc.)
+    }
+  }
+
+  const rows = items.map((item, index) => (
+    <Table.Row key={item.roleName + index} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
@@ -65,6 +87,7 @@ const UserRoleTable = ({ roleData }) => {
 
   return (
     <>
+    <LoadingScreen isLoading={userRoleLoading} error={userRoleError}>
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
           <Input placeholder="Search Role" w="50%" size={'xs'} />
@@ -72,11 +95,11 @@ const UserRoleTable = ({ roleData }) => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <EditUserRoleDialog title="Add New Role">
+        <AddUserRoleDialog handleAddUserRole={handleAddUserRole}   >
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New Role</Button>
           </ButtonGroup>
-        </EditUserRoleDialog>
+        </AddUserRoleDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} >
         <Table.Header>
@@ -97,7 +120,7 @@ const UserRoleTable = ({ roleData }) => {
           </Table.Row>
         </Table.Header>
         <Table.Body fontSize="sm" color={'gray.500'}>
-          {rows}
+          {userRoleLoading ? <LoadingScreen /> : rows}
         </Table.Body>
       </Table.Root>
 
@@ -113,6 +136,7 @@ const UserRoleTable = ({ roleData }) => {
           </Button>
         </ActionBarContent>
       </ActionBarRoot>
+            </LoadingScreen>
     </>
   )
 }

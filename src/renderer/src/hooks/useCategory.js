@@ -1,15 +1,11 @@
-import ApiService from '../common/apiService'
+import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
-const useCategory = ({ limit, offset }) => {
-  const category = new ApiService('categoryReducer')
-  const queryParams = new URLSearchParams({ limit, offset }).toString()
+const useCategory = () => {
+  const { data, loading, error, requestData: fetchCategory } = useApi('categoryReducer')
 
-  const {
-    data,
-    loading,
-    error,
-    requestData: getCategory
-  } = category.useApi(`api/CAT0011?${queryParams}`, 'GET')
+  const getCategory = (body) => {
+    fetchCategory('api/CAT0011', 'POST', body)
+  }
 
   return {
     data,

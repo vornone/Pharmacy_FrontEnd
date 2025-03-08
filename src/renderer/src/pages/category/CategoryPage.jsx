@@ -4,9 +4,9 @@ import React, { useEffect } from 'react'
 import CategoryTable from '@/renderer/components/table/CategoryTable'
 import useCategory from '@/renderer/src/hooks/useCategory'
 function CategoryPage() {
-  const { data, loading, error, getCategory } = useCategory({ limit: 10, offset: 0 })
+  const { data, loading, error, getCategory } = useCategory()
   useEffect(() => {
-    getCategory()
+    getCategory({ pageSize: 5, pageNumber: 0 })
   }, [])
   if (loading) {
     return (

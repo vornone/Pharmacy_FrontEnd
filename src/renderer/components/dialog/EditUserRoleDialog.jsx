@@ -55,13 +55,15 @@ const EditUserRoleDialog = ({ children, title, data }) => {
           </DialogBody>
           <DialogFooter>
             <DialogActionTrigger asChild>
-              <Button variant="solid" colorPalette={'red'} size={'xs'}>
+              <Button variant="surface" colorPalette={'red'} size={'xs'}>
                 Cancel
               </Button>
             </DialogActionTrigger>
-            <Button size={'xs'} variant={'solid'} colorPalette={'green'} onClick={handleSubmit}>
+            <DialogActionTrigger asChild >
+            <Button size={'xs'} variant={'surface'} colorPalette={'green'} onClick={handleSubmit}>
               Submit
             </Button>
+            </DialogActionTrigger>
           </DialogFooter>
           <DialogCloseTrigger />
         </DialogContent>
