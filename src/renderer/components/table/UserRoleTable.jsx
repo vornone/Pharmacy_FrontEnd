@@ -30,10 +30,11 @@ const UserRoleTable = ({ roleData }) => {
   const indeterminate = hasSelection && selection.length < items.length
 
   useEffect(() => {
+    getUserRole()
     if (userRoleData) {
       setItems(userRoleData)
     }
-  }, [userRoleData])
+  }, [])
 
 
   
@@ -87,7 +88,7 @@ const UserRoleTable = ({ roleData }) => {
 
   return (
     <>
-    <LoadingScreen isLoading={userRoleLoading} error={userRoleError}>
+    
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
           <Input placeholder="Search Role" w="50%" size={'xs'} />
@@ -120,7 +121,7 @@ const UserRoleTable = ({ roleData }) => {
           </Table.Row>
         </Table.Header>
         <Table.Body fontSize="sm" color={'gray.500'}>
-          {userRoleLoading ? <LoadingScreen /> : rows}
+          {userRoleLoading ? <Table.Cell><LoadingScreen isLoading={userRoleLoading}  error={userRoleError}/></Table.Cell> : rows}
         </Table.Body>
       </Table.Root>
 
@@ -136,7 +137,7 @@ const UserRoleTable = ({ roleData }) => {
           </Button>
         </ActionBarContent>
       </ActionBarRoot>
-            </LoadingScreen>
+
     </>
   )
 }
