@@ -17,7 +17,6 @@ import { PasswordInput } from '@/components/ui/password-input'
 import React, { useState } from 'react'
 
 const AddUserDialog = ({ children, title, data, roleData }) => {
-  const roles = ['Admin', 'Cashier', 'Manager']
   const roleNames = roleData.map((item) => item.roleName)
 
   const [user, setUser] = useState({

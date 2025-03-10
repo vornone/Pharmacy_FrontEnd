@@ -56,17 +56,23 @@ const UserTable = () => {
   const indeterminate = hasSelection && selection.length < items.length
   const handleUpdateUser = async (updatedUser) => {
     try {
-      await updateData('api/USR0031', updatedUser);
+      await updateData("api/USR0031", updatedUser);
+      
+      // Wait for the new user data to load
+      await getUser();
+  
+      // Ensure the state updates correctly
       setItems((prev) =>
         prev.map((existingItem) =>
           existingItem.username === updatedUser.username ? updatedUser : existingItem
         )
       );
-      getUser(); // Refresh user list
+  
     } catch (error) {
-      console.error("Error updating user role:", error);
+      console.error("Error updating user:", error);
     }
   };
+  
   
 
   const rows = items.map((item, index) => (
@@ -125,7 +131,7 @@ const UserTable = () => {
         </AddUserDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
-        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' }}>
+        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
             <Table.ColumnHeader h="5">
               <Checkbox

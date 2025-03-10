@@ -79,7 +79,7 @@ useEffect(() => {
       </VStack>
       <VStack w={'80%'} h={'100%'} p={5}>
         {activeItem === 'UserTable' ? (
-          <UserTable userData={userData || []} roleData={userRoleData || []} />
+          <UserTable/>
         ) : (
           <UserRoleTable />
         )}
