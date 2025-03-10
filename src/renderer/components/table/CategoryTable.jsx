@@ -75,11 +75,10 @@ const CategoryTable = ({ categoryData }) => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <EditUserRoleDialog title="Add New Role">
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New Cateogory</Button>
           </ButtonGroup>
-        </EditUserRoleDialog>
+
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header>

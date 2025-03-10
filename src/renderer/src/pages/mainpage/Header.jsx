@@ -12,7 +12,8 @@ import {
   SelectValueText
 } from '@/components/ui/select'
 import { useState } from 'react'
-const Header = () => {
+import { ColorModeProvider, useColorMode, useColorModeValue } from '@/components/ui/color-mode'
+const Header = ({bgColor}) => {
   const collection = createListCollection({
     items: [
       { label: 'POS System', value: 'POS System' },
@@ -22,11 +23,13 @@ const Header = () => {
   const [platform, setPlatform] = useState(collection.items[0].value)
   return (
     <HStack
+    bg={bgColor}
       w={'full'}
       justifyContent={'space-between'}
-      pt={'2'}
-      px={'2'}
-      borderBottom={'1px solid gray.700'}
+              borderBottom={'1px solid'}
+              borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+      py={'2'}
+      px={'5'}
       alignItems={'center'}
     >
       <Heading>System</Heading>

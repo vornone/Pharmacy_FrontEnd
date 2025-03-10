@@ -58,7 +58,8 @@ useEffect(() => {
             variant={'ghost'}
             onClick={() => setActiveItem('UserTable')}
             bg={activeItem === 'UserTable' ? 'gray.200' : 'transparent'}
-            _dark={{ bg: activeItem === 'UserTable' ? 'gray.800' : 'transparent' }}
+            _dark={{ bg: activeItem === 'UserTable' ? 'gray.800' : 'transparent' , color: activeItem === 'UserTable' ?  'white' :'gray.500'}}
+            color={activeItem === 'UserTable' ?  'black' : 'gray.500'}
           >
             User Table
           </Button>
@@ -69,7 +70,8 @@ useEffect(() => {
             variant={'ghost'}
             onClick={() => setActiveItem('UserRole')}
             bg={activeItem === 'UserRole' ? 'gray.200' : 'transparent'}
-            _dark={{ bg: activeItem === 'UserRole' ? 'gray.800' : 'transparent' }}
+            color={activeItem === 'UserRole' ?   'black':'gray.500'}
+            _dark={{ bg: activeItem === 'UserRole' ? 'gray.800' : 'transparent' , color: activeItem === 'UserRole' ? 'white': 'gray.500' }}
           >
             User Role
           </Button>

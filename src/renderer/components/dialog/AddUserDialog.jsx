@@ -14,21 +14,19 @@ import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
 import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
 import { PasswordInput } from '@/components/ui/password-input'
-import React, { useState, useEffect } from 'react'
-import useUpdateData from '@/renderer/src/hooks/useUpdateData'
-import useUser from '@/renderer/src/hooks/useUser'
-const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
-  const { updateData } = useUpdateData()
-  const {getUser} = useUser()
+import React, { useState } from 'react'
+
+const AddUserDialog = ({ children, title, data, roleData }) => {
+  const roles = ['Admin', 'Cashier', 'Manager']
   const roleNames = roleData.map((item) => item.roleName)
-  const [isEdittable, setIsEdittable] = useState(true)
+
   const [user, setUser] = useState({
     username: data?.username || '', // Use optional chaining and default value
     userRole: data?.roleName || '', // Use optional chaining and default value
     contact: data?.contact || '', // Use optional chaining and default value
     firstName: data?.firstName || '', // Use optional chaining and default value
     lastName: data?.lastName || '', // Use optional chaining and default value
-    roleId : data?.roleId
+    
   })
 
   const handleOnChange = (event) => {
@@ -37,53 +35,43 @@ const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
       ...prevUser,
       [name]: value
     }))
-    
   }
+
   const handleRoleChange = (selectedRole) => {
-    const selectedRoleData = roleData.find((role) => role.roleName === selectedRole);
     setUser((prevUser) => ({
       ...prevUser,
-      userRole: selectedRole,
-      roleId: selectedRoleData ? selectedRoleData.roleId : null // Update roleId based on roleName
-    }));
-  };
-  
-  const handleSubmit = () => {
-    setIsEdittable(true)
-    onUpdate(user)
+      userRole: selectedRole
+    }))
   }
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+
+  const handleSubmit = () => {
+    console.log(user) // Replace with your submission logic
+  }
 
   return (
-    <DialogRoot placement="center" trapFocus={true} modal={true}  unmountOnExit>
+    <DialogRoot placement="center" trapFocus={true} >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4}>
-            <Field label="Username (cannot be edited)" >
-              <Input name="username" size="sm" value={user.username} onChange={handleOnChange} disabled/>
+            <Field label="Username">
+              <Input name="username" size="sm"  onChange={handleOnChange} />
             </Field>
             <Field label="First Name" >
-            <Input disabled={isEdittable} name="firstName" size="sm" value={user.firstName} onChange={handleOnChange} />
+            <Input name="firstName" size="sm"  onChange={handleOnChange} />
             </Field>
             <Field label="Last Name">
-            <Input disabled={isEdittable} name="lastName" size="sm" value={user.lastName} onChange={handleOnChange} />
+            <Input name="lastName" size="sm"  onChange={handleOnChange} />
             </Field>
             <Field label="Contact (Optional)">
-              <Input disabled={isEdittable} name="contact" size="sm" value={user.contact} onChange={handleOnChange} />
+              <Input name="contact" size="sm"  onChange={handleOnChange} />
             </Field>
             <Field label="Role">
               <SearchSelection
-                disabled={isEdittable}
                 collection={roleNames}
-                selectedValue={user.userRole}
-                onChange={handleRoleChange}
-                name="userRole"
               />
             </Field>
           </VStack>
@@ -94,8 +82,8 @@ const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
               Cancel
             </Button>
           </DialogActionTrigger>
-          <Button size="xs" variant="surface" colorPalette={isEdittable?'blue':'green'} onClick={isEdittable ? () => setIsEdittable(false) : handleSubmit} >
-            {isEdittable ? 'Edit' : 'Update User'}
+          <Button size="xs" variant="surface" colorPalette="green" onClick={handleSubmit}>
+            Update User
           </Button>
         </DialogFooter>
         <DialogCloseTrigger />
@@ -104,4 +92,4 @@ const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
   )
 }
 
-export default EditUserDialog
+export default AddUserDialog

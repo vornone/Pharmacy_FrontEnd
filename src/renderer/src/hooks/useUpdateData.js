@@ -1,17 +1,18 @@
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
-import { queryData } from '../actions/ActionsType'
-const useUpdateData = (endpoint, method) => {
-  const dispatch = useDispatch()
-  const { data, loading, error } = useSelector((state) => state.updateReducer)
+import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
-  const updateData = (body) => {
-    dispatch(queryData('updateReducer', endpoint, method, body))
+const useUpdateData = () => {
+  const { data, loading, error, requestData: queryUpdateData } = useApi('updateReducer')
+
+  const updateData = (endpoint, body) => {
+    queryUpdateData(endpoint, 'POST', body)
   }
-  return { data: data?.data, loading, error, updateData }
+
+  return {
+    data,
+    loading,
+    error,
+    updateData
+  }
 }
+
 export default useUpdateData
-
-
-
-

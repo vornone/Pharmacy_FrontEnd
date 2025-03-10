@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 import { Field } from '@/components/ui/field'
-import useInsertData from '@/renderer/src/hooks/useInsertData'
-import useUserRole from '@/renderer/src/hooks/useUserRole'
+import  useInsertData  from '@/renderer/src/hooks/useInsertData'
 
 const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
-  const {data: dataRole, loading, error, insertData } = useInsertData()
+  const { data, loading, error, insertData } = useInsertData()
+  const [invalid, setInvalid] = useState(false)
   const [role, setRole] = useState({
     roleName: '',
-    description: ''
+    roleDescription: ''
   })
 
 
@@ -29,31 +29,45 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
       ...prevRole,
       [name]: value
     }))
-    console.log(role) 
+    setInvalid(false)
+  }
+
+  const handleSubmit = () => {
+    if (!role.roleName || !role.roleDescription) {
+      setInvalid(true)
+      return
+    }
+    handleAddUserRole(role)
+    setRole({
+      roleName: '',
+      roleDescription: ''
+    })
+    setInvalid(false)
   }
 
   return (
-    <DialogRoot placement="center">
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <DialogRoot placement="center" trapFocus={false} modal={true}  unmountOnExit>
+      <DialogTrigger asChild >{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New User</DialogTitle>
+          <DialogTitle>Add New Role</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <VStack w="100%" h="100%" align="flex-start">
-            <Field label="Role Name">
+            <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
               <Input
+                
                 name="roleName"
                 size="xs"
                 value={role.roleName}
                 onChange={handleOnChange}
               />
             </Field>
-            <Field label="Description">
+            <Field  invalid={invalid} label="Description" errorText="This field is invalid">
               <Textarea
-                name="description"
+                name="roleDescription"
                 size="xs"
-                value={role.description}
+                value={role.roleDescription}
                 onChange={handleOnChange}
               />
             </Field>
@@ -64,19 +78,19 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
             <Button variant="surface" colorPalette="red" size="xs">
               Cancel
             </Button>
-          </DialogActionTrigger>
+          </DialogActionTrigger >
           <Button
             size="xs"
             variant="surface"
             colorPalette="green"
-            onClick={() => handleAddUserRole(role)}
+            onClick={() => handleSubmit()}
             isLoading={loading} // Better UX for loading state
-            disabled={loading}
+            disabled={loading || invalid}
           >
-            {loading ? 'Saving...' : 'Save'}
+            {loading ? 'Saving...' : 'Add Role'}
           </Button>
         </DialogFooter>
-        <DialogCloseTrigger />
+        <DialogCloseTrigger  />
       </DialogContent>
     </DialogRoot>
   )

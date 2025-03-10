@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^3.8.0",
-    "@choc-ui/chakra-autocomplete": "^6.0.0",
+    "@choc-ui/chakra-autocomplete": "^6.1.0",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@emotion/react": "^11.14.0",

@@ -1,4 +1,4 @@
-import { Box, Button, Card, Image, Input, SelectRoot, VStack } from '@chakra-ui/react'
+import { Box, Button, Card, Image, Input, SelectRoot, VStack, Textarea } from '@chakra-ui/react'
 import {
   DialogActionTrigger,
   DialogBody,
@@ -10,65 +10,86 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { SegmentedControl } from '@/components/ui/segmented-control'
-import React, { useRef, forwardRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Field } from '@/components/ui/field'
-import { HiUpload } from 'react-icons/hi'
-import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
+import  useUpdateData  from '@/renderer/src/hooks/useUpdateData'
 
-const EditUserRoleDialog = ({ children, title, data }) => {
+const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
+  const { loading } = useUpdateData()
+  const [invalid, setInvalid] = useState(false)
   const [role, setRole] = useState({
-    user_role_name: data
+    roleId: data.roleId,
+    roleName: data.roleName,
+    roleDescription: data.roleDescription
   })
 
-  const handleOnChange = (event) => {
-    const { name, value } = event.target
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target
     setRole((prevRole) => ({
       ...prevRole,
       [name]: value
     }))
+    setInvalid(false)
   }
 
   const handleSubmit = () => {
-    console.log(role)
+    if (!role.roleName || !role.roleDescription) {
+      setInvalid(true)
+      return
+    }
+    handleUpdateUserRole(role)
+    setInvalid(false)
   }
 
   return (
-    <>
-      <DialogRoot placement={'center'}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            <VStack w={'100%'} h={'100%'} align={'flex-start'}>
-              <Field label="Role Name">
-                <Input
-                  name="user_role_name"
-                  size="xs"
-                  value={role.user_role_name}
-                  onChange={handleOnChange}
-                />
-              </Field>
-            </VStack>
-          </DialogBody>
-          <DialogFooter>
-            <DialogActionTrigger asChild>
-              <Button variant="surface" colorPalette={'red'} size={'xs'}>
-                Cancel
-              </Button>
-            </DialogActionTrigger>
-            <DialogActionTrigger asChild >
-            <Button size={'xs'} variant={'surface'} colorPalette={'green'} onClick={handleSubmit}>
-              Submit
+    <DialogRoot placement="center" trapFocus={false} modal={true}  unmountOnExit>
+      <DialogTrigger asChild >{children}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Role</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <VStack w="100%" h="100%" align="flex-start">
+            <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
+              <Input
+                
+                name="roleName"
+                size="xs"
+                value={role.roleName}
+                onChange={handleOnChange}
+              />
+            </Field>
+            <Field  invalid={invalid} label="Description" errorText="This field is invalid">
+              <Textarea
+                name="roleDescription"
+                size="xs"
+                value={role.roleDescription}
+                onChange={handleOnChange}
+              />
+            </Field>
+          </VStack>
+        </DialogBody>
+        <DialogFooter>
+          <DialogActionTrigger asChild>
+            <Button variant="surface" colorPalette="red" size="xs">
+              Cancel
             </Button>
-            </DialogActionTrigger>
-          </DialogFooter>
-          <DialogCloseTrigger />
-        </DialogContent>
-      </DialogRoot>
-    </>
+          </DialogActionTrigger >
+          <Button
+            size="xs"
+            variant="surface"
+            colorPalette="green"
+            onClick={() => handleSubmit()}
+            isLoading={loading} // Better UX for loading state
+            disabled={loading || invalid}
+          >
+            {loading ? 'Saving...' : 'Update Role'}
+          </Button>
+        </DialogFooter>
+        <DialogCloseTrigger  />
+      </DialogContent>
+    </DialogRoot>
   )
 }
 

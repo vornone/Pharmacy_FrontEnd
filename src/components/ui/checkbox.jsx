@@ -4,7 +4,7 @@ import * as React from 'react'
 export const Checkbox = React.forwardRef(function Checkbox(props, ref) {
   const { icon, children, inputProps, rootRef, ...rest } = props
   return (
-    <ChakraCheckbox.Root ref={rootRef} {...rest}>
+    <ChakraCheckbox.Root ref={rootRef} {...rest} variant={'subtle'} border={'1px solid gray'} borderRadius={'md'} overflow={'hidden'}>
       <ChakraCheckbox.HiddenInput ref={ref} {...inputProps} />
       <ChakraCheckbox.Control>
         {icon || <ChakraCheckbox.Indicator />}

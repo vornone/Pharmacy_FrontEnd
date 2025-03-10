@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Kbd, Table } from '@chakra-ui/react'
+import { Button, Kbd, Table,Box,Group, Text } from '@chakra-ui/react'
 import {
   ActionBarContent,
   ActionBarRoot,
@@ -21,10 +21,15 @@ import AddUserRoleDialog from '../dialog/AddUserRoleDialog'
 import useUserRole from '@/renderer/src/hooks/useUserRole'
 import LoadingScreen from '../loadingscreen/LoadingScreen'
 import useInsertData from '@/renderer/src/hooks/useInsertData'
+import useUpdateData from '@/renderer/src/hooks/useUpdateData'
+import useDeleteData from '@/renderer/src/hooks/useDeleteData'
+import { Popover, Portal } from "@chakra-ui/react"
 const UserRoleTable = ({ roleData }) => {
   const [selection, setSelection] = useState([])
   const {data: userRoleData, loading: userRoleLoading, error: userRoleError, getUserRole} = useUserRole()
-  const { data: insertRoleData, loading: insertRoleLoading, error: insertRoleError, insertData } = useInsertData()
+  const {  insertData } = useInsertData()
+  const { updateData } = useUpdateData()
+  const { deleteData } = useDeleteData()
   const [items, setItems] = useState([])
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
@@ -50,6 +55,31 @@ const UserRoleTable = ({ roleData }) => {
     }
   }
 
+  const handleUpdateUserRole = async (item) => {
+    try {
+      await updateData('api/ROLE0031', item);
+      // Update the existing item in the list
+      setItems((prev) =>
+        prev.map((existingItem) =>
+          existingItem.roleId === item.roleId ? item : existingItem
+        )
+      );
+      getUserRole();
+    } catch (error) {
+      console.error("Error updating user role:", error);
+    }
+  };
+
+  const handleDelete = async (item) => {
+    try {
+      await deleteData('api/ROLE0041', item);
+      // Remove the deleted item from the list
+      setItems((prev) => prev.filter((existingItem) => existingItem.roleId !== item.roleId));
+      getUserRole();
+    } catch (error) {
+      console.error("Error deleting user role:", error);
+    }
+  };
   const rows = items.map((item, index) => (
     <Table.Row key={item.roleName + index} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
@@ -68,20 +98,45 @@ const UserRoleTable = ({ roleData }) => {
       <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.roleName}</Table.Cell>
       <Table.Cell>
-        <EditUserRoleDialog title="Edit Role" data={item.roleName}>
+        <EditUserRoleDialog  data={item} handleUpdateUserRole={handleUpdateUserRole}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
             <MdEditDocument />
           </IconButton>
         </EditUserRoleDialog>
-        <IconButton
+        <Popover.Root >
+      <Popover.Trigger asChild>
+      <IconButton
           aria-label="Delete"
           size="sm"
           variant="ghost"
           colorPalette="red"
-          onClick={() => handleDelete(item)}
+
         >
           <MdDeleteForever />
         </IconButton>
+      </Popover.Trigger>
+      <Portal>
+        <Popover.Positioner>
+          <Popover.Content>
+            <Popover.Header fontSize="sm" fontWeight="semibold">Deletion Confirmation</Popover.Header>
+            <Popover.Arrow />
+            <Popover.Body color={'gray.400'}>
+              Are you sure you want to delete this role?
+            </Popover.Body>
+            <Popover.Footer justifyContent={"flex-end"}>
+              <Group>
+                <Button size="xs" variant="outline">
+                  Cancel
+                </Button>
+                <Button size="xs" colorPalette="red" variant={"surface"} onClick={() => handleDelete(item)}>Delete Role</Button>
+              </Group>
+            </Popover.Footer>
+            <Popover.CloseTrigger />
+          </Popover.Content>
+        </Popover.Positioner>
+      </Portal>
+    </Popover.Root>
+        
       </Table.Cell>
     </Table.Row>
   ))
@@ -103,7 +158,7 @@ const UserRoleTable = ({ roleData }) => {
         </AddUserRoleDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} >
-        <Table.Header>
+        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
             <Table.ColumnHeader h="5">
               <Checkbox
@@ -121,7 +176,7 @@ const UserRoleTable = ({ roleData }) => {
           </Table.Row>
         </Table.Header>
         <Table.Body fontSize="sm" color={'gray.500'}>
-          {userRoleLoading ? <Table.Cell><LoadingScreen isLoading={userRoleLoading}  error={userRoleError}/></Table.Cell> : rows}
+          {rows}
         </Table.Body>
       </Table.Root>
 

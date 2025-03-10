@@ -7,8 +7,8 @@ import { ColorModeProvider, useColorMode, useColorModeValue } from '@/components
 function Layout() {
   return (
     <VStack height="full" width="full">
-      <Header />
       <Grid
+      bg={useColorModeValue('white', 'gray.900')}
         width="100%"
         height="100%"
         boxSizing="border-box"
@@ -32,6 +32,9 @@ function Layout() {
         borderTop={'1px solid'}
         borderTopColor={useColorModeValue('gray.200', 'gray.700')}
       >
+        <GridItem area={"header"} minH={{ base: 'auto', lg: '100%' }} zIndex={2} >
+          <Header bgColor = {useColorModeValue('white', 'gray.950')} />
+        </GridItem>
         <GridItem area="nav" minH={{ base: 'auto', lg: '100%' }} zIndex={2}>
           <Sidebar />
         </GridItem>

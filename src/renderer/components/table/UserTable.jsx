@@ -8,7 +8,7 @@ import {
   ActionBarSeparator
 } from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
 import { ButtonGroup } from '@chakra-ui/react'
@@ -17,26 +17,60 @@ import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
 import EditUserDialog from '../dialog/EditUserDialog'
-
+import useUser from '@/renderer/src/hooks/useUser'
+import useUserRole from '@/renderer/src/hooks/useUserRole'
+import AddUserDialog from '../dialog/AddUserDialog'
+import useUpdateData from '@/renderer/src/hooks/useUpdateData'
 const headers = ['Id', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
-const initialItems = [
-  { user_id: 1, username: 'John Doe', user_role: 'Admin', user_password: 'password' },
-  { user_id: 2, username: 'Sokly', user_role: 'Admin', user_password: 'password' },
-  { user_id: 3, username: 'Rath', user_role: 'Admin', user_password: 'password' }
-]
-const UserTable = ({ userData, roleData }) => {
+
+const UserTable = () => {
+  const { data: userData,  getUser } = useUser()
+  const { data: userRoleData, getUserRole } = useUserRole()
+  const { updateData } = useUpdateData()
   const [selection, setSelection] = useState([])
-  const [items, setItems] = useState([...userData])
-  const date = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  const [items, setItems] = useState([])
+  const [roleItems, setRoleItems] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getUser() // Ensure getUser completes first
+      await getUserRole() // Fetch roles after users are loaded
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (userData) {
+      setItems(userData)
+    }
+  }, [userData])
+
+  useEffect(() => {
+    if (userRoleData) {
+      setRoleItems(userRoleData)
+    }
+  }, [userRoleData])
+
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      await updateData('api/USR0031', updatedUser);
+      setItems((prev) =>
+        prev.map((existingItem) =>
+          existingItem.username === updatedUser.username ? updatedUser : existingItem
+        )
+      );
+      getUser(); // Refresh user list
+    } catch (error) {
+      console.error("Error updating user role:", error);
+    }
+  };
+  
 
   const rows = items.map((item, index) => (
-    <Table.Row key={item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
+    <Table.Row key={index+item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
@@ -45,7 +79,7 @@ const UserTable = ({ userData, roleData }) => {
             setSelection((prev) =>
               changes.checked
                 ? [...prev, item.name]
-                : selection.filter((name) => name !== item.name)
+                : prev.filter((name) => name !== item.name)
             )
           }}
         />
@@ -53,11 +87,11 @@ const UserTable = ({ userData, roleData }) => {
       <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.username}</Table.Cell>
       <Table.Cell>{item.roleName}</Table.Cell>
-      <Table.Cell>{item.firstName}</Table.Cell>
-      <Table.Cell>{item.lastName}</Table.Cell>
+      <Table.Cell textTransform={'capitalize'}>{item.firstName}</Table.Cell>
+      <Table.Cell textTransform={'capitalize'}>{item.lastName}</Table.Cell>
       <Table.Cell>{item.contact}</Table.Cell>
       <Table.Cell>
-        <EditUserDialog title="Edit User" data={item} roleData={roleData}>
+        <EditUserDialog title="Edit User" data={item} roleData={roleItems} onUpdate={handleUpdateUser}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
             <MdEditDocument />
           </IconButton>
@@ -84,14 +118,14 @@ const UserTable = ({ userData, roleData }) => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <EditUserDialog title="New User" roleData={roleData}>
+        <AddUserDialog  roleData={roleItems}>
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New User</Button>
           </ButtonGroup>
-        </EditUserDialog>
+        </AddUserDialog>
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
-        <Table.Header>
+        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' }}>
           <Table.Row>
             <Table.ColumnHeader h="5">
               <Checkbox

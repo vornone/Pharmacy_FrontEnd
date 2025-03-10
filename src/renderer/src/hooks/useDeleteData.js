@@ -1,13 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { queryData } from '../actions/ActionsType'
-const useDeleteData = () => {
-  const dispatch = useDispatch()
-  const { data, loading, error } = useSelector((state) => state.deleteReducer)
+import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
-  const deleteData = (endpoint, method) => {
-    dispatch(queryData('deleteReducer', endpoint, method))
+const useDeleteData = () => {
+  const { data, loading, error, requestData: queryDeleteData } = useApi('deleteReducer')
+
+  const deleteData = (endpoint, body) => {
+    queryDeleteData(endpoint, 'POST', body)
   }
-  return { data: data?.data, loading, error, deleteData }
+
+  return {
+    data,
+    loading,
+    error,
+    deleteData
+  }
 }
 
 export default useDeleteData

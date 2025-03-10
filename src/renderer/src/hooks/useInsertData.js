@@ -1,6 +1,6 @@
 import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
-const insertData = () => {
+const useInsertData = () => {
   const { data, loading, error, requestData: queryInsertData } = useApi('insertReducer')
 
   const insertData = (endpoint, body) => {
@@ -15,4 +15,4 @@ const insertData = () => {
   }
 }
 
-export default insertData
+export default useInsertData

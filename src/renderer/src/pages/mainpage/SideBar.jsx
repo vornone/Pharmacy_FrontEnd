@@ -112,7 +112,8 @@ const Sidebar = () => {
       borderRight="1px solid"
       borderRightColor={borderColor}
       w={isCollapsed ? '55px' : '200px'}
-      transition="width 0.2s"
+      overflowX={'hidden'}
+      transition="width 0.3s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
