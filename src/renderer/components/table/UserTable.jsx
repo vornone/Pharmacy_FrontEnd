@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Kbd, Table } from '@chakra-ui/react'
+import { Button, Kbd, Spinner, Table } from '@chakra-ui/react'
 import {
   ActionBarContent,
   ActionBarRoot,
@@ -21,16 +21,25 @@ import useUser from '@/renderer/src/hooks/useUser'
 import useUserRole from '@/renderer/src/hooks/useUserRole'
 import AddUserDialog from '../dialog/AddUserDialog'
 import useUpdateData from '@/renderer/src/hooks/useUpdateData'
+import useDeleteData from '@/renderer/src/hooks/useDeleteData'
+import useInsertData from '@/renderer/src/hooks/useInsertData'
+import DeletePopover from '../popover/DeletePopover'
+
+
 const headers = ['Id', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
 
 const UserTable = () => {
-  const { data: userData,  getUser } = useUser()
+  const { data: userData, loading: userLoading, error: userError, getUser } = useUser()
   const { data: userRoleData, getUserRole } = useUserRole()
+  const { deleteData } = useDeleteData()
+  const { insertData } = useInsertData()
   const { updateData } = useUpdateData()
   const [selection, setSelection] = useState([])
   const [items, setItems] = useState([])
   const [roleItems, setRoleItems] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
+  
   useEffect(() => {
     const fetchData = async () => {
       await getUser() // Ensure getUser completes first
@@ -73,7 +82,36 @@ const UserTable = () => {
     }
   };
   
-  
+  const handleAddUser = async (item) => {
+    setIsLoading(true);
+    try {
+      // Optional: Add validation here
+      if (!item.username || !item.roleId) {
+        throw new Error("Username and Role are required");
+      }
+      setItems((prev) => [...prev, { ...item, id: prev.length + 1 }]);
+      await insertData('auth/', item);
+      await getUser();
+      console.log("User added successfully");
+    } catch (error) {
+      setItems((prev) => prev.filter((user) => user.username !== item.username));
+      console.error("Error adding user:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (item) => {
+    setIsLoading(true);
+    try {
+      await deleteData('api/USR0041', item);
+      setItems((prev) => prev.filter((existingItem) => existingItem.username !== item.username));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const rows = items.map((item, index) => (
     <Table.Row key={index+item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
@@ -102,15 +140,7 @@ const UserTable = () => {
             <MdEditDocument />
           </IconButton>
         </EditUserDialog>
-        <IconButton
-          aria-label="Delete"
-          size="sm"
-          variant="ghost"
-          colorPalette="red"
-          onClick={() => handleDelete(item)}
-        >
-          <MdDeleteForever />
-        </IconButton>
+        <DeletePopover onDelete={() => handleDelete(item)} isLoading={isLoading} name="User" />
       </Table.Cell>
     </Table.Row>
   ))
@@ -124,12 +154,13 @@ const UserTable = () => {
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <AddUserDialog  roleData={roleItems}>
+        <AddUserDialog  roleData={roleItems} onInsert={handleAddUser} >
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
             <Button>New User</Button>
           </ButtonGroup>
         </AddUserDialog>
       </Flex>
+      { userLoading? <Spinner /> : 
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
@@ -152,7 +183,7 @@ const UserTable = () => {
           {rows}
         </Table.Body>
       </Table.Root>
-
+}
       <ActionBarRoot open={hasSelection}>
         <ActionBarContent>
           <ActionBarSelectionTrigger>{selection.length} selected</ActionBarSelectionTrigger>

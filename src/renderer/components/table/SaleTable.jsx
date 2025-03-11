@@ -84,9 +84,9 @@ const SaleTable = () => {
   return (
     <>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
-        <Table.Header>
+        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
-            <Table.ColumnHeader h="5">
+            <Table.ColumnHeader h="5" >
               <Checkbox
                 aria-label="Select all rows"
                 checked={indeterminate ? 'indeterminate' : selection.length > 0}

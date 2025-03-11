@@ -3,33 +3,10 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '@chakra-ui/react'
 import UserTable from '@/renderer/components/table/UserTable'
 import UserRoleTable from '@/renderer/components/table/UserRoleTable'
-import useUser from '@/renderer/src/hooks/useUser'
-import useUserRole from '@/renderer/src/hooks/useUserRole'
-import useInsertData  from '@/renderer/src/hooks/useInsertData'
-import LoadingScreen from '@/renderer/components/loadingscreen/LoadingScreen'
-const menuItem = ({ name }) => {
-  return <Button>{name}</Button>
-}
+import { Suspense } from 'react'
+function UserPage() {
 
-function UserPage() {  const { data: userData, loading: userLoading, error: userError, getUser } = useUser()
-const {
-  data: userRoleData,
-  loading: userRoleLoading,
-  error: userRoleError,
-  getUserRole
-} = useUserRole()
-const { data: insertRoleData, loading: insertRoleLoading, error: insertRoleError, insertData: insertUserRole } = useInsertData()
 const [activeItem, setActiveItem] = useState('UserTable')
-
-
-// Trigger data loading immediately when the component mounts
-useEffect(() => {
-  getUser()
-  getUserRole()
-}, [])
-
-
-
   return (
     <Flex w={'100%'} h={'100%'}>
       <VStack
@@ -78,11 +55,9 @@ useEffect(() => {
         </VStack>
       </VStack>
       <VStack w={'80%'} h={'100%'} p={5}>
-        {activeItem === 'UserTable' ? (
-          <UserTable/>
-        ) : (
-          <UserRoleTable />
-        )}
+      <Suspense fallback={<Heading size="md">Loading...</Heading>}>
+          {activeItem === 'UserTable' ? <UserTable /> : <UserRoleTable />}
+        </Suspense>
       </VStack>
     </Flex>
   )

@@ -24,7 +24,7 @@ import useInsertData from '@/renderer/src/hooks/useInsertData'
 import useUpdateData from '@/renderer/src/hooks/useUpdateData'
 import useDeleteData from '@/renderer/src/hooks/useDeleteData'
 import { Popover, Portal } from "@chakra-ui/react"
-const UserRoleTable = ({ roleData }) => {
+const UserRoleTable = () => {
   const [selection, setSelection] = useState([])
   const {data: userRoleData, loading: userRoleLoading, error: userRoleError, getUserRole} = useUserRole()
   const {  insertData } = useInsertData()
