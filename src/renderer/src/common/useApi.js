@@ -11,7 +11,7 @@ const useApi = (reducerName) => {
     dispatch(queryData(reducerName, endpoint, method, body, {}))
   }
 
-  return { data: data?.data, loading, error, requestData }
+  return { data: data?.data, message: data?.message, loading, error, requestData }
 }
 
 export default useApi

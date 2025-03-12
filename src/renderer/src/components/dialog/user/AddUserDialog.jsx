@@ -1,4 +1,4 @@
-import { Box, Button, Card, Image, Input, VStack } from '@chakra-ui/react';
+import { Box, Button, Card, Image, Input, VStack,Flex } from '@chakra-ui/react';
 import {
   DialogActionTrigger,
   DialogBody,
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
 import { HiUpload } from 'react-icons/hi';
-import SearchSelection from '@/renderer/components/autocomplete/SearchSelection';
+import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection';
 import { PasswordInput } from '@/components/ui/password-input';
 import React, { useState, useEffect } from 'react';
 import useUpdateData from '@/renderer/src/hooks/useUpdateData';
@@ -52,12 +52,12 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
 
   const handleSubmit = () => {
     setFormSubmitted(true); // Mark form as submitted
-  
+
     const isValid = user.username && user.password && user.firstName && user.lastName && user.roleName;
     if (!isValid) return; // Prevent submission if fields are missing
-  
+
     onInsert(user);
-    
+
     // Reset form
     setUser({
       username: '',
@@ -68,16 +68,16 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
       roleId: null,
       password: '',
     });
-  
+
     setFormSubmitted(false); // Reset validation state
   };
 
   return (
-    <DialogRoot placement="center" trapFocus={true} modal={true} unmountOnExit>
+    <DialogRoot placement="center"  closeOnInteractOutside={false} trapFocus={false}	>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+          <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4}>
@@ -87,13 +87,14 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
             <Field invalid={formSubmitted && user.password === ''} label="Password" errorText={user.password === '' ? 'Password is required' : ''}>
               <PasswordInput name="password" size="sm" value={user.password} onChange={handleOnChange} />
             </Field>
+            <Flex gap={2} w={'full'}>
             <Field label="First Name" errorText={user.firstName === '' ? 'First Name is required' : ''} invalid={formSubmitted && user.firstName === ''}>
               <Input name="firstName" size="sm" value={user.firstName} onChange={handleOnChange} />
             </Field>
             <Field invalid={formSubmitted && user.lastName === ''} label="Last Name" errorText={user.lastName === '' ? 'Last Name is required' : ''}>
               <Input name="lastName" size="sm" value={user.lastName} onChange={handleOnChange} />
-            </Field>
-            <Field invalid={formSubmitted && user.contact === ''} label="Contact (Optional)" >
+            </Field></Flex>
+            <Field  label="Contact (Optional)" >
               <Input name="contact" size="sm" value={user.contact} onChange={handleOnChange} />
             </Field>
             <Field label="Role" invalid={formSubmitted && user.roleName === ''} errorText={user.roleName === '' ? 'Role is required' : ''}>

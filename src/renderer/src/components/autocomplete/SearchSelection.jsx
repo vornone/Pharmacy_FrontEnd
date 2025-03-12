@@ -10,7 +10,7 @@ import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import { InputGroup } from '@/components/ui/input-group'
 
 function SearchSelection({ collection, onChange, disabled, selectedValue, name }) {
-  const [value, setValue] = React.useState(selectedValue || '') 
+  const [value, setValue] = React.useState(selectedValue || '')
 
   // Handle input change (when typing)
   const handleOnChange = (event) => setValue(event.target.value)
@@ -18,7 +18,7 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
   const handleSelect = (selected) => {
     setValue(selected)
     if (onChange) {
-      onChange(selected) 
+      onChange(selected)
     }
   }
 

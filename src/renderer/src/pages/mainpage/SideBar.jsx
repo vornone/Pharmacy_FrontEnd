@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Box, VStack, Icon, Text, Flex, Separator, Stack } from '@chakra-ui/react'
+import React, { useState, useEffect, useMemo } from 'react'
+import { Box, VStack, Icon, Text, Flex, Stack, Separator } from '@chakra-ui/react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { TbCashRegister } from 'react-icons/tb'
-import { LuUserCog } from 'react-icons/lu'
-import {
-  FiArchive,
-  FiBox,
-  FiDatabase,
-  FiTable,
-  FiUsers,
-  FiSettings,
-  FiChevronLeft,
-  FiChevronRight,
-  FiHome
-} from 'react-icons/fi'
-import { LuUser } from "react-icons/lu";
-
-import { TbPackageImport } from 'react-icons/tb'
-import { useColorModeValue } from '@/components/ui/color-mode'
+import { FiHome, FiDatabase, FiTable, FiUsers, FiSettings } from 'react-icons/fi'
+import { LuUserCog, LuUser } from "react-icons/lu"
+import { TbCashRegister, TbPackageImport, TbLogout2 } from "react-icons/tb"
 import { IoList } from 'react-icons/io5'
-import { TbLogout2 } from "react-icons/tb";
-
+import { useColorModeValue } from '@/components/ui/color-mode'
 const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
   const inactiveColor = useColorModeValue('gray.500', 'gray.400')
@@ -47,6 +32,11 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
               color: activeColor
             }}
             onClick={onClick}
+            h="43px" // Fixed height for each item
+            alignItems="center"
+            whiteSpace="nowrap" // Prevent text from wrapping
+            overflowX="hidden"
+            overflowY={'hidden'} // Hide overflow horizontally
           >
             <Icon mr="4" boxSize="4" as={icon} />
             {children && <Text fontSize={'xs'}>{children}</Text>}
@@ -66,7 +56,7 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
   )
 }
 
-const Sidebar = () => {
+const Sidebar = React.memo(() => {
   const [isCollapsed, setIsCollapsed] = useState(true)
   const [activeItem, setActiveItem] = useState('Home')
   const navigate = useNavigate()
@@ -112,42 +102,43 @@ const Sidebar = () => {
       borderRight="1px solid"
       borderRightColor={borderColor}
       w={isCollapsed ? '55px' : '200px'}
-      overflowX={'hidden'}
+      overflowX={'auto'} // Allow horizontal scrolling when necessary
       transition="width 0.3s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
       <Stack justify={'space-between'} h={'97%'} align="space-between" >
-      <VStack spacing="0" align="stretch" >
-        {navItems.map((item) => (
-          <Box key={item.name}>
-            <NavItem
-              icon={item.icon}
-              isActive={item.name === activeItem}
-              onClick={() => handleItemClick(item)}
-              hasSeparator={item.hasSeparator}
-              to={item.to}
-            >
-              {!isCollapsed && item.name}
-            </NavItem>
-          </Box>
-        ))}
-              </VStack>
+        <VStack spacing="0" align="stretch" >
+          {navItems.map((item) => (
+            <Box key={item.name}>
+              <NavItem
+                icon={item.icon}
+                isActive={item.name === activeItem}
+                onClick={() => handleItemClick(item)}
+                hasSeparator={item.hasSeparator}
+                to={item.to}
+              >
+                {!isCollapsed && item.name}
+              </NavItem>
+            </Box>
+          ))}
+        </VStack>
 
-         <VStack spacing="0" align="stretch" >
-         <Separator
-              m={0}
-              orientation="horizontal"
-              h="1px"
-              w="full"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            />        <NavItem icon={TbLogout2} >{!isCollapsed && 'Logout'}</NavItem>
-        <NavItem icon={LuUser} >{!isCollapsed && 'Profile'}</NavItem></VStack>
-
+        <VStack spacing="0" align="stretch" >
+          <Separator
+            m={0}
+            orientation="horizontal"
+            h="1px"
+            w="full"
+            borderColor={useColorModeValue('gray.200', 'gray.700')}
+          />
+          <NavItem icon={TbLogout2}>{!isCollapsed && 'Logout'}</NavItem>
+          <NavItem icon={LuUser}>{!isCollapsed && 'Profile'}</NavItem>
+        </VStack>
 
       </Stack>
     </Box>
   )
-}
+})
 
 export default Sidebar

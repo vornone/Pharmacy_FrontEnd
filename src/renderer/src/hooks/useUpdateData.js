@@ -1,7 +1,7 @@
 import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
 const useUpdateData = () => {
-  const { data, loading, error, requestData: queryUpdateData } = useApi('updateReducer')
+  const { data, message, loading, error, requestData: queryUpdateData } = useApi('updateReducer')
 
   const updateData = (endpoint, body) => {
     queryUpdateData(endpoint, 'POST', body)
@@ -9,6 +9,7 @@ const useUpdateData = () => {
 
   return {
     data,
+    message,
     loading,
     error,
     updateData

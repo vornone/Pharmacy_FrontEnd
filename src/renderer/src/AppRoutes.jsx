@@ -12,14 +12,14 @@ import UserPage from './pages/UserManagement/users/UserPage'
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/product" element={<ProductPage />} />
-      <Route path="/import" element={<ImportPage />} />
-      <Route path="/pos" element={<POSPage />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="/category" element={<CategoryPage />} />
-      <Route path="/sale" element={<SalePage />} />
-      <Route path="/usermanagement" element={<UserPage />} />
+      <Route path="/product/*" element={<ProductPage />} />
+      <Route path="/import/*" element={<ImportPage />} />
+      <Route path="/pos/*" element={<POSPage />} />
+      <Route path="/home/*" element={<HomePage />} />
+      <Route path="/admin/*" element={<AdminPage />} />
+      <Route path="/category/*" element={<CategoryPage />} />
+      <Route path="/sale/*" element={<SalePage />} />
+      <Route path="/usermanagement/*" element={<UserPage />} />
     </Routes>
   )
 }

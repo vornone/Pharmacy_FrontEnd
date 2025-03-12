@@ -16,8 +16,8 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import AddSupplierDiaglog from '@/renderer/components/dialog/AddSupplierDiaglog'
-const SupplierTable = ({supplierData}) => {
+import EditUserRoleDialog from '@/renderer/src/components/dialog/user_role/EditUserRoleDialog'
+const CategoryTable = ({ categoryData }) => {
   const [selection, setSelection] = useState([])
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -27,36 +27,32 @@ const SupplierTable = ({supplierData}) => {
   const hasSelection = selection.length > 0
   const indeterminate = hasSelection && selection.length < items.length
 
-  const rows = supplierData.map((item,index) => (
-    <Table.Row key={'supplier'+item.supplierName} data-selected={selection.includes(item.supplierName) ? '' : undefined}>
+  const rows = categoryData.map((item, index) => (
+    <Table.Row
+      key={item.categoryName}
+      data-selected={selection.includes(item.name) ? '' : undefined}
+    >
       <Table.Cell>
         <Checkbox
           aria-label="Select row"
-          checked={selection.includes(item.supplierName)}
+          checked={selection.includes(item.name)}
           onCheckedChange={(changes) => {
             setSelection((prev) =>
               changes.checked
-                ? [...prev, item.supplierName]
+                ? [...prev, item.name]
                 : selection.filter((name) => name !== item.name)
             )
           }}
         />
       </Table.Cell>
       <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.supplierName}</Table.Cell>
-      <Table.Cell>{item.supplierAddress}</Table.Cell>
-      <Table.Cell>{item.supplierContact1}</Table.Cell>
-      <Table.Cell>{item.supplierContact2? item.supplierContact2:'none'}</Table.Cell>
+      <Table.Cell  fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.categoryName}</Table.Cell>
       <Table.Cell>
-        <IconButton
-          aria-label="Edit"
-          size="sm"
-          variant="ghost"
-          colorPalette="blue"
-          onClick={() => handleEdit(item)}
-        >
-          <MdEditDocument />
-        </IconButton>
+        <EditUserRoleDialog title="Edit Role" data={item.categoryName}>
+          <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
+            <MdEditDocument />
+          </IconButton>
+        </EditUserRoleDialog>
         <IconButton
           aria-label="Delete"
           size="sm"
@@ -74,16 +70,15 @@ const SupplierTable = ({supplierData}) => {
     <>
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
-          <Input placeholder="Search Supplier" w="50%" size={'xs'} />
+          <Input placeholder="Search Role" w="50%" size={'xs'} />
         </InputGroup>
         <IconButton variant={'outline'} size={'xs'}>
           <LuSlidersHorizontal />
         </IconButton>
-        <AddSupplierDiaglog>
           <ButtonGroup variant={'surface'} colorPalette={'green'} size={'xs'}>
-            <Button>New Supplier</Button>
+            <Button>New Cateogory</Button>
           </ButtonGroup>
-        </AddSupplierDiaglog>
+
       </Flex>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
@@ -112,7 +107,6 @@ const SupplierTable = ({supplierData}) => {
         <ActionBarContent>
           <ActionBarSelectionTrigger>{selection.length} selected</ActionBarSelectionTrigger>
           <ActionBarSeparator />
-
           <Button variant="outline" size="sm">
             Delete <Kbd>⌫</Kbd>
           </Button>
@@ -124,22 +118,11 @@ const SupplierTable = ({supplierData}) => {
     </>
   )
 }
-const headers = ['Id', 'Name', 'Address', 'Contact 1', 'Contact 2']
+const headers = ['Id', 'Category']
 const items = [
-  {
-    supplier_id: 1,
-    supplier_name: 'hello',
-    supplier_address: 'world',
-    supplier_contact1: 'foo',
-    supplier_contact2: 'bar'
-  },
-  {
-    supplier_id: 2,
-    supplier_name: 'hello',
-    supplier_address: 'world',
-    supplier_contact1: 'foo',
-    supplier_contact2: 'bar'
-  }
+  { user_role_id: 1, user_role_name: 'Admin' },
+  { user_role_id: 2, user_role_name: 'User' },
+  { user_role_id: 3, user_role_name: 'Cashier' }
 ]
 
-export default SupplierTable
+export default CategoryTable

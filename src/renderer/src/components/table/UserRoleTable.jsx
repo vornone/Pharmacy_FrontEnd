@@ -16,8 +16,8 @@ import { Flex } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import EditUserRoleDialog from '@/renderer/components/dialog/EditUserRoleDialog'
-import AddUserRoleDialog from '../dialog/AddUserRoleDialog'
+import EditUserRoleDialog from '@/renderer/src/components/dialog/user_role/EditUserRoleDialog'
+import AddUserRoleDialog from '../dialog/user_role/AddUserRoleDialog'
 import useUserRole from '@/renderer/src/hooks/useUserRole'
 import LoadingScreen from '../loadingscreen/LoadingScreen'
 import useInsertData from '@/renderer/src/hooks/useInsertData'
@@ -42,7 +42,7 @@ const UserRoleTable = () => {
   }, [])
 
 
-  
+
   const handleAddUserRole = async (item) => {
     try {
       await insertData('api/ROLE0021', item)
@@ -136,14 +136,14 @@ const UserRoleTable = () => {
         </Popover.Positioner>
       </Portal>
     </Popover.Root>
-        
+
       </Table.Cell>
     </Table.Row>
   ))
 
   return (
     <>
-    
+
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
           <Input placeholder="Search Role" w="50%" size={'xs'} />

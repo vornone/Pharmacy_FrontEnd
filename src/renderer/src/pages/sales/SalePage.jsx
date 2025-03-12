@@ -9,7 +9,7 @@ import { Input } from '@chakra-ui/react'
 import { Separator } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import SaleTable from '@/renderer/components/table/SaleTable'
+import SaleTable from '@/renderer/src/components/table/SaleTable'
 function SalePage() {
   return (
     <Flex w={'100%'} h={'100%'}>

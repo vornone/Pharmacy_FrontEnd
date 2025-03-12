@@ -1,7 +1,7 @@
 import { VStack, Heading, Flex, Text } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 
-import CategoryTable from '@/renderer/components/table/CategoryTable'
+import CategoryTable from '@/renderer/src/components/table/CategoryTable'
 import useCategory from '@/renderer/src/hooks/useCategory'
 function CategoryPage() {
   const { data, loading, error, getCategory } = useCategory()

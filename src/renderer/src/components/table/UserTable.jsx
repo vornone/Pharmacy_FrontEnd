@@ -1,33 +1,30 @@
 'use client'
 
 import { Button, Kbd, Spinner, Table } from '@chakra-ui/react'
-import {
-  ActionBarContent,
-  ActionBarRoot,
-  ActionBarSelectionTrigger,
-  ActionBarSeparator
-} from '@/components/ui/action-bar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
 import { ButtonGroup } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
+import { Input , HStack, Stack } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import { InputGroup } from '@/components/ui/input-group'
-import EditUserDialog from '../dialog/EditUserDialog'
+import EditUserDialog from '@/renderer/src/components/dialog/user/EditUserDialog'
 import useUser from '@/renderer/src/hooks/useUser'
 import useUserRole from '@/renderer/src/hooks/useUserRole'
-import AddUserDialog from '../dialog/AddUserDialog'
+import AddUserDialog from '@/renderer/src/components/dialog/user/AddUserDialog'
 import useUpdateData from '@/renderer/src/hooks/useUpdateData'
 import useDeleteData from '@/renderer/src/hooks/useDeleteData'
 import useInsertData from '@/renderer/src/hooks/useInsertData'
-import DeletePopover from '../popover/DeletePopover'
-
+import DeletePopover from '@/renderer/src/components/popover/DeletePopover'
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from "@/components/ui/skeleton"
 
 const headers = ['Id', 'Name', 'Role', 'First Name', 'Last Name', 'Contact']
-
 const UserTable = () => {
   const { data: userData, loading: userLoading, error: userError, getUser } = useUser()
   const { data: userRoleData, getUserRole } = useUserRole()
@@ -39,13 +36,12 @@ const UserTable = () => {
   const [roleItems, setRoleItems] = useState([])
   const [isLoading, setIsLoading] = useState(false);
 
-  
+
   useEffect(() => {
     const fetchData = async () => {
-      await getUser() // Ensure getUser completes first
-      await getUserRole() // Fetch roles after users are loaded
+      await getUser()
+      await getUserRole()
     }
-
     fetchData()
   }, [])
 
@@ -66,22 +62,17 @@ const UserTable = () => {
   const handleUpdateUser = async (updatedUser) => {
     try {
       await updateData("api/USR0031", updatedUser);
-      
-      // Wait for the new user data to load
-      await getUser();
-  
-      // Ensure the state updates correctly
       setItems((prev) =>
         prev.map((existingItem) =>
           existingItem.username === updatedUser.username ? updatedUser : existingItem
         )
       );
-  
+
     } catch (error) {
       console.error("Error updating user:", error);
     }
   };
-  
+
   const handleAddUser = async (item) => {
     setIsLoading(true);
     try {
@@ -91,7 +82,6 @@ const UserTable = () => {
       }
       setItems((prev) => [...prev, { ...item, id: prev.length + 1 }]);
       await insertData('auth/', item);
-      await getUser();
       console.log("User added successfully");
     } catch (error) {
       setItems((prev) => prev.filter((user) => user.username !== item.username));
@@ -115,19 +105,6 @@ const UserTable = () => {
 
   const rows = items.map((item, index) => (
     <Table.Row key={index+item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
-      <Table.Cell>
-        <Checkbox
-          aria-label="Select row"
-          checked={selection.includes(item.name)}
-          onCheckedChange={(changes) => {
-            setSelection((prev) =>
-              changes.checked
-                ? [...prev, item.name]
-                : prev.filter((name) => name !== item.name)
-            )
-          }}
-        />
-      </Table.Cell>
       <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.username}</Table.Cell>
       <Table.Cell>{item.roleName}</Table.Cell>
@@ -160,19 +137,16 @@ const UserTable = () => {
           </ButtonGroup>
         </AddUserDialog>
       </Flex>
-      { userLoading? <Spinner /> : 
+      { userLoading?     <Stack gap="6" w={'full'}>
+      <HStack width="full">
+        <SkeletonCircle size="10" />
+        <SkeletonText noOfLines={2} />
+      </HStack>
+      <Skeleton height="200px" />
+    </Stack> :
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
-            <Table.ColumnHeader h="5">
-              <Checkbox
-                aria-label="Select all rows"
-                checked={indeterminate ? 'indeterminate' : selection.length > 0}
-                onCheckedChange={(changes) => {
-                  setSelection(changes.checked ? items.map((item) => item.name) : [])
-                }}
-              />
-            </Table.ColumnHeader>
             {headers.map((header) => (
               <Table.ColumnHeader key={header}>{header}</Table.ColumnHeader>
             ))}
@@ -183,19 +157,7 @@ const UserTable = () => {
           {rows}
         </Table.Body>
       </Table.Root>
-}
-      <ActionBarRoot open={hasSelection}>
-        <ActionBarContent>
-          <ActionBarSelectionTrigger>{selection.length} selected</ActionBarSelectionTrigger>
-          <ActionBarSeparator />
-          <Button variant="outline" size="sm">
-            Delete <Kbd>⌫</Kbd>
-          </Button>
-          <Button variant="outline" size="sm">
-            Share <Kbd>T</Kbd>
-          </Button>
-        </ActionBarContent>
-      </ActionBarRoot>
+      }
     </>
   )
 }

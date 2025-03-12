@@ -1,6 +1,6 @@
 import React from 'react'
-import ProductGrid from '@/renderer/components/productGrid/ProductGrid'
-import OrderPage from '@/renderer/components/orderGrid/OrderPage'
+import ProductGrid from '@/renderer/src/components/productGrid/ProductGrid'
+import OrderPage from '@/renderer/src/components/orderGrid/OrderPage'
 import { Flex, Box, HStack } from '@chakra-ui/react'
 function POSPage() {
   return (

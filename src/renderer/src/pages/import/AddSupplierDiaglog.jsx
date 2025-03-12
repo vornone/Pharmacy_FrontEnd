@@ -14,7 +14,7 @@ import { SegmentedControl } from '@/components/ui/segmented-control'
 import React, { useRef, forwardRef, useState } from 'react'
 import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
-import SearchSelection from '@/renderer/components/autocomplete/SearchSelection'
+import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection'
 
 const AddProductDialog = ({ children }) => {
   const [imagePreview, setImagePreview] = useState(

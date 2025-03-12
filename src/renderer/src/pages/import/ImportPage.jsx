@@ -1,10 +1,10 @@
 import { HStack, VStack, Text, Heading, Box, Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
-import ImportTable from '@/renderer/components/table/ImportTable'
-import SupplierTable from '@/renderer/components/table/SupplierTable'
+import ImportTable from '@/renderer/src/components/table/ImportTable'
+import SupplierTable from '@/renderer/src/components/table/SupplierTable'
 import useSupplier from '../../hooks/useSupplier'
-import LoadingScreen from '@/renderer/components/loadingscreen/LoadingScreen'
+import LoadingScreen from '@/renderer/src/components/loadingscreen/LoadingScreen'
 
 function ImportPage() {
   const { data, loading, error, getSupplier } = useSupplier()
