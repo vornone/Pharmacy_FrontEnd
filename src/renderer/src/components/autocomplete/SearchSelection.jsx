@@ -27,7 +27,6 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
       openOnFocus
       emptyState="No results found"
       listAllValuesOnFocus
-
       w={'100%'}
       onSelect={handleSelect}
     >
@@ -35,6 +34,7 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
         <>
           <InputGroup endElement={<Icon>{isOpen ? <FiChevronRight /> : <FiChevronDown />}</Icon>}>
             <AutoCompleteInput
+            
               name={name}
               variant="subtle"
               placeholder="Search..."
@@ -43,12 +43,11 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
               onChange={handleOnChange}
             />
           </InputGroup>
-          <AutoCompleteList>
+          <AutoCompleteList maxH={'100px'}>
             {collection.map((item, index) => (
               <AutoCompleteItem
                 key={`item-${index}`}
                 value={item}
-                textTransform="capitalize"
                 onClick={() => handleSelect(item)}
               >
                 {item}

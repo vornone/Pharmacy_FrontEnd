@@ -22,9 +22,6 @@ const OrderCard = ({key, item, orderData, setOrderData }) => {
       setOrderData(a)
     }
   }
-  useEffect(() => {
-    console.log(item)
-  }, [item])
   return (
     <Card.Root flexDirection="row" w={"100%"} h={"100px"} key={key} shadow={"sm"} borderRadius={'md'} overflow={'hidden'} >
     <Image

@@ -17,7 +17,6 @@ const NewLoginForm = ({ onLogin }) => {
   const handleInputChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value })
     setIsError(false)
-    console.log(input)
   }
   const handleSubmit = async (e) => {
     if (e) {

@@ -47,14 +47,13 @@ const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
 
   const handleSubmit = () => {
     setFormSubmitted(true); // Mark form as submitted
-
     const isValid = user.username && user.firstName && user.lastName && user.roleName;
     if (!isValid) return; // Prevent submission if fields are missing
-
     onUpdate(user); // Update user data
     setFormSubmitted(false); // Reset form submission state
     setIsEdittable(true); // Set editable back to true after submit
   };
+
 
   return (
     <DialogRoot placement="center"   unmountOnExit onExitComplete={()=> setIsEdittable(true)}  closeOnInteractOutside={false} trapFocus={false}>
@@ -88,7 +87,7 @@ const EditUserDialog = ({ children, data, roleData,onUpdate }) => {
               />
             </Field>
             <Field invalid={formSubmitted && !user.roleId} label={"Change Password" }>
-              <ChangePasswordDialog>
+              <ChangePasswordDialog username={user.username}>
             <Button variant="outline" colorPalette="neutral" size="sm" disabled={isEdittable}>
               Edit Password
             </Button>

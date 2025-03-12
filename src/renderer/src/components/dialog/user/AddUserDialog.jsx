@@ -80,7 +80,7 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
           <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4}>
+          <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4} mb={10}>
             <Field invalid={formSubmitted && user.username === ''} label="Username" errorText={user.username === '' ? 'Username is required' : ''}>
               <Input name="username" size="sm" value={user.username} onChange={handleOnChange} />
             </Field>
