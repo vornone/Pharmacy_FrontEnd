@@ -15,13 +15,12 @@ import { HiUpload } from 'react-icons/hi';
 import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection';
 import { PasswordInput } from '@/components/ui/password-input';
 import React, { useState, useEffect } from 'react';
-import useUpdateData from '@/renderer/src/hooks/useUpdateData';
-import useUser from '@/renderer/src/hooks/useUser';
+import useInsertData from '@/renderer/src/hooks/useInsertData';
 
 const AddUserDialog = ({ children, data, roleData, onInsert }) => {
   const roleNames = roleData.map((item) => item.roleName);
   const [formSubmitted, setFormSubmitted] = useState(false);
-
+  const { loading } = useInsertData()
   // Initialize user state with default empty values
   const [user, setUser] = useState({
     username: data?.username || '',
@@ -113,7 +112,7 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
               Cancel
             </Button>
           </DialogActionTrigger>
-          <Button size="xs" variant="surface" colorPalette={'green'} onClick={handleSubmit}>
+          <Button size="xs" variant="surface" colorPalette={'green'} onClick={handleSubmit} disabled={loading} loading={loading}>
             Add User
           </Button>
         </DialogFooter>

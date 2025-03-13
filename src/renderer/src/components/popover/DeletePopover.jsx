@@ -27,7 +27,7 @@ const DeletePopover = ({onDelete, isLoading, name}) => {
                     <Button size="xs" variant="outline">
                       Cancel
                     </Button>
-                    <Button size="xs" colorPalette="red" variant={"surface"} onClick={onDelete} isLoading={isLoading}>Delete {name}</Button>
+                    <Button size="xs" colorPalette="red" variant={"surface"} onClick={onDelete} loading={isLoading} disabled={isLoading}>Delete {name}</Button>
                   </Group>
                 </Popover.Footer>
                 <Popover.CloseTrigger />

@@ -53,7 +53,6 @@ const ChangePasswordDialog = ({ children, username }) => {
 
   return (
     <>
-      <ToastContainer />
     <HStack wrap="wrap" gap="4">
       <Dialog.Root
         size="sm"

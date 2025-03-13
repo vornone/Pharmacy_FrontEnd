@@ -77,11 +77,10 @@ const TableRow = memo(({ item, index, isSelected, onSelect, onUpdate, onDelete }
 
   return (
     <Table.Row data-selected={isSelected ? '' : undefined}>
-      <Table.Cell>
-      </Table.Cell>
+
       <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.roleName}</Table.Cell>
-      <Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }} width="33%" wordBreak={'break-word'} >{item.roleName}</Table.Cell>
+      <Table.Cell >
         <EditUserRoleDialog data={item} handleUpdateUserRole={onUpdate}>
           <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
             <MdEditDocument />
@@ -102,8 +101,7 @@ const TableHeader = memo(({ headers, hasSelection, allSelected, onSelectAll }) =
   return (
     <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' }}>
       <Table.Row>
-        <Table.ColumnHeader h="5">
-        </Table.ColumnHeader>
+
         {headers.map((header) => (
           <Table.ColumnHeader key={header}>{header}</Table.ColumnHeader>
         ))}
@@ -236,7 +234,7 @@ const UserRoleTable = () => {
           </ButtonGroup>
         </AddUserRoleDialog>
       </Flex>
-      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
+      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} tableLayout={'fixed'} >
         <TableHeader
           headers={headers}
           hasSelection={indeterminate ? 'indeterminate' : selection.length > 0}
