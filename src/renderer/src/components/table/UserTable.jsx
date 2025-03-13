@@ -62,7 +62,7 @@ const UserTable = () => {
     try {
       if (!item.username || !item.roleId) throw new Error("Username and Role are required")
       await insertData('auth/', item)
-      await getUser()
+      setItems(prevItems => [...prevItems, item])
     } catch (error) {
       console.error("Error adding user:", error)
     } finally {
