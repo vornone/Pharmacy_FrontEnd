@@ -4,7 +4,7 @@ import { MdDeleteForever } from 'react-icons/md'
 const DeletePopover = ({onDelete, isLoading, name}) => {
   return (
     <Popover.Root >
-          <Popover.Trigger asChild>
+          <Popover.Trigger asChild >
           <IconButton
               aria-label="Delete"
               size="sm"

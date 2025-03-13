@@ -2,7 +2,7 @@
 
 import { Button, Kbd, Spinner, Table } from '@chakra-ui/react'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { MdDeleteForever, MdEditDocument } from 'react-icons/md'
 import { IconButton } from '@chakra-ui/react'
 import { ButtonGroup } from '@chakra-ui/react'
@@ -18,6 +18,8 @@ import useUpdateData from '@/renderer/src/hooks/useUpdateData'
 import useDeleteData from '@/renderer/src/hooks/useDeleteData'
 import useInsertData from '@/renderer/src/hooks/useInsertData'
 import DeletePopover from '@/renderer/src/components/popover/DeletePopover'
+import { useCallback } from 'react'
+import { useMemo } from 'react'
 import {
   Skeleton,
   SkeletonCircle,
@@ -37,37 +39,24 @@ const UserTable = () => {
   const [isLoading, setIsLoading] = useState(false);
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await getUser()
-      await getUserRole()
-    }
-    fetchData()
-  }, [])
+  const fetchData = useCallback(async () => {
+    await getUser();
+    await getUserRole();
+  }, [getUser, getUserRole]);
 
   useEffect(() => {
-    if (userData) {
-      setItems(userData)
-    }
-  }, [userData])
+    fetchData().then(() => {
+      if (userData) setItems(userData);
+      if (userRoleData) setRoleItems(userRoleData);
+    });
+  }, [userData]);
 
-  useEffect(() => {
-    if (userRoleData) {
-      setRoleItems(userRoleData)
-    }
-  }, [userRoleData])
 
   const hasSelection = selection.length > 0
-  const indeterminate = hasSelection && selection.length < items.length
   const handleUpdateUser = async (updatedUser) => {
     try {
       await updateData("api/USR0031", updatedUser);
-      setItems((prev) =>
-        prev.map((existingItem) =>
-          existingItem.username === updatedUser.username ? updatedUser : existingItem
-        )
-      );
-
+      await getUser();
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -76,15 +65,12 @@ const UserTable = () => {
   const handleAddUser = async (item) => {
     setIsLoading(true);
     try {
-      // Optional: Add validation here
       if (!item.username || !item.roleId) {
         throw new Error("Username and Role are required");
       }
-      setItems((prev) => [...prev, { ...item, id: prev.length + 1 }]);
       await insertData('auth/', item);
-      console.log("User added successfully");
+      await getUser();
     } catch (error) {
-      setItems((prev) => prev.filter((user) => user.username !== item.username));
       console.error("Error adding user:", error);
     } finally {
       setIsLoading(false);
@@ -95,7 +81,7 @@ const UserTable = () => {
     setIsLoading(true);
     try {
       await deleteData('api/USR0041', item);
-      setItems((prev) => prev.filter((existingItem) => existingItem.username !== item.username));
+      await getUser();
     } catch (error) {
       console.error("Error deleting user:", error);
     } finally {
@@ -103,27 +89,32 @@ const UserTable = () => {
     }
   };
 
-  const rows = items.map((item, index) => (
-    <Table.Row key={index+item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
-      <Table.Cell>{index + 1}</Table.Cell>
-      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.username}</Table.Cell>
-      <Table.Cell>{item.roleName}</Table.Cell>
-      <Table.Cell textTransform={'capitalize'}>{item.firstName}</Table.Cell>
-      <Table.Cell textTransform={'capitalize'}>{item.lastName}</Table.Cell>
-      <Table.Cell>{item.contact}</Table.Cell>
-      <Table.Cell>
-        <EditUserDialog title="Edit User" data={item} roleData={roleItems} onUpdate={handleUpdateUser}>
-          <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
-            <MdEditDocument />
-          </IconButton>
-        </EditUserDialog>
-        <DeletePopover onDelete={() => handleDelete(item)} isLoading={isLoading} name="User" />
-      </Table.Cell>
-    </Table.Row>
-  ))
+
+  const rows = useMemo(() =>
+    items.map((item, index) => (
+      <Table.Row key={index + item.username} data-selected={selection.includes(item.name) ? '' : undefined}>
+        <Table.Cell>{index + 1}</Table.Cell>
+        <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>{item.username}</Table.Cell>
+        <Table.Cell>{item.roleName}</Table.Cell>
+        <Table.Cell textTransform={'capitalize'}>{item.firstName}</Table.Cell>
+        <Table.Cell textTransform={'capitalize'}>{item.lastName}</Table.Cell>
+        <Table.Cell>{item.contact}</Table.Cell>
+        <Table.Cell>
+          <EditUserDialog title="Edit User" data={item} roleData={roleItems} onUpdate={handleUpdateUser}>
+            <IconButton aria-label="Edit" size="sm" variant="ghost" colorPalette="blue">
+              <MdEditDocument />
+            </IconButton>
+          </EditUserDialog>
+          <DeletePopover onDelete={() => handleDelete(item)} isLoading={isLoading} name="User" />
+        </Table.Cell>
+      </Table.Row>
+    ))
+  , [items, selection, isLoading]);
+
 
   return (
     <>
+    <Stack w={'100%'} h={'100%'}  gap={5}>
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
           <Input placeholder="Search User" w="50%" size={'xs'} />
@@ -137,13 +128,7 @@ const UserTable = () => {
           </ButtonGroup>
         </AddUserDialog>
       </Flex>
-      { userLoading?     <Stack gap="6" w={'full'}>
-      <HStack width="full">
-        <SkeletonCircle size="10" />
-        <SkeletonText noOfLines={2} />
-      </HStack>
-      <Skeleton height="200px" />
-    </Stack> :
+
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
         <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
           <Table.Row>
@@ -157,7 +142,7 @@ const UserTable = () => {
           {rows}
         </Table.Body>
       </Table.Root>
-      }
+    </Stack>
     </>
   )
 }

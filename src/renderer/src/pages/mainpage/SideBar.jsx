@@ -128,7 +128,9 @@ const Sidebar = () => {
               hasSeparator={item.hasSeparator}
               to={item.to}
             >
+              <Text isTruncated>
               {!isCollapsed && item.name}
+              </Text>
             </NavItem>
           </Box>
         ))}
