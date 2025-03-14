@@ -12,33 +12,36 @@ import {
 } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 import { Field } from '@/components/ui/field'
-import  useUpdateData  from '@/renderer/src/hooks/useUpdateData'
+import  useInsertData  from '@/renderer/src/hooks/useInsertData'
 
-const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
-  const { loading } = useUpdateData()
+const AddCategoryDialog = ({ children ,handleAddCategory}) => {
+  const { data, loading, error, insertData } = useInsertData()
   const [invalid, setInvalid] = useState(false)
-  const [role, setRole] = useState({
-    roleId: data.roleId,
-    roleName: data.roleName,
-    roleDescription: data.roleDescription
+  const [category, setCategory] = useState({
+    categoryName: '',
+    description: ''
   })
 
 
   const handleOnChange = (e) => {
     const { name, value } = e.target
-    setRole((prevRole) => ({
-      ...prevRole,
+    setCategory((prevcategory) => ({
+      ...prevcategory,
       [name]: value
     }))
     setInvalid(false)
   }
 
   const handleSubmit = () => {
-    if (!role.roleName || !role.roleDescription) {
+    if (!category.categoryName || !category.description) {
       setInvalid(true)
       return
     }
-    handleUpdateUserRole(role)
+    handleAddCategory(category)
+    setCategory({
+      categoryName: '',
+      description: ''
+    })
     setInvalid(false)
   }
 
@@ -47,24 +50,24 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
       <DialogTrigger asChild >{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit User Role</DialogTitle>
+          <DialogTitle>Add New Category</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <VStack w="100%" h="100%" align="flex-start">
-            <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
+            <Field  invalid={invalid} label="category Name" errorText="This field is invalid">
               <Input
 
-                name="roleName"
+                name="categoryName"
                 size="sm"
-                value={role.roleName}
+                value={category.categoryName}
                 onChange={handleOnChange}
               />
             </Field>
-            <Field  invalid={invalid} label="Description" errorText="This field is invalid">
+            <Field  label="Description (optional)" >
               <Textarea
-                name="roleDescription"
+                name="description"
                 size="sm"
-                value={role.roleDescription}
+                value={category.description}
                 onChange={handleOnChange}
               />
             </Field>
@@ -84,7 +87,7 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
             isLoading={loading} // Better UX for loading state
             disabled={loading || invalid}
           >
-            {loading ? 'Saving...' : 'Update Role'}
+            {loading ? 'Saving...' : 'Add category'}
           </Button>
         </DialogFooter>
         <DialogCloseTrigger  />
@@ -93,4 +96,4 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
   )
 }
 
-export default EditUserRoleDialog
+export default AddCategoryDialog

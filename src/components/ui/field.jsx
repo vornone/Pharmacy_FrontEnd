@@ -6,8 +6,8 @@ export const Field = React.forwardRef(function Field(props, ref) {
   return (
     <ChakraField.Root ref={ref} {...rest}>
       {label && (
-        <ChakraField.Label color='gray.400' _dark={{ color: 'gray.400' }}>
-          <Text fontSize={'xs'} fontWeight={'medium'}>{label}</Text>
+        <ChakraField.Label >
+          <Text fontSize={'xs'} fontWeight={'regular'}>{label}</Text>
           <ChakraField.RequiredIndicator fallback={optionalText} />
         </ChakraField.Label>
       )}

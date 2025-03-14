@@ -44,8 +44,6 @@ const UserTable = () => {
   const handleUpdateUser = useCallback(async (updatedUser) => {
     try {
       await updateData("api/USR0031", updatedUser);
-  
-      // Update the local state instead of refetching the whole list
       setItems(prevItems =>
         prevItems.map(user =>
           user.username === updatedUser.username ? { ...user, ...updatedUser } : user
@@ -55,7 +53,7 @@ const UserTable = () => {
       console.error("Error updating user:", error);
     }
   }, [updateData]);
-  
+
 
   const handleAddUser = useCallback(async (item) => {
     setIsLoading(true)

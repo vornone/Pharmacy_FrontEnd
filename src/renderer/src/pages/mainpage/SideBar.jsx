@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { Box, VStack, Icon, Text, Flex, Separator, Stack } from '@chakra-ui/react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { TbCashRegister } from 'react-icons/tb'
-import { LuUserCog } from 'react-icons/lu'
-import {
-  FiArchive,
-  FiBox,
-  FiDatabase,
-  FiTable,
-  FiUsers,
-  FiSettings,
-  FiChevronLeft,
-  FiChevronRight,
-  FiHome
-} from 'react-icons/fi'
-import { LuUser } from "react-icons/lu";
-
-import { TbPackageImport } from 'react-icons/tb'
-import { useColorModeValue } from '@/components/ui/color-mode'
+import { TbCashRegister, TbPackageImport, TbLogout2 } from 'react-icons/tb'
+import { LuUserCog, LuUser } from "react-icons/lu"
+import { FiDatabase, FiTable, FiUsers, FiSettings, FiHome } from 'react-icons/fi'
 import { IoList } from 'react-icons/io5'
-import { TbLogout2 } from "react-icons/tb";
+import { useColorModeValue } from '@/components/ui/color-mode'
 
-const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
+const navItems = [
+  { name: 'Home', icon: FiHome, hasSeparator: true, to: '/home' },
+  { name: 'Products', icon: FiDatabase, to: '/product' },
+  { name: 'Category', icon: FiTable, to: '/category' },
+  { name: 'User Management', icon: FiUsers, to: '/usermanagement' },
+  { name: 'POS', icon: TbCashRegister, to: '/pos' },
+  { name: 'Sale', icon: IoList, to: '/sale' },
+  { name: 'Import', icon: TbPackageImport, hasSeparator: true, to: '/import' },
+  { name: 'Settings', icon: FiSettings, to: '/settings' },
+  { name: 'Admin', icon: LuUserCog, to: '/admin' }
+]
+
+const NavItem = React.memo(({ icon, children, isActive, onClick, hasSeparator, to }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
   const inactiveColor = useColorModeValue('gray.500', 'gray.400')
   const activeBg = useColorModeValue('gray.200', 'gray.700')
@@ -36,118 +34,101 @@ const NavItem = ({ icon, children, isActive, onClick, hasSeparator, to }) => {
             px="3"
             py="3"
             cursor="pointer"
-            role="group"
             fontWeight="semibold"
-            transition=".15s ease"
             color={isActive ? activeColor : inactiveColor}
             bg={isActive ? activeBg : 'transparent'}
-            borderRadius={'lg'}
-            _hover={{
-              bg: hoverBg,
-              color: activeColor
-            }}
+            borderRadius="lg"
+            _hover={{ bg: hoverBg, color: activeColor }}
             onClick={onClick}
           >
             <Icon mr="4" boxSize="4" as={icon} />
-            {children && <Text fontSize={'xs'}>{children}</Text>}
+            {children && <Text fontSize="xs" whiteSpace="nowrap">{children}</Text>}
           </Flex>
           {hasSeparator && (
-            <Separator
-              m={0}
-              orientation="horizontal"
-              h="1px"
-              w="full"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            />
+            <Separator h="1px" w="full" borderColor={useColorModeValue('gray.200', 'gray.700')} />
           )}
         </Stack>
       </Link>
     </>
   )
-}
+})
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true)
-  const [activeItem, setActiveItem] = useState('Home')
-  const navigate = useNavigate()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const bgColor = useColorModeValue('white', 'gray.950')
 
-  const navItems = [
-    { name: 'Home', icon: FiHome, hasSeparator: true, to: '/home' },
-    { name: 'Products', icon: FiDatabase, to: '/product' },
-    { name: 'Category', icon: FiTable, to: '/category' },
-    { name: 'User Management', icon: FiUsers, to: '/usermanagement' },
-    { name: 'POS', icon: TbCashRegister, to: '/pos' },
-    { name: 'Sale', icon: IoList, to: '/sale' },
-    { name: 'Import', icon: TbPackageImport, hasSeparator: true, to: '/import' },
-    { name: 'Settings', icon: FiSettings, to: '/settings' },
-    { name: 'Admin', icon: LuUserCog, to: '/admin' }
-  ]
+  // Fixed path matching logic to handle subpaths
+  const activeItem = useMemo(() => {
+    const currentPath = location.pathname;
 
-  useEffect(() => {
-    // Find the active item based on the current path
-    const active = navItems.find((item) => item.to === location.pathname)
-    if (active) {
-      setActiveItem(active.name)
-    }
-  }, [location.pathname])
+    // Find the nav item with the longest matching path prefix
+    let matchedItem = null;
+    let longestMatchLength = 0;
 
-  const handleItemClick = (item) => {
-    setActiveItem(item.name) // Set the active item
-    navigate(item.to) // Navigate to the specified route
-  }
+    navItems.forEach(item => {
+      const baseRoute = item.to.replace('/*', '');
+      if (currentPath.startsWith(baseRoute) && baseRoute.length > longestMatchLength) {
+        matchedItem = item;
+        longestMatchLength = baseRoute.length;
+      }
+    });
+
+    return matchedItem?.name || 'Home';
+  }, [location.pathname]);
+
+  const handleItemClick = useCallback((to) => {
+    // Replace /* with empty string to navigate to the base path
+    const navigateTo = to.replace('/*', '');
+    navigate(navigateTo);
+  }, [navigate]);
 
   return (
     <Box
       p={2}
       pos="fixed"
-      as="nav"
       h="100%"
-      pb="10"
       overflowY="auto"
       bg={bgColor}
       borderRight="1px solid"
       borderRightColor={borderColor}
       w={isCollapsed ? '55px' : '200px'}
-      overflowX={'hidden'}
       transition="width 0.3s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <Stack justify={'space-between'} h={'97%'} align="space-between" >
-      <VStack spacing="0" align="stretch" >
-        {navItems.map((item) => (
-          <Box key={item.name}>
+      <Stack justify="space-between" h="97%">
+        <VStack spacing="0" align="stretch">
+          {navItems.map((item) => (
             <NavItem
+              key={item.name}
               icon={item.icon}
               isActive={item.name === activeItem}
-              onClick={() => handleItemClick(item)}
+              onClick={() => handleItemClick(item.to)}
               hasSeparator={item.hasSeparator}
-              to={item.to}
+              to={item.to.replace('/*', '')}
             >
               {!isCollapsed && item.name}
             </NavItem>
-          </Box>
-        ))}
-              </VStack>
+          ))}
+        </VStack>
 
-         <VStack spacing="0" align="stretch" >
-         <Separator
-              m={0}
-              orientation="horizontal"
-              h="1px"
-              w="full"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            />        <NavItem icon={TbLogout2} >{!isCollapsed && 'Logout'}</NavItem>
-        <NavItem icon={LuUser} >{!isCollapsed && 'Profile'}</NavItem></VStack>
-
-
+        {/* Logout & Profile */}
+        <VStack spacing="0" align="stretch">
+          <Separator h="1px" w="full" borderColor={useColorModeValue('gray.200', 'gray.700')} />
+          <NavItem icon={TbLogout2} to="/logout">
+            {!isCollapsed && 'Logout'}
+          </NavItem>
+          <NavItem icon={LuUser} to="/profile">
+            {!isCollapsed && 'Profile'}
+          </NavItem>
+        </VStack>
       </Stack>
     </Box>
   )
 }
 
-export default Sidebar
+export default React.memo(Sidebar)

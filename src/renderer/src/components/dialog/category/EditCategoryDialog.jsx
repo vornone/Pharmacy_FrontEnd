@@ -1,6 +1,5 @@
-import { Box, Button, Card, Image, Input, SelectRoot, VStack } from '@chakra-ui/react'
+import { Box, Button, Card, Image, Input, SelectRoot, VStack, Textarea } from '@chakra-ui/react'
 import {
-  DialogActionTrigger,
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
@@ -10,67 +9,76 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { SegmentedControl } from '@/components/ui/segmented-control'
-import React, { useRef, forwardRef, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Field } from '@/components/ui/field'
-import { HiUpload } from 'react-icons/hi'
-import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection'
+import useUpdateData from '@/renderer/src/hooks/useUpdateData'
 
-const EditCategoryDialog = ({ children, title, data }) => {
+const EditCategoryDialog = ({ children, handleUpdateCategory, data }) => {
+  const { loading } = useUpdateData()
+  const [invalid, setInvalid] = useState(false)
   const [category, setCategory] = useState({
-    category_name: data
+    categoryId: data.categoryId || '',
+    categoryName: data.categoryName || '',
+    description: data.description || ''
   })
+  const [open, setOpen] = useState(false) // Controls dialog open state
 
-  const handleOnChange = (event) => {
-    const { name, value } = event.target
-    setCategory((prevCategory) => ({
-      ...prevCategory,
+  const handleOnChange = (e) => {
+    const { name, value } = e.target
+    setCategory((prevCat) => ({
+      ...prevCat,
       [name]: value
     }))
+    setInvalid(false)
   }
 
-  const handleSubmit = () => {
-    console.log(role)
+  const handleSubmit = async () => {
+    if (!category.categoryName) {
+      setInvalid(true)
+      return
+    }
+    try {
+      await handleUpdateCategory(category) // Ensure async operation completes
+      setOpen(false) // Close dialog after successful update
+    } catch (error) {
+      console.error("Error updating category:", error)
+    }
   }
-
-  useEffect(() => {
-    console.log(category)
-  }, [category])
 
   return (
-    <>
-      <DialogRoot placement={'center'}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            <VStack w={'100%'} h={'100%'} align={'flex-start'}>
-              <Field label="Category Name">
-                <Input
-                  name="category_name"
-                  value={category.category_name}
-                  size="xs"
-                  onChange={handleOnChange}
-                />
-              </Field>
-            </VStack>
-          </DialogBody>
-          <DialogFooter>
-            <DialogActionTrigger asChild>
-              <Button variant="solid" colorPalette={'red'} size={'xs'}>
-                Cancel
-              </Button>
-            </DialogActionTrigger>
-            <Button size={'xs'} variant={'solid'} colorPalette={'green'} onClick={handleSubmit}>
-              Submit
-            </Button>
-          </DialogFooter>
-          <DialogCloseTrigger />
-        </DialogContent>
-      </DialogRoot>
-    </>
+    <DialogRoot placement="center" trapFocus={false} modal={true} open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild onClick={() => setOpen(true)}>{children}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Category</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <VStack w="100%" h="100%" align="flex-start">
+            <Field invalid={invalid} label="Category Name" errorText="This field is required">
+              <Input name="categoryName" size="sm" value={category.categoryName} onChange={handleOnChange} />
+            </Field>
+            <Field label="Description (optional)">
+              <Textarea name="description" size="sm" value={category.description} onChange={handleOnChange} />
+            </Field>
+          </VStack>
+        </DialogBody>
+        <DialogFooter>
+          <Button variant="surface" colorPalette="red" size="xs" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            size="xs"
+            variant="surface"
+            colorPalette="green"
+            onClick={handleSubmit}
+            isLoading={loading} // Show loading state
+            disabled={loading || invalid}
+          >
+            {loading ? 'Saving...' : 'Update Category'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </DialogRoot>
   )
 }
 

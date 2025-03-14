@@ -56,9 +56,9 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
           <VStack w="100%" h="100%" align="flex-start">
             <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
               <Input
-                
+
                 name="roleName"
-                size="xs"
+                size="sm"
                 value={role.roleName}
                 onChange={handleOnChange}
               />
@@ -66,7 +66,7 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
             <Field  invalid={invalid} label="Description" errorText="This field is invalid">
               <Textarea
                 name="roleDescription"
-                size="xs"
+                size="sm"
                 value={role.roleDescription}
                 onChange={handleOnChange}
               />

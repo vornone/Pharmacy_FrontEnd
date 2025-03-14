@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Kbd, Table, Box, Group, Text } from '@chakra-ui/react'
+import { Button, Kbd, Table, Box, Group, Text, Stack } from '@chakra-ui/react'
 import {
   ActionBarContent,
   ActionBarRoot,
@@ -121,11 +121,9 @@ const UserRoleTable = () => {
   const [items, setItems] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  // Derived state
   const hasSelection = selection.length > 0;
   const indeterminate = hasSelection && selection.length < items.length;
 
-  // Filter items based on search
   const filteredItems = useMemo(() => {
     if (!searchText.trim()) return items;
     return items.filter(item =>
@@ -133,27 +131,20 @@ const UserRoleTable = () => {
     );
   }, [items, searchText]);
 
-  // Initial data load
   useEffect(() => {
     getUserRole();
   }, []);
 
-  // Update local state when API data changes
   useEffect(() => {
     if (userRoleData) {
       setItems(userRoleData);
     }
   }, [userRoleData]);
 
-  // Memoized handlers for real-time updates
   const handleAddUserRole = useCallback(async (item) => {
     try {
-      const response = await insertData('api/ROLE0021', item);
-      // Add the new item to the local state immediately
-      // If the API returns the created item with an ID, use that
-      const newItem = response?.data || { ...item, roleId: Date.now() }; // Fallback ID if none provided
-      setItems(prev => [...prev, newItem]);
-      // No need to call getUserRole() here
+      await insertData('api/ROLE0021', item);
+      await getUserRole();
     } catch (error) {
       console.error("Error adding user role:", error);
     }
@@ -162,13 +153,11 @@ const UserRoleTable = () => {
   const handleUpdateUserRole = useCallback(async (item) => {
     try {
       await updateData('api/ROLE0031', item);
-      // Update the item in local state immediately
       setItems(prev =>
         prev.map(existingItem =>
           existingItem.roleId === item.roleId ? item : existingItem
         )
       );
-      // No need to call getUserRole() here
     } catch (error) {
       console.error("Error updating user role:", error);
     }
@@ -177,13 +166,10 @@ const UserRoleTable = () => {
   const handleDelete = useCallback(async (item) => {
     try {
       await deleteData('api/ROLE0041', item);
-      // Remove the item from local state immediately
       setItems(prev => prev.filter(existingItem => existingItem.roleId !== item.roleId));
-      // Clear the item from selection if it was selected
       if (selection.includes(item.name)) {
         setSelection(prev => prev.filter(name => name !== item.name));
       }
-      // No need to call getUserRole() here
     } catch (error) {
       console.error("Error deleting user role:", error);
     }
@@ -215,6 +201,7 @@ const UserRoleTable = () => {
 
   return (
     <>
+    <Stack w="100%" h="100%" gap={5}>
       <Flex w="full" justify="space-between" gap={5}>
         <InputGroup flex="1" startElement={<LuSearch />}>
           <Input
@@ -234,7 +221,9 @@ const UserRoleTable = () => {
           </ButtonGroup>
         </AddUserRoleDialog>
       </Flex>
-      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} tableLayout={'fixed'} >
+      <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'} tableLayout={'fixed'} w={
+        '70%'
+      }>
         <TableHeader
           headers={headers}
           hasSelection={indeterminate ? 'indeterminate' : selection.length > 0}
@@ -264,7 +253,6 @@ const UserRoleTable = () => {
             variant="outline"
             size="sm"
             onClick={() => {
-              // Bulk delete functionality for selected items
               const selectedItems = items.filter(item => selection.includes(item.name));
               selectedItems.forEach(item => handleDelete(item));
             }}
@@ -276,6 +264,7 @@ const UserRoleTable = () => {
           </Button>
         </ActionBarContent>
       </ActionBarRoot>
+      </Stack>
     </>
   );
 };
