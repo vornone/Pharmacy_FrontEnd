@@ -1,4 +1,4 @@
-const axios = require('axios')
+import axios from 'axios'
 
 /**
  * Creates an Axios instance with default configuration.

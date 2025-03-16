@@ -42,7 +42,7 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
     setInvalid(false)
   }
 
-  return (
+return (
     <DialogRoot placement="center" trapFocus={false} modal={true}  unmountOnExit>
       <DialogTrigger asChild >{children}</DialogTrigger>
       <DialogContent>
@@ -53,7 +53,6 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
           <VStack w="100%" h="100%" align="flex-start">
             <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
               <Input
-
                 name="roleName"
                 size="sm"
                 value={role.roleName}
@@ -81,10 +80,10 @@ const EditUserRoleDialog = ({ children ,handleUpdateUserRole, data}) => {
             variant="surface"
             colorPalette="green"
             onClick={() => handleSubmit()}
-            isLoading={loading} // Better UX for loading state
+            loading={loading}
             disabled={loading || invalid}
           >
-            {loading ? 'Saving...' : 'Update Role'}
+            {loading ? 'Saving...' : 'Edit Role'}
           </Button>
         </DialogFooter>
         <DialogCloseTrigger  />

@@ -56,7 +56,6 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
           <VStack w="100%" h="100%" align="flex-start">
             <Field  invalid={invalid} label="Role Name" errorText="This field is invalid">
               <Input
-
                 name="roleName"
                 size="sm"
                 value={role.roleName}
@@ -84,7 +83,7 @@ const AddUserRoleDialog = ({ children ,handleAddUserRole}) => {
             variant="surface"
             colorPalette="green"
             onClick={() => handleSubmit()}
-            isLoading={loading} // Better UX for loading state
+            loading={loading} // Better UX for loading state
             disabled={loading || invalid}
           >
             {loading ? 'Saving...' : 'Add Role'}
