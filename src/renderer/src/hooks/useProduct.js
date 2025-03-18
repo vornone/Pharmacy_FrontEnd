@@ -1,36 +1,57 @@
-import { queryData } from '../actions/ActionsType'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-const useProduct = (selectedFile, productData) => {
+import { queryData } from '../actions/ActionsType'
+
+const useProduct = () => {
   const dispatch = useDispatch()
   const apiSource = 'productReducer'
-  const formData = new FormData()
-  formData.append('file', selectedFile)
-  formData.append(
-    'inputData',
-    new Blob([JSON.stringify(productData)], {
-      type: 'application/json'
-    })
-  )
-
+  const [uploadedImageName, setUploadedImageName] = useState(null)
+  
   const { data, loading, error } = useSelector((state) => state.productReducer)
 
-  const insertFile = () => {
-    dispatch(queryData(apiSource, 'product/insert', 'POST', formData))
+  const uploadImage = async (selectedFile) => {
+    const imageFormData = new FormData()
+    imageFormData.append('file', selectedFile)
+    
+    try {
+      dispatch(queryData(apiSource, 'upload', 'POST', imageFormData))
+    } catch (err) {
+      console.error('Error uploading image:', err)
+    }
   }
-  const getProduct = () => {
-    dispatch(queryData(apiSource, 'product', 'POST'))
+
+  const registerProduct = async (productData, selectedFile) => {
+    await uploadImage(selectedFile)
+    const imageName = selectedFile ? selectedFile.name : null
+    const productWithImage = {
+      ...productData,
+      productImage: imageName
+    }
+    try {
+      dispatch(queryData(apiSource, 'PRO0021', 'POST', JSON.stringify(productWithImage), {
+        'Content-Type': 'application/json'
+      }))
+    } catch (err) {
+      console.error('Error registering product:', err)
+    }
+  }
+  const getProducts = () => {
+    dispatch(queryData(apiSource, 'product', 'GET'))
   }
   useEffect(() => {
-    data
-  }, [dispatch])
+    if (data && data.uploadedImage) {
+      setUploadedImageName(data.uploadedImage)
+    }
+  }, [data])
 
   return {
-    data: data?.data.product,
+    data: data?.data,
+    uploadedImageName,
     loading,
     error,
-    insertFile,
-    getProduct
+    uploadImage,
+    registerProduct,
+    getProducts
   }
 }
 
