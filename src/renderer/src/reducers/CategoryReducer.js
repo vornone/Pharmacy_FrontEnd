@@ -17,6 +17,8 @@ const categoryReducer = (state = initialState, action) => {
           error: null
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     case API_SUCCESS:
       if (action.payload.source === 'categoryReducer') {
         return {
@@ -25,6 +27,8 @@ const categoryReducer = (state = initialState, action) => {
           data: action.payload.data
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     case API_FAILURE:
       if (action.payload.source === 'categoryReducer') {
         return {
@@ -33,6 +37,8 @@ const categoryReducer = (state = initialState, action) => {
           error: action.payload.error
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     default:
       return state
   }

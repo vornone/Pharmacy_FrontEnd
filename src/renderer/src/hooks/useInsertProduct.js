@@ -1,9 +1,6 @@
-import { queryData } from '../actions/ActionsType'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import useApi from '../common/useApi' // Assuming useApi is now a custom hook
+
 const useInsertProduct = (selectedFile, productData) => {
-  const dispatch = useDispatch()
-  const apiSource = 'insertReducer'
   const formData = new FormData()
   formData.append('file', selectedFile)
   formData.append(
@@ -12,15 +9,15 @@ const useInsertProduct = (selectedFile, productData) => {
       type: 'application/json'
     })
   )
+  const { data, message, loading, error, requestData: queryInsertProduct } = useApi('insertReducer')
 
-  const { data, loading, error } = useSelector((state) => state.insertReducer)
-
-  const insertProduct = () => {
-    dispatch(queryData(apiSource, 'product/insert', 'POST', formData))
+  const insertProduct = (endpoint, formData) => {
+    queryInsertProduct(endpoint, 'POST', formData)
   }
 
   return {
-    data: data?.data,
+    data,
+    message,
     loading,
     error,
     insertProduct

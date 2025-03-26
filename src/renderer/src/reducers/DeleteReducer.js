@@ -1,6 +1,4 @@
-// src/features/apiReducer.js
 import { API_REQUEST, API_SUCCESS, API_FAILURE } from '../actions/ActionsType.js'
-
 const initialState = {
   loading: false,
   data: null,
@@ -17,6 +15,8 @@ const deleteReducer = (state = initialState, action) => {
           error: null
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     case API_SUCCESS:
       if (action.payload.source === 'deleteReducer') {
         return {
@@ -25,6 +25,8 @@ const deleteReducer = (state = initialState, action) => {
           data: action.payload.data
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     case API_FAILURE:
       if (action.payload.source === 'deleteReducer') {
         return {
@@ -33,6 +35,8 @@ const deleteReducer = (state = initialState, action) => {
           error: action.payload.error
         }
       }
+      return state // Return unchanged state if source doesn't match
+
     default:
       return state
   }

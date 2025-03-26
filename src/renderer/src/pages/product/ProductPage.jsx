@@ -3,7 +3,7 @@ import { useDebounce } from 'use-debounce'
 import { VStack, SimpleGrid, Flex, Input, IconButton, Button, Box, HStack } from '@chakra-ui/react'
 import { LuSearch, LuSlidersHorizontal } from 'react-icons/lu'
 import ProductCard from './ProductCard'
-import AddProductDialog from './AddProductDialog'
+import AddProductDialog from '@/renderer/src/components/dialog/product/AddProductDialog'
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -11,35 +11,46 @@ import {
   PaginationRoot
 } from '@/components/ui/pagination'
 import { InputGroup } from '@/components/ui/input-group'
+import useProduct from '../../hooks/useProduct'
 
 function ProductPage() {
   const [page, setPage] = useState(1)
   const pageSize = 12
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
-
-  // Mock product data
-  const products = new Array(102).fill(0).map((_, index) => ({
-    id: index,
-    name: `Product ${index + 1}`
-  }))
-
-  // Filter products based on debounced search term
-  const filteredItems = products.filter((product) =>
-    product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
-  )
-
-  // Reset pagination to page 1 when search term changes
+  const {data, loading, error, getProduct} = useProduct()
+  const [pageSizeNumber, setPageSizeNumber] = useState({pageSize: 10, pageNumber: 1})
   useEffect(() => {
-    setPage(1)
-  }, [debouncedSearch])
+    getProduct(pageSizeNumber)
+  }, [])
 
-  const startRange = (page - 1) * pageSize
-  const endRange = startRange + pageSize
-  const visibleItems = filteredItems
-    .slice(startRange, endRange)
-    .map((product) => <ProductCard key={product.id} product={product} />)
+  // // Mock product data
+  // const products = new Array(102).fill(0).map((_, index) => ({
+  //   id: index,
+  //   name: `Product ${index + 1}`
+  // }))
 
+  // // Filter products based on debounced search term
+  // const filteredItems = products.filter((product) =>
+  //   product.productName.toLowerCase().includes(debouncedSearch.toLowerCase())
+  // )
+
+  // // Reset pagination to page 1 when search term changes
+  // useEffect(() => {
+  //   setPage(1)
+  // }, [debouncedSearch])
+
+  // const startRange = (page - 1) * pageSize
+  // const endRange = startRange + pageSize
+  // const visibleItems = filteredItems
+  //   .slice(startRange, endRange)
+  //   .map((product) => <ProductCard key={product.id} product={product} />)
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
   return (
     <VStack
       spacing={4}
@@ -80,9 +91,11 @@ function ProductPage() {
         minH="0"
         flex="1"
       >
-        {visibleItems}
+        {data?.map((product) => (
+          <ProductCard key={product.productId} product={product} />
+        ))}
       </SimpleGrid>
-      <PaginationRoot
+      {/* <PaginationRoot
         page={page}
         count={filteredItems.length}
         pageSize={pageSize}
@@ -94,7 +107,7 @@ function ProductPage() {
           <PaginationItems />
           <PaginationNextTrigger />
         </HStack>
-      </PaginationRoot>
+      </PaginationRoot> */}
     </VStack>
   )
 }

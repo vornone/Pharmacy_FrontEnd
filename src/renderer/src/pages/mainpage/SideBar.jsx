@@ -100,7 +100,7 @@ const Sidebar = () => {
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <Stack justify="space-between" h="97%">
+      <Stack justify="space-between" h="100%">
         <VStack spacing="0" align="stretch">
           {navItems.map((item) => (
             <NavItem
@@ -117,7 +117,7 @@ const Sidebar = () => {
         </VStack>
 
         {/* Logout & Profile */}
-        <VStack spacing="0" align="stretch">
+        <VStack spacing="0" align="stretch" h={'100%'}>
           <Separator h="1px" w="full" borderColor={useColorModeValue('gray.200', 'gray.700')} />
           <NavItem icon={TbLogout2} to="/logout">
             {!isCollapsed && 'Logout'}

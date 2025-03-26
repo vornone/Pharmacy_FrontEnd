@@ -11,15 +11,14 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { SegmentedControl } from '@/components/ui/segmented-control'
-import React, { useRef, forwardRef, useState, useEffect } from 'react'
+import React, { useRef, forwardRef, useState } from 'react'
 import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
 import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection'
 import { MdCancel, MdEdit, MdOutlineCancel, MdSave } from 'react-icons/md'
-import useCategory from '@/renderer/src/hooks/useCategory'
 const product_detail = [
   {
-    productName: 'Nue Camp',
+    product_name: 'Nue Camp',
     product_price: '100$',
     product_image:
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -35,25 +34,10 @@ const mainOption = [
   { label: 'Marketing', value: 'Marketing' },
   { label: 'Support', value: 'Support' }
 ]
-const AddProductDialog = ({children, insertProduct }) => {
-  const { data, loading, error , getCategory} = useCategory()
+const EditProductDialog = ({ product,children }) => {
   const [isEditable, setIsEditable] = React.useState(false)
-  const [imagePreview, setImagePreview] = useState(``)
-  const [category, setCategory] = useState([])
+  const [imagePreview, setImagePreview] = useState(`http://localhost:8080/images/${product.productImage}`)
   const [uploadedImage, setUploadedImage] = useState(null)
-  const [product , setProduct] = useState({
-      categoryId:0,
-      productName:"",
-      productSize: "",
-      productColor: ""})
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value
-    }))
-  }
   const handleUploadClick = () => {
     inputRef.current.click()
   }
@@ -74,15 +58,6 @@ const AddProductDialog = ({children, insertProduct }) => {
         "shirt",
         "t-shirt",
       ];
-
-      useEffect(() => {
-        getCategory({pageSize:10,pageNumber:1});
-        if(data){
-          setCategory(data.map((item) => item.categoryName))
-        }
-      }, []);
-
-
   return (
     <>
       <Input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile}   accept="image/*"/>
@@ -98,14 +73,15 @@ const AddProductDialog = ({children, insertProduct }) => {
           <DialogBody>
             <VStack w={'100%'} h={'100%'} p={5} align={'flex-start'}>
               <Image src={imagePreview} w={'full'} h={'200px'} objectFit="cover" borderRadius={'md'}/>
-              <Button onClick={handleUploadClick} size={'sm'}  variant={'outline'}>
+              <Button onClick={handleUploadClick} size={'sm'} disabled={!isEditable} variant={'outline'}>
                 <HiUpload /> Edit Image
               </Button>
               <Field label="Product name">
                 <Input
-                  name="productName"
+                  name="product_name"
+                  defaultValue={product.productName}
+                  disabled={!isEditable}
                   size="sm"
-                  onChange={handleChange}
                 />
               </Field>
 
@@ -113,22 +89,24 @@ const AddProductDialog = ({children, insertProduct }) => {
                 <Input
                   name="product_price"
                   defaultValue={100}
+                  disabled={!isEditable}
                   size="sm"
                 />
               </Field>
               <Field label="Product Color">
                 <Input
-                  name="productColor"
-                  onChange={handleChange}
+                  name="product_color"
+                  disabled={!isEditable}
                   size="sm"
+                  value={product.productColor}
                 />
               </Field>
               <Flex gap={5}>
               <Field label="Product Size">
-                <SegmentedControl name="productSize" onChange={handleChange} items={['XS', 'SM', 'M', 'L', 'XL']} size="sm" />
+                <SegmentedControl defaultValue={product.productSize} items={['XS', 'S', 'M', 'L', 'XL']} size="sm" disabled={!isEditable}/>
               </Field>
               <Field label="Category">
-                <SearchSelection collection={category}  onChange={(value) => setProduct({ ...product, categoryId: value })}/>
+                <SearchSelection collection={countries} disabled={!isEditable}/>
               </Field>
               </Flex>
             </VStack>
@@ -143,8 +121,9 @@ const AddProductDialog = ({children, insertProduct }) => {
               variant="surface"
               onClick={() => setIsEditable(!isEditable)}
               size={'xs'}
-              colorPalette={'green'}
-            ><Flex gap={2} justify={'center'} align={'center'} ><Icon size={'xs'}><MdSave/></Icon>Save</Flex>
+              colorPalette={isEditable ? 'green' : 'blue'}
+            >
+              {isEditable ? <Flex gap={2} justify={'center'} align={'center'} ><Icon size={'xs'}><MdSave/></Icon>Save</Flex> : <Flex gap={2} justify={'center'} align={'center'}><Icon size={'xs'}><MdEdit/></Icon>Edit</Flex>}
             </Button>
           </DialogFooter>
           <DialogCloseTrigger />
@@ -154,4 +133,4 @@ const AddProductDialog = ({children, insertProduct }) => {
   )
 }
 
-export default AddProductDialog
+export default EditProductDialog

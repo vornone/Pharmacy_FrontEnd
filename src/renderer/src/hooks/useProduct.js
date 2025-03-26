@@ -1,57 +1,16 @@
-import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { queryData } from '../actions/ActionsType'
+import useApi from '../common/useApi' // Assuming useApi is now a custom hook
 
 const useProduct = () => {
-  const dispatch = useDispatch()
-  const apiSource = 'productReducer'
-  const [uploadedImageName, setUploadedImageName] = useState(null)
-  
-  const { data, loading, error } = useSelector((state) => state.productReducer)
+  const { data, loading, error, requestData: fetchProduct } = useApi('productReducer')
 
-  const uploadImage = async (selectedFile) => {
-    const imageFormData = new FormData()
-    imageFormData.append('file', selectedFile)
-    
-    try {
-      dispatch(queryData(apiSource, 'upload', 'POST', imageFormData))
-    } catch (err) {
-      console.error('Error uploading image:', err)
-    }
+  const getProduct = (body) => {
+    fetchProduct('api/PRO0011', 'POST', body)
   }
-
-  const registerProduct = async (productData, selectedFile) => {
-    await uploadImage(selectedFile)
-    const imageName = selectedFile ? selectedFile.name : null
-    const productWithImage = {
-      ...productData,
-      productImage: imageName
-    }
-    try {
-      dispatch(queryData(apiSource, 'PRO0021', 'POST', JSON.stringify(productWithImage), {
-        'Content-Type': 'application/json'
-      }))
-    } catch (err) {
-      console.error('Error registering product:', err)
-    }
-  }
-  const getProducts = () => {
-    dispatch(queryData(apiSource, 'product', 'GET'))
-  }
-  useEffect(() => {
-    if (data && data.uploadedImage) {
-      setUploadedImageName(data.uploadedImage)
-    }
-  }, [data])
-
   return {
-    data: data?.data,
-    uploadedImageName,
+    data,
     loading,
     error,
-    uploadImage,
-    registerProduct,
-    getProducts
+    getProduct
   }
 }
 

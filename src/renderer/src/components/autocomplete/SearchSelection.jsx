@@ -34,16 +34,17 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
         <>
           <InputGroup endElement={<Icon>{isOpen ? <FiChevronRight /> : <FiChevronDown />}</Icon>}>
             <AutoCompleteInput
-            
+              size={'xs'}
               name={name}
               variant="subtle"
               placeholder="Search..."
               disabled={disabled}
               value={value}
               onChange={handleOnChange}
+              fontSize={'sm'}
             />
           </InputGroup>
-          <AutoCompleteList maxH={'100px'}>
+          <AutoCompleteList maxH={'100px'} py={2}>
             {collection.map((item, index) => (
               <AutoCompleteItem
                 key={`item-${index}`}
