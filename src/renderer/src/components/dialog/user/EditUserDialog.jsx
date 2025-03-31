@@ -15,6 +15,7 @@ import { Field } from '@/components/ui/field';
 import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import useUpdateData from '@/renderer/src/hooks/useUpdateData';
+import { PasswordInput } from '@/components/ui/password-input';
 const EditUserDialog = ({ children, data, roleData, onUpdate }) => {
   const { loading } = useUpdateData();
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -59,7 +60,7 @@ const EditUserDialog = ({ children, data, roleData, onUpdate }) => {
   return (
     <DialogRoot placement="center" unmountOnExit onExitComplete={() => setIsEdittable(true)} closeOnInteractOutside={false} trapFocus={false}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
         <DialogHeader>
           <DialogTitle>Edit User Detail</DialogTitle>
         </DialogHeader>
@@ -67,6 +68,16 @@ const EditUserDialog = ({ children, data, roleData, onUpdate }) => {
           <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4}>
             <Field label="Username (cannot be edited)">
               <Input name="username" size="sm" defaultValue={data.username} onChange={handleOnChange} disabled />
+            </Field>
+            <Field invalid={formSubmitted && !user.roleId} label={"Password"}>
+              <Flex gap={2} w={'full'}>
+              <PasswordInput value={'123456'} disabled></PasswordInput>
+              <ChangePasswordDialog username={user.username}>
+                <Button variant="surface" colorPalette="primary" size="sm" disabled={isEdittable}>
+                  Edit Password
+                </Button>
+              </ChangePasswordDialog>
+              </Flex>
             </Field>
             <Flex gap={2} w={'full'}>
               <Field label="First Name" errorText={'Invalid first name'} invalid={formSubmitted && user.firstName === ''}>
@@ -88,13 +99,7 @@ const EditUserDialog = ({ children, data, roleData, onUpdate }) => {
                 name="roleName"
               />
             </Field>
-            <Field invalid={formSubmitted && !user.roleId} label={"Change Password"}>
-              <ChangePasswordDialog username={user.username}>
-                <Button variant="solid" colorPalette="neutral" size="sm" disabled={isEdittable}>
-                  Edit Password
-                </Button>
-              </ChangePasswordDialog>
-            </Field>
+
           </VStack>
         </DialogBody>
         <DialogFooter>

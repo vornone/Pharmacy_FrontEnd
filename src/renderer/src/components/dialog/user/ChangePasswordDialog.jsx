@@ -67,7 +67,7 @@ const ChangePasswordDialog = ({ children, username }) => {
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content borderRadius={25} _dark={{ bg: 'gray.900' }}>
               <Dialog.Header>
                 <Dialog.Title>Change Password</Dialog.Title>
               </Dialog.Header>

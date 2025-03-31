@@ -91,7 +91,7 @@ const AddProductDialog = ({children, insertProduct }) => {
         <DialogTrigger asChild>
           {children}
         </DialogTrigger>
-        <DialogContent >
+        <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
           <DialogHeader>
             <DialogTitle>Product Detail</DialogTitle>
           </DialogHeader>

@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, Image, Input, SelectRoot, VStack } from '@chakra-ui/react'
+import { Box, Button, Card, Flex, Image, Input, SelectRoot, Text, VStack } from '@chakra-ui/react'
 import {
   DialogActionTrigger,
   DialogBody,
@@ -31,19 +31,25 @@ const ProductCard = ({ product }) => {
   return (
     <>
         <EditProductDialog product={product}>
-          <Card.Root maxH={'xs'} shadow={'lg'} borderRadius={0} p={2} gap={4}>
+          <Card.Root maxH={'xs'} shadow={'md'} borderRadius={20} p={2} gap={4} _dark={{ bg: 'gray.900' }}>
             <Image
-              borderRadius={'sm'}
+              borderRadius={18}
               src={`http://localhost:8080/images/${product.productImage}`}
               alt="Product Image"
               h={'70%'}
               objectFit="cover"
             />
             <Card.Body h={'30%'} w={'100%'} p={0}>
-              <Card.Title fontSize={'md'} fontWeight={'medium'}>{product.productName}</Card.Title>
-              <Card.Description fontSize={'xs'}>Price : 100$</Card.Description>
+              <Card.Title ><Flex justifyContent={'space-between'}>
+                <Text fontSize={'md'} fontWeight={'medium'} textTransform={'capitalize'}>{product.productName}</Text> <Text color={'gray.400'} fontSize={'sm'} fontWeight={'medium'} _dark={{ color: 'gray.400' }}>{'$100.00'}</Text></Flex></Card.Title>
+              <Card.Description >
+                <Flex gap={2}>
+                <Text>{'15'}</Text>
+                <Badge  size={'sm'} variant={'surface'} colorPalette={'green'} borderRadius={'full'}> in stock</Badge>
+                </Flex>
+              </Card.Description>
               <Flex flexDirection={'row-reverse'}>
-                <Badge size={'sm'} variant={'surface'} colorPalette={'gray.500'}>{product.categoryName}</Badge>
+                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>{product.productSize}</Badge>
                 </Flex>
             </Card.Body>
           </Card.Root>

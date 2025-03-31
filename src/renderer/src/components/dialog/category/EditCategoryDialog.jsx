@@ -48,7 +48,7 @@ const EditCategoryDialog = ({ children, handleUpdateCategory, data }) => {
   return (
     <DialogRoot placement="center" trapFocus={false} modal={true} open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild onClick={() => setOpen(true)}>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>

@@ -74,11 +74,11 @@ const AddUserDialog = ({ children, data, roleData, onInsert }) => {
   return (
     <DialogRoot placement="center"  closeOnInteractOutside={false} trapFocus={false}	>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
         <DialogHeader>
           <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <DialogBody >
           <VStack w={'100%'} h={'100%'} align={'flex-start'} spacing={4} mb={10}>
             <Field invalid={formSubmitted && user.username === ''} label="Username" errorText={user.username === '' ? 'Username is required' : ''}>
               <Input name="username" size="sm" value={user.username} onChange={handleOnChange} />

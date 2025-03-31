@@ -48,7 +48,7 @@ const AddCategoryDialog = ({ children ,handleAddCategory}) => {
   return (
     <DialogRoot placement="center" trapFocus={false} modal={true}  unmountOnExit>
       <DialogTrigger asChild >{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
         <DialogHeader>
           <DialogTitle>Add New Category</DialogTitle>
         </DialogHeader>

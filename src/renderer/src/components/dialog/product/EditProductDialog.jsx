@@ -63,14 +63,14 @@ const EditProductDialog = ({ product,children }) => {
       <Input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile}   accept="image/*"/>
 
       <DialogRoot placement={'center'} trapFocus={false}  closeOnInteractOutside={false} >
-        <DialogTrigger asChild>
+        <DialogTrigger asChild >
           {children}
         </DialogTrigger>
-        <DialogContent >
+        <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }} >
           <DialogHeader>
             <DialogTitle>Product Detail</DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <DialogBody >
             <VStack w={'100%'} h={'100%'} p={5} align={'flex-start'}>
               <Image src={imagePreview} w={'full'} h={'200px'} objectFit="cover" borderRadius={'md'}/>
               <Button onClick={handleUploadClick} size={'sm'} disabled={!isEditable} variant={'outline'}>
@@ -103,7 +103,7 @@ const EditProductDialog = ({ product,children }) => {
               </Field>
               <Flex gap={5}>
               <Field label="Product Size">
-                <SegmentedControl defaultValue={product.productSize} items={['XS', 'S', 'M', 'L', 'XL']} size="sm" disabled={!isEditable}/>
+                <SegmentedControl defaultValue={product.productSize} items={['XS', 'SM', 'M', 'L', 'XL']} size="sm" disabled={!isEditable}/>
               </Field>
               <Field label="Category">
                 <SearchSelection collection={countries} disabled={!isEditable}/>

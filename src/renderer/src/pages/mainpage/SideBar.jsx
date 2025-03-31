@@ -6,6 +6,7 @@ import { LuUserCog, LuUser } from "react-icons/lu"
 import { FiDatabase, FiTable, FiUsers, FiSettings, FiHome } from 'react-icons/fi'
 import { IoList } from 'react-icons/io5'
 import { useColorModeValue } from '@/components/ui/color-mode'
+import { Tooltip } from "@/components/ui/tooltip"
 
 const navItems = [
   { name: 'Home', icon: FiHome, hasSeparator: true, to: '/home' },
@@ -19,16 +20,26 @@ const navItems = [
   { name: 'Admin', icon: LuUserCog, to: '/admin' }
 ]
 
-const NavItem = React.memo(({ icon, children, isActive, onClick, hasSeparator, to }) => {
+const NavItem = React.memo(({ icon, children, isActive, onClick, hasSeparator, to,name }) => {
   const activeColor = useColorModeValue('gray.700', 'white')
   const inactiveColor = useColorModeValue('gray.500', 'gray.400')
-  const activeBg = useColorModeValue('gray.200', 'gray.700')
-  const hoverBg = useColorModeValue('gray.200', 'gray.700')
+  const activeBg = useColorModeValue('green.200', 'green.700')
+  const hoverBg = useColorModeValue('green.200', 'green.700')
 
   return (
     <>
       <Link to={to}>
+
+
         <Stack>
+        <Tooltip
+          content={name}
+          positioning={{ placement: "right-center" }}
+          openDelay={100}
+          closeDelay={100}
+          colorPalette="gray"
+
+        >
           <Flex
             align="center"
             px="3"
@@ -44,10 +55,12 @@ const NavItem = React.memo(({ icon, children, isActive, onClick, hasSeparator, t
             <Icon mr="4" boxSize="4" as={icon} />
             {children && <Text fontSize="xs" whiteSpace="nowrap">{children}</Text>}
           </Flex>
+          </Tooltip>
           {hasSeparator && (
             <Separator h="1px" w="full" borderColor={useColorModeValue('gray.200', 'gray.700')} />
           )}
         </Stack>
+
       </Link>
     </>
   )
@@ -95,7 +108,7 @@ const Sidebar = () => {
       bg={bgColor}
       borderRight="1px solid"
       borderRightColor={borderColor}
-      w={isCollapsed ? '55px' : '200px'}
+      w={'55px'}
       transition="width 0.3s"
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
@@ -103,6 +116,7 @@ const Sidebar = () => {
       <Stack justify="space-between" h="100%">
         <VStack spacing="0" align="stretch">
           {navItems.map((item) => (
+
             <NavItem
               key={item.name}
               icon={item.icon}
@@ -110,20 +124,20 @@ const Sidebar = () => {
               onClick={() => handleItemClick(item.to)}
               hasSeparator={item.hasSeparator}
               to={item.to.replace('/*', '')}
+              name={item.name}
             >
-              {!isCollapsed && item.name}
             </NavItem>
+
           ))}
         </VStack>
-
         {/* Logout & Profile */}
         <VStack spacing="0" align="stretch" h={'100%'}>
           <Separator h="1px" w="full" borderColor={useColorModeValue('gray.200', 'gray.700')} />
-          <NavItem icon={TbLogout2} to="/logout">
-            {!isCollapsed && 'Logout'}
+          <NavItem icon={TbLogout2} to="/logout" name="Logout">
+            {/* {!isCollapsed && 'Logout'} */}
           </NavItem>
-          <NavItem icon={LuUser} to="/profile">
-            {!isCollapsed && 'Profile'}
+          <NavItem icon={LuUser} to="/profile"  name="Profile">
+            {/* {!isCollapsed && 'Profile'} */}
           </NavItem>
         </VStack>
       </Stack>
