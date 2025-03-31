@@ -1,8 +1,8 @@
-import { Badge, Box, Button, Card, HStack, Icon, Image, Text, VStack, Flex } from "@chakra-ui/react"
-import { HiPlus, HiMinus } from "react-icons/hi";
-import React, { useEffect } from "react";
-const OrderCard = ({key, item, orderData, setOrderData }) => {
-  const [quantity, setQuantity] = React.useState(item.product_quantity);
+import { Badge, Box, Button, Card, HStack, Icon, Image, Text, VStack, Flex } from '@chakra-ui/react'
+import { HiPlus, HiMinus } from 'react-icons/hi'
+import React, { useEffect } from 'react'
+const OrderCard = ({ key, item, orderData, setOrderData }) => {
+  const [quantity, setQuantity] = React.useState(item.product_quantity)
   function deleteOrder() {
     item.product_quantity = 0
     let newOrders = [...orderData].filter((item) => item.product_quantity !== 0)
@@ -23,31 +23,63 @@ const OrderCard = ({key, item, orderData, setOrderData }) => {
     }
   }
   return (
-    <Card.Root flexDirection="row" w={"100%"} h={"100px"} key={key} shadow={"sm"} borderRadius={'md'} overflow={'hidden'} >
-    <Image
-      objectFit="cover"
-      w="auto"
-      h="100%"
-      src={item.product_image}
-      alt="Caffe Latte"
-    />
-    <Box h={'100%'} w={'100%'}  >
-      <Card.Body h={'100%'} p={0} w={'100%'}>
-        <VStack  justify={'space-between'} h={'100%'} p={2} align={'start'} >
-          <VStack align={'start'}>
-        <Text fontSize="md"  fontWeight={'light'} >{item.product_name}</Text>
-        <Text fontSize="sm" color={'gray.400'}>{item.product_price}</Text>
-        </VStack>
-        <Flex gap={2} justify={'flex-end'} w={'100%'}>
-        <Button size="2xs" colorPalette="red" variant="surface" onClick={()=> handleDecrement()}><Icon size={"2xs"}><HiMinus /></Icon></Button>
-        <Text fontSize="sm" w={'20px'} textAlign={'center'}>{item.product_quantity}</Text>
-        <Button size="2xs" colorPalette="green" variant="surface" onClick={()=> handleIncrement()}><Icon size={"2xs"} z><HiPlus /></Icon></Button>
-        </Flex>
-        </VStack>
-      </Card.Body>
-    </Box>
-  </Card.Root>
+    <Card.Root
+      flexDirection="row"
+      w={'100%'}
+      h={'120px'}
+      key={key}
+      shadow={'md'}
+      borderRadius={10}
+      overflow={'hidden'}
+      _dark={{ bg: 'gray.900' }}
+      p={2}
+    >
+      <Image
+        objectFit="cover"
+        w="auto"
+        h="100%"
+        src={item.product_image}
+        alt="Caffe Latte"
+        borderRadius={8}
+      />
+      <Box h={'100%'} w={'100%'}>
+        <Card.Body h={'100%'} p={0} w={'100%'}>
+          <VStack justify={'space-between'} h={'100%'} p={2} align={'start'}>
+            <VStack align={'start'}>
+              <Text fontSize="sm">{item.product_name}</Text>
+              <Text fontSize="xs" color={'gray.400'}>
+                {item.product_price}
+              </Text>
+            </VStack>
+            <Flex gap={2} justify={'flex-end'} w={'100%'}>
+              <Button
+                size="2xs"
+                colorPalette="red"
+                variant="surface"
+                onClick={() => handleDecrement()}
+              >
+                <Icon size={'2xs'} _dark={{ color: 'white' }}>
+                  <HiMinus />
+                </Icon>
+              </Button>
+              <Text fontSize="sm" w={'20px'} textAlign={'center'}>
+                {item.product_quantity}
+              </Text>
+              <Button
+                size="2xs"
+                colorPalette="green"
+                variant="surface"
+                onClick={() => handleIncrement()}
+              >
+                <Icon size={'2xs'} _dark={{ color: 'white' }}>
+                  <HiPlus />
+                </Icon>
+              </Button>
+            </Flex>
+          </VStack>
+        </Card.Body>
+      </Box>
+    </Card.Root>
   )
-  
 }
 export default OrderCard

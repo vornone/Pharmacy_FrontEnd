@@ -16,7 +16,7 @@ import { Field } from '@/components/ui/field'
 import { HiUpload } from 'react-icons/hi'
 import SearchSelection from '@/renderer/src/components/autocomplete/SearchSelection'
 import EditProductDialog from '@/renderer/src/components/dialog/product/EditProductDialog'
-import { Badge } from "@chakra-ui/react"
+import { Badge } from '@chakra-ui/react'
 const product_detail = [
   {
     product_name: 'Nue Camp',
@@ -27,34 +27,72 @@ const product_detail = [
 ]
 
 const ProductCard = ({ product }) => {
-
   return (
     <>
-        <EditProductDialog product={product}>
-          <Card.Root maxH={'xs'} shadow={'md'} borderRadius={20} p={2} gap={4} _dark={{ bg: 'gray.900' }}>
-            <Image
-              borderRadius={18}
-              src={`http://localhost:8080/images/${product.productImage}`}
-              alt="Product Image"
-              h={'70%'}
-              objectFit="cover"
-            />
-            <Card.Body h={'30%'} w={'100%'} p={0}>
-              <Card.Title ><Flex justifyContent={'space-between'}>
-                <Text fontSize={'md'} fontWeight={'medium'} textTransform={'capitalize'}>{product.productName}</Text> <Text color={'gray.400'} fontSize={'sm'} fontWeight={'medium'} _dark={{ color: 'gray.400' }}>{'$100.00'}</Text></Flex></Card.Title>
-              <Card.Description >
-                <Flex gap={2}>
-                <Text>{'15'}</Text>
-                <Badge  size={'sm'} variant={'surface'} colorPalette={'green'} borderRadius={'full'}> in stock</Badge>
-                </Flex>
-              </Card.Description>
-              <Flex flexDirection={'row-reverse'}>
-                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>{product.productSize}</Badge>
-                </Flex>
-            </Card.Body>
-          </Card.Root>
-        </EditProductDialog>
-
+      <EditProductDialog product={product}>
+        <Card.Root
+          maxH={'sm'}
+          shadow={'md'}
+          borderRadius={20}
+          p={2}
+          gap={4}
+          _dark={{ bg: 'gray.900' }}
+        >
+          <Badge
+            size={'sm'}
+            variant={'surface'}
+            colorPalette={'green'}
+            borderRadius={'lg'}
+            pos={'absolute'}
+            top={3}
+            right={3}
+          >
+            {' '}
+            in stock
+          </Badge>
+          <Image
+            borderRadius={18}
+            src={`http://localhost:8080/images/${product.productImage}`}
+            alt="Product Image"
+            h={'70%'}
+            objectFit="cover"
+          />
+          <Card.Body h={'30%'} w={'100%'} p={0}>
+            <Card.Title>
+              <Flex justifyContent={'space-between'}>
+                <Text fontSize={'md'} fontWeight={'medium'} textTransform={'capitalize'}>
+                  {product.productName}
+                </Text>{' '}
+              </Flex>
+            </Card.Title>
+            <VStack w={'full'} alignItems={'flex-start'} justify={'space-between'}>
+              <Flex gap={2} justifyContent={'space-between'} w={'full'}>
+                <Text
+                  color={'gray.600'}
+                  fontSize={'sm'}
+                  fontWeight={'medium'}
+                  _dark={{ color: 'gray.400' }}
+                >
+                  {'$100.00'}
+                </Text>
+                <Text
+                  fontSize={'sm'}
+                  fontWeight={'medium'}
+                  color={'gray.600'}
+                  _dark={{ color: 'gray.400' }}
+                >
+                  {'15'} items
+                </Text>
+              </Flex>
+              <Flex flexDirection={'row-reverse'} w={'full'}>
+                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>
+                  {product.productSize}
+                </Badge>
+              </Flex>
+            </VStack>
+          </Card.Body>
+        </Card.Root>
+      </EditProductDialog>
     </>
   )
 }

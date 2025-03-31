@@ -35,17 +35,18 @@ const mainOption = [
   { label: 'Marketing', value: 'Marketing' },
   { label: 'Support', value: 'Support' }
 ]
-const AddProductDialog = ({children, insertProduct }) => {
-  const { data, loading, error , getCategory} = useCategory()
+const AddProductDialog = ({ children, insertProduct }) => {
+  const { data, loading, error, getCategory } = useCategory()
   const [isEditable, setIsEditable] = React.useState(false)
-  const [imagePreview, setImagePreview] = useState(``)
+  const [imagePreview, setImagePreview] = useState('@/renderer/public/img/y9DpT.jpg')
   const [category, setCategory] = useState([])
   const [uploadedImage, setUploadedImage] = useState(null)
-  const [product , setProduct] = useState({
-      categoryId:0,
-      productName:"",
-      productSize: "",
-      productColor: ""})
+  const [product, setProduct] = useState({
+    categoryId: 0,
+    productName: '',
+    productSize: '',
+    productColor: ''
+  })
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -67,76 +68,80 @@ const AddProductDialog = ({children, insertProduct }) => {
       alert('Please select an image file.')
     }
   }
-      const countries = [
-        "pant",
-        "skirt",
-        "jeans",
-        "shirt",
-        "t-shirt",
-      ];
+  const countries = ['pant', 'skirt', 'jeans', 'shirt', 't-shirt']
 
-      useEffect(() => {
-        getCategory({pageSize:10,pageNumber:1});
-        if(data){
-          setCategory(data.map((item) => item.categoryName))
-        }
-      }, []);
-
+  useEffect(() => {
+    getCategory({ pageSize: 10, pageNumber: 1 })
+    if (data) {
+      setCategory(data.map((item) => item.categoryName))
+    }
+  }, [])
 
   return (
     <>
-      <Input type="file" ref={inputRef} style={{ display: 'none' }} onChange={handleUploadFile}   accept="image/*"/>
+      <Input
+        type="file"
+        ref={inputRef}
+        style={{ display: 'none' }}
+        onChange={handleUploadFile}
+        accept="image/*"
+      />
 
-      <DialogRoot placement={'center'} trapFocus={false}  closeOnInteractOutside={false} >
-        <DialogTrigger asChild>
-          {children}
-        </DialogTrigger>
+      <DialogRoot placement={'center'} trapFocus={false} closeOnInteractOutside={false}>
+        <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent borderRadius={25} _dark={{ bg: 'gray.900' }}>
           <DialogHeader>
             <DialogTitle>Product Detail</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <VStack w={'100%'} h={'100%'} p={5} align={'flex-start'}>
-              <Image src={imagePreview} w={'full'} h={'200px'} objectFit="cover" borderRadius={'md'}/>
-              <Button onClick={handleUploadClick} size={'sm'}  variant={'outline'}>
+              <Image
+                src={imagePreview}
+                w={'full'}
+                h={'200px'}
+                objectFit="cover"
+                borderRadius={'md'}
+              />
+              <Button onClick={handleUploadClick} size={'sm'} variant={'outline'}>
                 <HiUpload /> Edit Image
               </Button>
               <Field label="Product name">
-                <Input
-                  name="productName"
-                  size="sm"
-                  onChange={handleChange}
-                />
+                <Input name="productName" size="sm" onChange={handleChange} />
               </Field>
 
               <Field label="Product price">
-                <Input
-                  name="product_price"
-                  defaultValue={100}
-                  size="sm"
-                />
+                <Input name="product_price" defaultValue={100} size="sm" />
               </Field>
               <Field label="Product Color">
-                <Input
-                  name="productColor"
-                  onChange={handleChange}
-                  size="sm"
-                />
+                <Input name="productColor" onChange={handleChange} size="sm" />
               </Field>
               <Flex gap={5}>
-              <Field label="Product Size">
-                <SegmentedControl name="productSize" onChange={handleChange} items={['XS', 'SM', 'M', 'L', 'XL']} size="sm" />
-              </Field>
-              <Field label="Category">
-                <SearchSelection collection={category}  onChange={(value) => setProduct({ ...product, categoryId: value })}/>
-              </Field>
+                <Field label="Product Size">
+                  <SegmentedControl
+                    name="productSize"
+                    onChange={handleChange}
+                    items={['XS', 'SM', 'M', 'L', 'XL']}
+                    size="sm"
+                  />
+                </Field>
+                <Field label="Category">
+                  <SearchSelection
+                    collection={category}
+                    onChange={(value) => setProduct({ ...product, categoryId: value })}
+                  />
+                </Field>
               </Flex>
             </VStack>
           </DialogBody>
           <DialogFooter>
             <DialogActionTrigger asChild>
               <Button variant="outline" colorPalette={'red'} size={'xs'}>
-              <Flex gap={2} justify={'center'} align={'center'}><Icon size={'xs'}><MdOutlineCancel/></Icon>Cancel</Flex>
+                <Flex gap={2} justify={'center'} align={'center'}>
+                  <Icon size={'xs'}>
+                    <MdOutlineCancel />
+                  </Icon>
+                  Cancel
+                </Flex>
               </Button>
             </DialogActionTrigger>
             <Button
@@ -144,7 +149,13 @@ const AddProductDialog = ({children, insertProduct }) => {
               onClick={() => setIsEditable(!isEditable)}
               size={'xs'}
               colorPalette={'green'}
-            ><Flex gap={2} justify={'center'} align={'center'} ><Icon size={'xs'}><MdSave/></Icon>Save</Flex>
+            >
+              <Flex gap={2} justify={'center'} align={'center'}>
+                <Icon size={'xs'}>
+                  <MdSave />
+                </Icon>
+                Save
+              </Flex>
             </Button>
           </DialogFooter>
           <DialogCloseTrigger />

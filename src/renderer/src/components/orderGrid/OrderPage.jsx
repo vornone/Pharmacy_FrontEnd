@@ -10,9 +10,9 @@ const OrderPage = () => {
         justify="space-between"
         gap={5}
         p={5}
-        borderRadius={'sm'}
+        borderRadius={15}
         boxShadow={'md'}
-        _dark={{ bg: 'gray.950' }}
+        _dark={{ bg: 'gray.900' }}
       >
         <Heading>
           Order Id:
@@ -22,24 +22,24 @@ const OrderPage = () => {
         </Heading>
       </Flex>
 
-        <OrderGrid />
+      <OrderGrid />
 
       <Stack
         w="full"
         justify="space-between"
         gap={2}
         p={5}
-        borderRadius={'sm'}
+        borderRadius={15}
         boxShadow={'md'}
-        _dark={{ bg: 'gray.950' }}
+        _dark={{ bg: 'gray.900' }}
       >
-                <Flex gap={3} py={5}>
-                  <Field label={'Discount'}>
-          <Input placeholder="Discount..." size={'sm'} _dark={{ border: '1px solid gray' }} />
-        </Field>
-        <Field label={'Deposit'}>
-          <Input placeholder="Deposit..." size={'sm'} _dark={{ border: '1px solid gray' }} />
-        </Field>
+        <Flex gap={3} py={5}>
+          <Field label={'Discount'}>
+            <Input placeholder="Discount..." size={'sm'} _dark={{ border: '1px solid gray' }} />
+          </Field>
+          <Field label={'Deposit'}>
+            <Input placeholder="Deposit..." size={'sm'} _dark={{ border: '1px solid gray' }} />
+          </Field>
         </Flex>
         <Flex justify={'space-between'}>
           <Text fontSize={'sm'} color={'gray.400'}>
