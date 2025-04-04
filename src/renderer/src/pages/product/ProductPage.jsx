@@ -81,7 +81,6 @@ function ProductPage() {
           </Button>
         </AddProductDialog>
       </Flex>
-
       <SimpleGrid
         templateColumns="repeat(6, 1fr)"
         templateRows="repeat(3, 1fr)"

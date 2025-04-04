@@ -42,7 +42,9 @@ function SearchSelection({ collection, onChange, disabled, selectedValue, name }
               value={value}
               onChange={handleOnChange}
               fontSize={'sm'}
-              border={'1px solid gray'}
+
+              borderColor={'gray.200'}
+              _dark={{ borderColor: 'gray.800' }}
             />
           </InputGroup>
           <AutoCompleteList maxH={'100px'} py={2}>

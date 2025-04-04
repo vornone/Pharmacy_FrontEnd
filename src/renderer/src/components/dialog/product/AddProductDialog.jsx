@@ -110,7 +110,7 @@ const AddProductDialog = ({ children, insertProduct }) => {
               </Field>
 
               <Field label="Product price">
-                <Input name="product_price" defaultValue={100} size="sm" />
+                <Input name="product_price"  size="sm" />
               </Field>
               <Field label="Product Color">
                 <Input name="productColor" onChange={handleChange} size="sm" />
@@ -154,7 +154,7 @@ const AddProductDialog = ({ children, insertProduct }) => {
                 <Icon size={'xs'}>
                   <MdSave />
                 </Icon>
-                Save
+                Add Product
               </Flex>
             </Button>
           </DialogFooter>

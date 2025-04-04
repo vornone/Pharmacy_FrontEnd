@@ -72,10 +72,12 @@ const EditProductDialog = ({ product,children }) => {
           </DialogHeader>
           <DialogBody >
             <VStack w={'100%'} h={'100%'} p={5} align={'flex-start'}>
-              <Image src={imagePreview} w={'full'} h={'200px'} objectFit="cover" borderRadius={'md'}/>
+              <Flex  align={'flex-end'} justify={'space-between'}  w={'100%'}>
+              <Image src={imagePreview} w={'200px'} h={'200px'} objectFit="cover" borderRadius={'25px'}/>
               <Button onClick={handleUploadClick} size={'sm'} disabled={!isEditable} variant={'outline'}>
                 <HiUpload /> Edit Image
-              </Button>
+              </Button></Flex>
+
               <Field label="Product name">
                 <Input
                   name="product_name"
@@ -101,13 +103,15 @@ const EditProductDialog = ({ product,children }) => {
                   value={product.productColor}
                 />
               </Field>
+
               <Flex gap={5}>
-              <Field label="Product Size">
-                <SegmentedControl defaultValue={product.productSize} items={['XS', 'SM', 'M', 'L', 'XL']} size="sm" disabled={!isEditable}/>
-              </Field>
               <Field label="Category">
                 <SearchSelection collection={countries} disabled={!isEditable}/>
               </Field>
+              <Field label="Product Size">
+                <SegmentedControl defaultValue={product.productSize} items={['XS', 'SM', 'M', 'L', 'XL']} size="sm" disabled={!isEditable}/>
+              </Field>
+
               </Flex>
             </VStack>
           </DialogBody>
