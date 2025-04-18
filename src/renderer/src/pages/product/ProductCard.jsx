@@ -31,7 +31,8 @@ const ProductCard = ({ product }) => {
     <>
       <EditProductDialog product={product}>
         <Card.Root
-          maxH={'sm'}
+          maxW={'xs'}
+          h={'2xs'}
           shadow={'md'}
           borderRadius={20}
           p={2}
@@ -63,20 +64,23 @@ const ProductCard = ({ product }) => {
                 <Text fontSize={'md'} fontWeight={'medium'} textTransform={'capitalize'}>
                   {product.productName}
                 </Text>{' '}
+                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>
+                  {product.productSize}
+                </Badge>
               </Flex>
             </Card.Title>
-            <VStack w={'full'} alignItems={'flex-start'} justify={'space-between'}>
-              <Flex gap={2} justifyContent={'space-between'} w={'full'}>
+            <VStack w={'full'} alignItems={'flex-start'} justify={'space-between'} gap={100}>
+              <Flex gap={4} justifyContent={'space-between'} w={'full'}>
                 <Text
                   color={'gray.600'}
-                  fontSize={'sm'}
+                  fontSize={'xs'}
                   fontWeight={'medium'}
                   _dark={{ color: 'gray.400' }}
                 >
                   {'$100.00'}
                 </Text>
                 <Text
-                  fontSize={'sm'}
+                  fontSize={'xs'}
                   fontWeight={'medium'}
                   color={'gray.600'}
                   _dark={{ color: 'gray.400' }}
@@ -85,9 +89,7 @@ const ProductCard = ({ product }) => {
                 </Text>
               </Flex>
               <Flex flexDirection={'row-reverse'} w={'full'}>
-                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>
-                  {product.productSize}
-                </Badge>
+
               </Flex>
             </VStack>
           </Card.Body>

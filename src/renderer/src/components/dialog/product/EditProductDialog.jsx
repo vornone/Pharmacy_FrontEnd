@@ -73,7 +73,7 @@ const EditProductDialog = ({ product,children }) => {
           <DialogBody >
             <VStack w={'100%'} h={'100%'} p={5} align={'flex-start'}>
               <Flex  align={'flex-end'} justify={'space-between'}  w={'100%'}>
-              <Image src={imagePreview} w={'200px'} h={'200px'} objectFit="cover" borderRadius={'25px'}/>
+              <Image src={imagePreview} w={'200px'} h={'200px'} objectFit="cover" borderRadius={'sm'}/>
               <Button onClick={handleUploadClick} size={'sm'} disabled={!isEditable} variant={'outline'}>
                 <HiUpload /> Edit Image
               </Button></Flex>
