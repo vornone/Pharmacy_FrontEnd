@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
       <EditProductDialog product={product}>
         <Card.Root
           maxW={'xs'}
-          h={'2xs'}
+          h={'xs'}
           shadow={'md'}
           borderRadius={20}
           p={2}
@@ -58,29 +58,29 @@ const ProductCard = ({ product }) => {
             h={'70%'}
             objectFit="cover"
           />
-          <Card.Body h={'30%'} w={'100%'} p={0}>
+          <Card.Body h={'30%'} w={'100%'} p={0} gap={2}>
             <Card.Title>
               <Flex justifyContent={'space-between'}>
                 <Text fontSize={'md'} fontWeight={'medium'} textTransform={'capitalize'}>
-                  {product.productName}
+                  {product.productName} - {product.productColor}
                 </Text>{' '}
-                <Badge size={'md'} variant={'surface'} borderRadius={'md'}>
+                <Badge size={'sm'} variant={'surface'} borderRadius={'md'}>
                   {product.productSize}
                 </Badge>
               </Flex>
             </Card.Title>
-            <VStack w={'full'} alignItems={'flex-start'} justify={'space-between'} gap={100}>
-              <Flex gap={4} justifyContent={'space-between'} w={'full'}>
+            <VStack w={'full'} alignItems={'flex-start'} justify={'space-between'}>
+              <Flex justifyContent={'space-between'} w={'full'}>
                 <Text
                   color={'gray.600'}
-                  fontSize={'xs'}
+                  fontSize={'sm'}
                   fontWeight={'medium'}
                   _dark={{ color: 'gray.400' }}
                 >
                   {'$100.00'}
                 </Text>
                 <Text
-                  fontSize={'xs'}
+                  fontSize={'sm'}
                   fontWeight={'medium'}
                   color={'gray.600'}
                   _dark={{ color: 'gray.400' }}
@@ -88,9 +88,7 @@ const ProductCard = ({ product }) => {
                   {'15'} items
                 </Text>
               </Flex>
-              <Flex flexDirection={'row-reverse'} w={'full'}>
-
-              </Flex>
+              <Flex flexDirection={'row-reverse'} w={'full'}></Flex>
             </VStack>
           </Card.Body>
         </Card.Root>

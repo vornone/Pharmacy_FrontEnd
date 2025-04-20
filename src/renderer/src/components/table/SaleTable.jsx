@@ -45,11 +45,21 @@ const SaleTable = () => {
           }}
         />
       </Table.Cell>
-      <Table.Cell >{item.id}</Table.Cell>
-      <Table.Cell color="white.500" _dark={{ color: 'white' }} fontWeight={600}>{item.customer}</Table.Cell>
+      <Table.Cell>{item.id}</Table.Cell>
+      <Table.Cell color="white.500" _dark={{ color: 'white' }} fontWeight={600}>
+        {item.customer}
+      </Table.Cell>
       <Table.Cell>${item.subtotal}</Table.Cell>
-      <Table.Cell  fontWeight={600} color={'black'} _dark={{ color: 'white' }}>${item.Total}</Table.Cell>
-      <Table.Cell color={item.Remaining === 0 ? 'green.500' : 'red.500'} fontWeight={400}>${item.Remaining}</Table.Cell>
+      <Table.Cell fontWeight={600} color={'black'} _dark={{ color: 'white' }}>
+        ${item.Total}
+      </Table.Cell>
+      <Table.Cell>${item.Deposit}</Table.Cell>
+      <Table.Cell
+        color={item.Total - item.Deposit === 0 ? 'green.500' : 'red.500'}
+        fontWeight={400}
+      >
+        ${item.Total - item.Deposit}
+      </Table.Cell>
       <Table.Cell>{item.Date}</Table.Cell>
       <Table.Cell>
         {item.Remaining === 0 ? (
@@ -84,9 +94,9 @@ const SaleTable = () => {
   return (
     <>
       <Table.Root variant={'outline'} striped={false} size={'sm'} borderRadius={'md'}>
-        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' } }>
+        <Table.Header bg={'gray.100'} _dark={{ bg: 'gray.800' }}>
           <Table.Row>
-            <Table.ColumnHeader h="5" >
+            <Table.ColumnHeader h="5">
               <Checkbox
                 aria-label="Select all rows"
                 checked={indeterminate ? 'indeterminate' : selection.length > 0}
@@ -121,7 +131,7 @@ const SaleTable = () => {
     </>
   )
 }
-const headers = ['Id', 'Customer', 'Subtotal', 'Total', 'Remaining', 'Date', 'Status']
+const headers = ['Id', 'Customer', 'Subtotal', 'Total', 'Deposit', 'Remaining', 'Date', 'Status']
 const items = [
   {
     id: 1,
@@ -129,6 +139,7 @@ const items = [
     subtotal: 500,
     Total: 700,
     Others: 10,
+    Deposit: 100,
     Remaining: 500,
     Date: '2022-01-01'
   },
@@ -138,6 +149,7 @@ const items = [
     subtotal: 300,
     Total: 310,
     Others: 10,
+    Deposit: 100,
     Remaining: 500,
     Date: '2022-01-01'
   },
@@ -147,6 +159,7 @@ const items = [
     subtotal: 500,
     Total: 600,
     Others: 10,
+    Deposit: 600,
     Remaining: 0,
     Date: '2022-01-01'
   }
